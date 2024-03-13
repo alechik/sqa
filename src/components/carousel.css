@@ -1,0 +1,83 @@
+ul,
+li {
+    list-style: none;
+    white-space: nowrap;
+
+}
+
+li {
+    display: inline;
+    width: 100%;
+    height: 100%;
+}
+
+img {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+.carousel-cont{
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    width: 100%;
+}
+.main-container {
+    width: 700px; /* Cambiado de 700px */
+    margin: auto;
+}
+.container-images {
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    overflow: hidden;
+}
+
+.container-images ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.container-images li {
+    flex: 0 0 100%;
+}
+
+.container-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* Asegura que la imagen cubra el contenedor manteniendo su relación de aspecto */
+}
+
+.slider-container{
+    position: relative;
+    height: 100%;
+}
+
+
+/*Controladores del carrusel*/
+.leftArrow {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: 32px;
+    font-size: 50px;
+    font-weight: 700;
+    color: #fff;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.rightArrow {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 32px;
+    font-size: 50px;
+    font-weight: 700;
+    color: #fff;
+    z-index: 1;
+    cursor: pointer;
+}

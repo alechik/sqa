@@ -6,7 +6,13 @@ import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "
 async function getUserTypes() {
     const userTypesCollectionRef = collection(db, 'user_types');
     const querySnapshot = await getDocs(userTypesCollectionRef);
-    return querySnapshot.docs.map(docSnap => new UserType(docSnap.id, docSnap.data().description, docSnap.data().name));
+    return querySnapshot.docs.map(docSnap => {
+        return new UserType(
+            docSnap.id, // El ID del documento Firestore
+            docSnap.data().description, // La descripción del tipo de usuario
+            docSnap.data().name // El nombre del tipo de usuario
+        );
+    });
 }
 
 async function getUserTypeById(userTypeId) {

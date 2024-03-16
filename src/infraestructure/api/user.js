@@ -1,20 +1,65 @@
 // Importaciones necesarias de Firebase
 import { db, auth } from "../firebase--config.js";
 import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser } from 'firebase/auth';
-import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
+import { User } from "../../domain/User.js";
 
+// Obtener todos los usuarios desde Firestore
+async function getUsers() {
+    const usersCollectionRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersCollectionRef);
+    const users = [];
+    querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const user = new User(
+            docSnap.id, // Se asume que este es el UID proporcionado por Firebase Authentication
+            data.address,
+            data.birthday_date,
+            data.ci,
+            data.email,
+            data.gender,
+            data.lastnames,
+            data.names,
+            "", // La contraseña no se almacena en Firestore por razones de seguridad
+            data.user_type_id
+        );
+        users.push(user);
+    });
+    return users;
+}
+
+/*
 // Crear un nuevo usuario en Firebase Authentication y almacenar sus datos en Firestore
 async function createUser(userData) {
     // Crear usuario en Firebase Authentication
     const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
     const user = userCredential.user;
-    
+
     // Prepara los datos del usuario para Firestore (excluye la contraseña)
-    const {  ...userDataForFirestore } = userData;
+    const { ...userDataForFirestore } = userData;
 
     // Almacenar los datos adicionales del usuario en Firestore, incluyendo el email
     await setDoc(doc(db, "users", user.uid), userDataForFirestore);
 
+    return user.uid;
+}
+*/
+
+async function createUser(userData) {
+    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+    const user = userCredential.user;
+    const userToSave = new User(user.uid, userData.address, userData.birthday_date, userData.ci, userData.email, userData.gender, userData.lastnames, userData.names, userData.user_type_id); // Asumiendo que userData incluye estos campos
+    await setDoc(doc(db, "users", user.uid), {
+        // Usamos los valores del objeto userToSave, excluyendo la propiedad de contraseña
+        address: userToSave.address,
+        birthday_date: userToSave.birthday_date,
+        ci: userToSave.ci,
+        email: userToSave.email,
+        gender: userToSave.gender,
+        lastnames: userToSave.lastnames,
+        names: userToSave.names,
+        user_type_id: userToSave.user_type_id
+    });
     return user.uid;
 }
 
@@ -44,7 +89,7 @@ async function updateUser(userId, updatedData) {
     }
 
     // Excluye contraseña de los datos actualizados para Firestore
-    const {  ...updatedDataForFirestore } = updatedData;
+    const { ...updatedDataForFirestore } = updatedData;
 
     // Actualizar los datos del usuario en Firestore, incluyendo el email
     await setDoc(doc(db, "users", userId), updatedDataForFirestore, { merge: true });
@@ -63,6 +108,7 @@ async function deleteUser(userId) {
 }
 
 export {
+    getUsers,
     createUser,
     getUserById,
     updateUser,

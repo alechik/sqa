@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
+import {createUser} from "../../infraestructure/api/user.js";
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');
@@ -44,14 +45,19 @@ export default function Register() {
         setAddress(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         setIsClicked(true);
 
         if (password === confirmPassword) {
-
-            navigate('/home');
+            try {
+                await createUser({ firstName, lastName, email, password, address });
+                navigate('/');
+            } catch (error) {
+                console.error('Error al registrar usuario:', error.message);
+                // Maneja el error aquí, muestra un mensaje de error al usuario, por ejemplo
+            }
         }
 
         setIsPasswordMatch(password === confirmPassword);

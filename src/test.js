@@ -129,7 +129,7 @@ async function testProductCategories() {
 
 testProductCategories().catch(console.error);*/
 
-// test.js
+/*/ test.js
 // Importaciones necesarias
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
@@ -170,3 +170,4 @@ async function testCreateSalesRecord() {
 
 // Ejecutar las pruebas
 testCreateSalesRecord();
+*/

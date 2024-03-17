@@ -1,12 +1,12 @@
-/* Mostrar producto
+/*/Mostrar producto
 import { getProducts, getProductById } from "./infraestructure/api/product.js";
 
 
 (async()=>{
     console.log(await getProducts())
     console.log(await getProductById("5ptq9q9UTgi54AaS3NST"))
-})()*/
-
+})()
+*/
 
 /* Crear producto
 import { createProduct, getProducts } from "./infraestructure/api/product.js";
@@ -94,14 +94,14 @@ const userData = {
 
 
 import {
-    createProductCategory,
+    createProductCategory, getProductCategories, getProductCategoryById, deleteProductCategory, updateProductCategory
 } from './infraestructure/api/product_category.js'; // Asegúrate de ajustar la ruta de importación
 
 async function testProductCategories() {
     console.log('Creando una nueva categoría de producto...');
-    const newCategory = await createProductCategory({ description: 'Gadgets y dispositivos inteligentes', name: 'Gadgets' });
+    const newCategory = await createProductCategory({ description: 'Frutas comestibles naturales', name: 'Frutas' });
     console.log('Nueva categoría creada:', newCategory);
-/*
+
     console.log('Obteniendo todas las categorías de productos...');
     const categories = await getProductCategories();
     console.log('Todas las categorías:', categories);
@@ -124,7 +124,7 @@ async function testProductCategories() {
 
     console.log('Verificando la eliminación...');
     const categoriesAfterDeletion = await getProductCategories();
-    console.log('Categorías después de la eliminación:', categoriesAfterDeletion);*/
+    console.log('Categorías después de la eliminación:', categoriesAfterDeletion);
 }
 
 testProductCategories().catch(console.error);

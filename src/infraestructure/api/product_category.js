@@ -1,12 +1,39 @@
-// product_category.js
 import { db } from '../firebase-connection.js';
 import { ProductCategory } from "../../domain/ProductCategory.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
+/*
 async function getProductCategories() {
     const querySnapshot = await getDocs(collection(db, 'product_categories'));
     return querySnapshot.docs.map(docSnap => new ProductCategory(docSnap.id, docSnap.data().description, docSnap.data().name));
 }
+*/
+
+async function getProductCategories() {
+    const productCategoryCollectionRef = collection(db, 'product_categories');
+    const querySnapshot = await getDocs(productCategoryCollectionRef);
+    return querySnapshot.docs.map(docSnap => {
+        return new ProductCategory(
+            docSnap.id,
+            docSnap.data().description,
+            docSnap.data().name
+        );
+    });
+}
+
+/*
+ async function getUserTypes() {
+    const userTypesCollectionRef = collection(db, 'user_types');
+    const querySnapshot = await getDocs(userTypesCollectionRef);
+    return querySnapshot.docs.map(docSnap => {
+        return new UserType(
+            docSnap.id,
+            docSnap.data().description, 
+            docSnap.data().name
+        );
+    });
+}
+ */
 
 async function getProductCategoryById(productCategoryId) {
     const docSnap = await getDoc(doc(db, 'product_categories', productCategoryId));

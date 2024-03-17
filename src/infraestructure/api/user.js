@@ -1,10 +1,9 @@
 // Importaciones necesarias de Firebase
 import { db, auth } from "../firebase--config.js";
-import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser } from 'firebase/auth';
-import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
 import { User } from "../../domain/User.js";
+import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
+import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser } from 'firebase/auth';
 
-// Obtener todos los usuarios desde Firestore
 async function getUsers() {
     const usersCollectionRef = collection(db, "users");
     const querySnapshot = await getDocs(usersCollectionRef);
@@ -28,22 +27,16 @@ async function getUsers() {
     return users;
 }
 
-/*
-// Crear un nuevo usuario en Firebase Authentication y almacenar sus datos en Firestore
-async function createUser(userData) {
-    // Crear usuario en Firebase Authentication
-    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-    const user = userCredential.user;
+async function getUserById(userId) {
+    const userDocRef = doc(db, "users", userId);
+    const docSnap = await getDoc(userDocRef);
 
-    // Prepara los datos del usuario para Firestore (excluye la contraseña)
-    const { ...userDataForFirestore } = userData;
+    if (!docSnap.exists()) {
+        throw new Error("No se encontró el usuario");
+    }
 
-    // Almacenar los datos adicionales del usuario en Firestore, incluyendo el email
-    await setDoc(doc(db, "users", user.uid), userDataForFirestore);
-
-    return user.uid;
+    return { uid: userId, ...docSnap.data() };
 }
-*/
 
 async function createUser(userData) {
     const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
@@ -63,17 +56,22 @@ async function createUser(userData) {
     return user.uid;
 }
 
-// Obtener los datos de un usuario desde Firestore
-async function getUserById(userId) {
-    const userDocRef = doc(db, "users", userId);
-    const docSnap = await getDoc(userDocRef);
+/*
+// Crear un nuevo usuario en Firebase Authentication y almacenar sus datos en Firestore
+async function createUser(userData) {
+    // Crear usuario en Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+    const user = userCredential.user;
 
-    if (!docSnap.exists()) {
-        throw new Error("No se encontró el usuario");
-    }
+    // Prepara los datos del usuario para Firestore (excluye la contraseña)
+    const { ...userDataForFirestore } = userData;
 
-    return { uid: userId, ...docSnap.data() };
+    // Almacenar los datos adicionales del usuario en Firestore, incluyendo el email
+    await setDoc(doc(db, "users", user.uid), userDataForFirestore);
+
+    return user.uid;
 }
+*/
 
 // Actualizar los datos de un usuario en Firestore y Firebase Authentication si es necesario
 async function updateUser(userId, updatedData) {

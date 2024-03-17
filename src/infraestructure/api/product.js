@@ -1,9 +1,7 @@
-// Importaciones necesarias de Firebase
 import { db } from "../firebase-connection.js";
 import { Product } from "../../domain/Product.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-// Función para obtener todos los productos
 async function getProducts() {
     const productsCollectionRef = collection(db, "products");
     const productsSnapshot = await getDocs(productsCollectionRef);
@@ -24,7 +22,6 @@ async function getProducts() {
     return products;
 }
 
-// Función para obtener un producto por su ID
 async function getProductById(productId) {
     const productDocRef = doc(db, "products", productId);
     const productDoc = await getDoc(productDocRef);
@@ -43,20 +40,17 @@ async function getProductById(productId) {
     );
 }
 
-// Función para crear un nuevo producto
 async function createProduct(productData) {
     const productsCollectionRef = collection(db, "products");
     const productRef = await addDoc(productsCollectionRef, productData);
     return productRef.id;
 }
 
-// Función para actualizar un producto existente
 async function updateProduct(productId, updatedData) {
     const productDocRef = doc(db, "products", productId);
     await updateDoc(productDocRef, updatedData);
 }
 
-// Función para eliminar un producto
 async function deleteProduct(productId) {
     const productDocRef = doc(db, "products", productId);
     await deleteDoc(productDocRef);

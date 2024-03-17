@@ -1,6 +1,5 @@
-// user_type.js
-import { db } from './firebase-connection.js'; // Asegúrate de que esta es la ruta correcta al archivo
-import { UserType } from "../domain/UserType.js"; // Verifica que esta es la ruta correcta al archivo
+import { db } from './firebase-connection.js';
+import { UserType } from "../domain/UserType.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
 async function getUserTypes() {
@@ -8,9 +7,9 @@ async function getUserTypes() {
     const querySnapshot = await getDocs(userTypesCollectionRef);
     return querySnapshot.docs.map(docSnap => {
         return new UserType(
-            docSnap.id, // El ID del documento Firestore
-            docSnap.data().description, // La descripción del tipo de usuario
-            docSnap.data().name // El nombre del tipo de usuario
+            docSnap.id,
+            docSnap.data().description, 
+            docSnap.data().name
         );
     });
 }
@@ -25,7 +24,7 @@ async function getUserTypeById(userTypeId) {
 async function createUserType(userTypeData) {
     const userTypesCollectionRef = collection(db, 'user_types');
     const docRef = await addDoc(userTypesCollectionRef, userTypeData);
-    return docRef.id; // Devuelve el ID del nuevo documento
+    return docRef.id;
 }
 
 async function updateUserType(userTypeId, updatedData) {

@@ -1,6 +1,6 @@
 import { db } from './firebase-connection.js';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { Delivery } from '../../domain/delivery.js';
+import { Delivery } from '../../domain/Delivery.js';
 
 async function getDeliveries() {
     const deliveriesCollectionRef = collection(db, 'deliveries');
@@ -56,7 +56,7 @@ async function deleteDelivery(deliveryId) {
     await deleteDoc(delivertDocRef);
 }
 
-export {
+export default{
     getDeliveries,
     getDeliveryById,
     createDelivery,

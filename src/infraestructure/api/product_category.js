@@ -2,55 +2,57 @@ import { db } from '../firebase-connection.js';
 import { ProductCategory } from "../../domain/ProductCategory.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-/*
-async function getProductCategories() {
-    const querySnapshot = await getDocs(collection(db, 'product_categories'));
-    return querySnapshot.docs.map(docSnap => new ProductCategory(docSnap.id, docSnap.data().description, docSnap.data().name));
-}
-*/
-
 async function getProductCategories() {
     const productCategoryCollectionRef = collection(db, 'product_categories');
-    const querySnapshot = await getDocs(productCategoryCollectionRef);
-    return querySnapshot.docs.map(docSnap => {
-        return new ProductCategory(
-            docSnap.id,
-            docSnap.data().description,
-            docSnap.data().name
+    const productCategoriesSnapshot = await getDocs(productCategoryCollectionRef);
+    const productCategories = [];
+    productCategoriesSnapshot.forEach((doc) => {
+        const data = doc.data();
+        const productCategory = new ProductCategory(
+            doc.id,
+            data.description,
+            data.name
         );
+        productCategories.push(productCategory);
     });
+    return productCategories;
 }
-
-/*
- async function getUserTypes() {
-    const userTypesCollectionRef = collection(db, 'user_types');
-    const querySnapshot = await getDocs(userTypesCollectionRef);
-    return querySnapshot.docs.map(docSnap => {
-        return new UserType(
-            docSnap.id,
-            docSnap.data().description, 
-            docSnap.data().name
-        );
-    });
-}
- */
 
 async function getProductCategoryById(productCategoryId) {
-    const docSnap = await getDoc(doc(db, 'product_categories', productCategoryId));
-    if (!docSnap.exists()) throw new Error('Product category not found');
-    return new ProductCategory(docSnap.id, docSnap.data().description, docSnap.data().name);
+    const productCategoryDocRef = doc(db, 'product_categories', productCategoryId);
+    const productCategoryDoc = await getDoc(productCategoryDocRef);
+    if (!productCategoryDoc.exists()) {
+        throw new Error("Product category not found");
+    }
+    const productCategoryData = productCategoryDoc.data();
+    return new ProductCategory(
+        productCategoryDoc.id,
+        productCategoryData.description,
+        productCategoryData.name
+    );
 }
 
 async function createProductCategory(productCategoryData) {
-    const docRef = await addDoc(collection(db, 'product_categories'), {
-        name: productCategoryData.name,
-        description: productCategoryData.description
-    });
-    return new ProductCategory(docRef.id, productCategoryData.description, productCategoryData.name);
+    const newProductCategory = new ProductCategory(
+        null,
+        productCategoryData.description,
+        productCategoryData.name
+    );
+
+    const productCategoryDataForFirestore = newProductCategory.toFirestore();
+
+    const docRef = await addDoc(collection(db, 'product_categories'), productCategoryDataForFirestore);
+    newProductCategory.id = docRef.id;
+    return docRef.id;
 }
 
 async function updateProductCategory(productCategoryId, updatedData) {
-    await updateDoc(doc(db, 'product_categories', productCategoryId), updatedData);
+    const productDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
+        if (value !== undefined) acc[key] = value;
+        return acc;
+    }, {});
+
+    await updateDoc(doc(db, 'product_categories', productCategoryId), productDataForFirestore);
 }
 
 async function deleteProductCategory(productCategoryId) {

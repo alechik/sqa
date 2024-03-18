@@ -1,16 +1,6 @@
-// delivery.js
 import { db } from './firebase-connection.js';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-
-class Delivery {
-    constructor(id, userId, delivered, deliveryAddress, deliveryDetailId) {
-        this.id = id;
-        this.userId = userId;
-        this.delivered = delivered;
-        this.deliveryAddress = deliveryAddress;
-        this.deliveryDetailId = deliveryDetailId;
-    }
-}
+import { Delivery } from '../../domain/delivery.js';
 
 async function getDeliveries() {
     const querySnapshot = await getDocs(collection(db, 'deliveries'));

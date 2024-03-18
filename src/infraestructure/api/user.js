@@ -1,4 +1,3 @@
-// Importaciones necesarias de Firebase
 import { db, auth } from "../firebase--config.js";
 import { User } from "../../domain/User.js";
 import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";

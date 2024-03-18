@@ -1,173 +1,107 @@
-/*/Mostrar producto
-import { getProducts, getProductById } from "./infraestructure/api/product.js";
-
-
-(async()=>{
-    console.log(await getProducts())
-    console.log(await getProductById("5ptq9q9UTgi54AaS3NST"))
-})()
-*/
-
-/* Crear producto
-import { createProduct, getProducts } from "./infraestructure/api/product.js";
-
-// Datos del nuevo producto a agregar
-const newProductData = {
-    description: "Pulmon",
-    pictures: ["urlImagen1.jpg", "urlImagen2.jpg"], // Asume que quieres guardar URLs de imágenes
-    product_category_id: "Cuerpo", // Asume un ID de categoría existente o de ejemplo
-    product_name: "Omar",
-    stock: 50, // Cantidad en stock
-    unitary_price: 5000.00 // Precio unitario
-};
-
-(async () => {
-    try {
-        // Crear un nuevo producto
-        const newProductId = await createProduct(newProductData);
-        console.log(`Nuevo producto agregado con ID: ${newProductId}`);
-
-        // Mostrar todos los productos para verificar
-        console.log('Todos los productos después de agregar uno nuevo:');
-        const products = await getProducts();
-        console.log(products);
-    } catch (error) {
-        console.error("Error al crear un nuevo producto:", error);
-    }
-})();   */
-
-
-/*Actualizar produdto*/
-
-
-
-/*Usuario
-import { createUser } from "./infraestructure/api/user.js";
-
-// Datos iniciales del usuario para la prueba
-const userData = {
-    email: "nuevoUsuario@example.com",
-    password: "Contraseña123",
-    address: "123 Calle Principal",
-    birthday_date: "2000-01-01",
-    ci: "123456789",
-    gender: "No especificado",
-    lastnames: "Doe",
-    names: "John",
-    user_type_id: "tipoDeUsuario123"
-};
-
-(async () => {
-    try {
-        // Crear un nuevo usuario
-        console.log("Creando un nuevo usuario...");
-        const userId = await createUser(userData);
-        console.log(`Nuevo usuario creado con ID: ${userId}`);
-/*
-        // Obtener y mostrar el usuario creado por ID
-        console.log(`Obteniendo el usuario creado con ID: ${userId}...`);
-        const user = await getUserById(userId);
-        console.log("Detalles del usuario creado:", user);
-
-        // Actualizar el usuario
-        const updatedUserData = { ...userData, names: "Jane", lastnames: "Doe Updated", email: "usuarioActualizado@example.com" };
-        console.log(`Actualizando el usuario con ID: ${userId}...`);
-        await updateUser(userId, updatedUserData);
-        console.log("Usuario actualizado.");
-
-        // Obtener y mostrar el usuario actualizado
-        console.log(`Obteniendo el usuario actualizado con ID: ${userId}...`);
-        const updatedUser = await getUserById(userId);
-        console.log("Detalles del usuario actualizado:", updatedUser);
-
-        // Eliminar el usuario
-        console.log(`Eliminando el usuario con ID: ${userId}...`);
-        await deleteUser(userId);
-        console.log("Usuario eliminado.");
-*//*
-    } catch (error) {
-        console.error("Se produjo un error durante las pruebas de usuario:", error);
-    }
-})();
-*/
-
-
 /*
 import {
-    createProductCategory, getProductCategories, getProductCategoryById, deleteProductCategory, updateProductCategory
-} from './infraestructure/api/product_category.js'; // Asegúrate de ajustar la ruta de importación
+    getProducts,
+    getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct
+} from "./infraestructure/api/product.js"; // Ajusta la ruta según sea necesario
 
-async function testProductCategories() {
-    console.log('Creando una nueva categoría de producto...');
-    const newCategory = await createProductCategory({ description: 'Frutas comestibles naturales', name: 'Frutas' });
-    console.log('Nueva categoría creada:', newCategory);
+async function testCRUDOperations() {
+    console.log("Iniciando pruebas CRUD para Productos...");
 
-    console.log('Obteniendo todas las categorías de productos...');
-    const categories = await getProductCategories();
-    console.log('Todas las categorías:', categories);
+    // Datos de prueba para un nuevo producto
+    const sampleProductData = {
+        description: "Producto de Prueba",
+        pictures: ["url1.jpg", "url2.jpg"],
+        product_category_id: "categoria123",
+        product_name: "Producto Test",
+        stock: 10,
+        unitary_price: 100.0
+    };
 
-    console.log(`Obteniendo la categoría creada por ID: ${newCategory.id}`);
-    const categoryById = await getProductCategoryById(newCategory.id);
-    console.log('Categoría obtenida por ID:', categoryById);
+    // Crear Producto
+    console.log("Creando producto...");
+    const productId = await createProduct(sampleProductData);
+    console.log(`Producto creado con ID: ${productId}`);
 
-    console.log(`Actualizando la categoría con ID: ${newCategory.id}...`);
-    await updateProductCategory(newCategory.id, { name: 'Gadgets Actualizados' });
-    console.log('Categoría actualizada.');
+    // Obtener Todos los Productos
+    console.log("Obteniendo todos los productos...");
+    const products = await getProducts();
+    console.log(products);
 
-    console.log('Verificando la actualización...');
-    const updatedCategory = await getProductCategoryById(newCategory.id);
-    console.log('Detalles de la categoría actualizada:', updatedCategory);
+    // Obtener Producto por ID
+    console.log(`Obteniendo producto con ID: ${productId}`);
+    const product = await getProductById(productId);
+    console.log(product);
 
-    console.log(`Eliminando la categoría con ID: ${newCategory.id}...`);
-    await deleteProductCategory(newCategory.id);
-    console.log('Categoría eliminada.');
+    // Actualizar Producto
+    console.log(`Actualizando producto con ID: ${productId}`);
+    const updatedData = { ...sampleProductData, product_name: "Producto Actualizado" };
+    await updateProduct(productId, updatedData);
+    console.log("Producto actualizado.");
 
-    console.log('Verificando la eliminación...');
-    const categoriesAfterDeletion = await getProductCategories();
-    console.log('Categorías después de la eliminación:', categoriesAfterDeletion);
-}
+    // Obtener Producto Actualizado
+    console.log(`Obteniendo producto actualizado con ID: ${productId}`);
+    const updatedProduct = await getProductById(productId);
+    console.log(updatedProduct);
 
-testProductCategories().catch(console.error);*/
-
-/*/ test.js
-// Importaciones necesarias
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { createSalesRecord } from './infraestructure/api/sales_record.js'; // Asegúrate de que la ruta es correcta
-
-// Configuración de Firebase (reemplaza con tu propia configuración)
-const firebaseConfig = {
-    apiKey: "AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E",
-    authDomain: "tienda-fa7e8.firebaseapp.com",
-    databaseURL: "https://tienda-fa7e8-default-rtdb.firebaseio.com",
-    projectId: "tienda-fa7e8",
-    storageBucket: "tienda-fa7e8.appspot.com",
-    messagingSenderId: "117697052879",
-    appId: "1:117697052879:web:e70dbf632fc084fce9f7ba",
-    measurementId: "G-722C6BWG3J"
-};
-
-// Inicialización de Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Datos de prueba para crear un SalesRecord
-const salesRecordData = {
-    userId: '',
-    deliveryIds: ['entrega_id_1', 'entrega_id_2'], // Asume que deliveryIds es un array
-    // ... cualquier otro dato necesario para SalesRecord
-};
-
-// Función de prueba para crear un SalesRecord
-async function testCreateSalesRecord() {
-    try {
-        const salesRecord = await createSalesRecord(salesRecordData);
-        console.log('SalesRecord creado:', salesRecord);
-    } catch (error) {
-        console.error('Error al crear SalesRecord:', error);
-    }
+    // Eliminar Producto
+    console.log(`Eliminando producto con ID: ${productId}`);
+    await deleteProduct(productId);
+    console.log("Producto eliminado.");
 }
 
 // Ejecutar las pruebas
-testCreateSalesRecord();
+testCRUDOperations().catch(console.error);
 */
+
+import {
+    getProductCategories,
+    getProductCategoryById,
+    createProductCategory,
+    updateProductCategory,
+    deleteProductCategory
+  } from './infraestructure/api/product_category.js'; // Ajusta la ruta según sea necesario
+  
+  async function testProductCategoryCRUD() {
+    console.log('Iniciando pruebas CRUD para ProductCategory...');
+  
+    // Crear una nueva categoría de producto
+    console.log('Creando una nueva categoría de producto...');
+    const productCategoryData = {
+      description: 'Electrónica',
+      name: 'Electronics'
+    };
+    const newProductCategoryId = await createProductCategory(productCategoryData);
+    console.log(`Nueva categoría creada con ID: ${newProductCategoryId}`);
+  
+    // Obtener todas las categorías de producto
+    console.log('Obteniendo todas las categorías de producto...');
+    const categories = await getProductCategories();
+    console.log(categories);
+  
+    // Obtener la categoría de producto por ID
+    console.log(`Obteniendo la categoría de producto por ID: ${newProductCategoryId}`);
+    const categoryById = await getProductCategoryById(newProductCategoryId);
+    console.log(categoryById);
+  
+    // Actualizar la categoría de producto
+    console.log(`Actualizando la categoría de producto con ID: ${newProductCategoryId}`);
+    const updatedData = { name: 'Electrónica Actualizada' };
+    await updateProductCategory(newProductCategoryId, updatedData);
+    console.log('Categoría de producto actualizada.');
+  
+    // Verificar la actualización
+    console.log(`Verificando la actualización de la categoría de producto con ID: ${newProductCategoryId}`);
+    const updatedCategory = await getProductCategoryById(newProductCategoryId);
+    console.log(updatedCategory);
+  
+    // Eliminar la categoría de producto
+    console.log(`Eliminando la categoría de producto con ID: ${newProductCategoryId}`);
+    await deleteProductCategory(newProductCategoryId);
+    console.log('Categoría de producto eliminada.');
+  }
+  
+  testProductCategoryCRUD().catch(console.error);
+  

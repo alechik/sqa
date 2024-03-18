@@ -4,32 +4,55 @@ import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "
 
 async function getUserTypes() {
     const userTypesCollectionRef = collection(db, 'user_types');
-    const querySnapshot = await getDocs(userTypesCollectionRef);
-    return querySnapshot.docs.map(docSnap => {
-        return new UserType(
-            docSnap.id,
-            docSnap.data().description, 
-            docSnap.data().name
+    const userTypesSnapshot = await getDocs(userTypesCollectionRef);
+    const userTypes = [];
+    userTypesSnapshot.forEach((doc) => {
+        const data = doc.data();
+        const userType = new UserType(
+            doc.id,
+            data.description,
+            data.name
         );
+        userTypes.push(userType);
     });
+    return userTypes;
 }
 
 async function getUserTypeById(userTypeId) {
     const userTypeDocRef = doc(db, 'user_types', userTypeId);
     const docSnap = await getDoc(userTypeDocRef);
-    if (!docSnap.exists()) throw new Error('User type not found');
-    return new UserType(docSnap.id, docSnap.data().description, docSnap.data().name);
+    if (!docSnap.exists()) {
+        throw new Error('User type not found');
+    }
+    const userTypeData = docSnap.data();
+    return new UserType(
+        docSnap.id,
+        userTypeData.description,
+        userTypeData.name
+    );
 }
 
 async function createUserType(userTypeData) {
-    const userTypesCollectionRef = collection(db, 'user_types');
-    const docRef = await addDoc(userTypesCollectionRef, userTypeData);
+    const newUserType = new UserType(
+        null,
+        userTypeData.description,
+        userTypeData.name
+    );
+
+    const userTypeDataForFirestore = newUserType.toFirestore();
+
+    const docRef = await addDoc(collection(db, 'user_types'), userTypeDataForFirestore);
+    newUserType.id = docRef.id;
     return docRef.id;
 }
 
 async function updateUserType(userTypeId, updatedData) {
-    const userTypeDocRef = doc(db, 'user_types', userTypeId);
-    await updateDoc(userTypeDocRef, updatedData);
+    const userTypeDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
+        if (value !== undefined) acc[key] = value;
+        return acc;
+    }, {});
+
+    await updateDoc(doc(db, 'user_types', userTypeId), userTypeDataForFirestore);
 }
 
 async function deleteUserType(userTypeId) {

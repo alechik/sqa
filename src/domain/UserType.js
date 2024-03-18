@@ -4,6 +4,13 @@ class UserType {
     this.description = description;
     this.name = name;
   }
+
+  toFirestore() {
+    return {
+      description: this.description,
+      name: this.name
+    };
+  }
 }
 
 export { UserType };

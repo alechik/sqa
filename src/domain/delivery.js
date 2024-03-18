@@ -1,4 +1,3 @@
-// delivery.js
 class Delivery {
     constructor(id, userId, delivered, deliveryAddress, deliveryDetailId) {
         this.id = id;
@@ -6,6 +5,15 @@ class Delivery {
         this.delivered = delivered;
         this.deliveryAddress = deliveryAddress;
         this.deliveryDetailId = deliveryDetailId;
+    }
+
+    toFirestore() {
+        return {
+            userId: this.userId,
+            delivered: this.delivered,
+            deliveryAddress: this.deliveryAddress,
+            deliveryDetailId: this.deliveryDetailId
+        };
     }
 }
 

@@ -41,14 +41,33 @@ async function getProductById(productId) {
 }
 
 async function createProduct(productData) {
-    const productsCollectionRef = collection(db, "products");
-    const productRef = await addDoc(productsCollectionRef, productData);
+    const newProduct = new Product(
+        null,
+        productData.description,
+        productData.pictures,
+        productData.product_category_id,
+        productData.product_name,
+        productData.stock,
+        productData.unitary_price
+    );
+
+    const productDataForFirestore = newProduct.toFirestore();
+
+    const productRef = await addDoc(collection(db, "products"), productDataForFirestore);
+    newProduct.id = productRef.id;
     return productRef.id;
 }
 
 async function updateProduct(productId, updatedData) {
+    const productDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
+        if (value !== undefined) {
+            acc[key] = value;
+        }
+        return acc;
+    }, {});
+
     const productDocRef = doc(db, "products", productId);
-    await updateDoc(productDocRef, updatedData);
+    await updateDoc(productDocRef, productDataForFirestore);
 }
 
 async function deleteProduct(productId) {

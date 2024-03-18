@@ -1,6 +1,5 @@
-// services/salesRecord.js
-import { db } from '../firebase-connection.js'; // Asegúrate de que la ruta es correcta
-import { SalesRecord } from '../domain/SalesRecord.js'; // Verifica que la ruta es correcta
+import { db } from '../firebase-connection.js';
+import { SalesRecord } from '../domain/SalesRecord.js';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 async function getSalesRecords() {

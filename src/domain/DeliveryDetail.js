@@ -1,7 +1,7 @@
 class DeliveryDetail {
     constructor(id, sellByProductId, totalSell, date) {
         this.id = id;
-        this.sellByProductId = sellByProductId; // esto es un arreglo de IDs de 'sell_by_product'
+        this.sellByProductId = sellByProductId;
         this.totalSell = totalSell;
         this.date = date;
     }

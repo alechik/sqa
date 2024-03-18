@@ -260,3 +260,103 @@ button {
         width: 290px;
     }
 }
+
+
+.google-btn {
+    background-color: #fff;
+    margin-top: 10px;
+    /* Color de fondo blanco */
+    color: #757575;
+    /* Color de texto Google */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    /* Padding horizontal */
+    height: 40px;
+    /* Altura del botón */
+    border-radius: 2px;
+    /* Bordes ligeramente redondeados */
+    border: 1px solid #f5f5f5;
+    /* Borde sutil */
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, .1), -1px -1px 5px 0 rgba(0, 0, 0, .1);
+    /* Sombra suave */
+    cursor: pointer;
+    /* Cursor en forma de mano para indicar clic */
+    transition: box-shadow 0.2s;
+    /* Transición suave al cambiar la sombra */
+}
+
+.google-btn:hover {
+    box-shadow: 0 0 6px #4285f4;
+    /* Sombra con el color de Google al pasar el ratón */
+}
+
+.google-icon-wrapper {
+    background-color: #fff;
+    /* Fondo blanco para el icono */
+    border-right: 1px solid #f5f5f5;
+    /* Separador */
+    padding: 10px;
+    /* Espacio alrededor del icono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 24px;
+    /* Separación entre el icono y el texto */
+}
+
+.google-icon {
+    width: 18px;
+    /* Tamaño del icono de Google */
+    height: 18px;
+    /* Mantener la proporción del icono */
+}
+
+.google-btn-text {
+    font-size: 14px;
+    /* Tamaño del texto */
+    font-weight: 500;
+    /* Peso del texto */
+    letter-spacing: 0.2px;
+    /* Espaciado de caracteres */
+    color: #757575;
+    /* Color del texto */
+}
+
+.facebook-btn {
+    background-color: #4267B2;
+    /* Color de fondo característico de Facebook */
+    color: white;
+    /* Color del texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin-top: 10px;
+    /* Espacio superior para separar de otros botones */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    border: none;
+    /* Sin borde */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* Sombra para dar profundidad */
+    cursor: pointer;
+    /* Cursor en forma de mano para indicar clic */
+    transition: background-color 0.3s;
+    /* Transición suave al cambiar de color */
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+}
+
+.facebook-btn:hover {
+    background-color: #365899;
+    /* Color de fondo más oscuro al pasar el ratón */
+}
+
+.facebook-btn-text {
+    margin-left: 10px;
+    /* Espaciado entre el ícono y el texto */
+}
+

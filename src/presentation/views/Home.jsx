@@ -1,12 +1,13 @@
-import {Outlet} from "react-router-dom";
 import './home.css'
 import Carousel from "../components/Carousel.jsx";
-import FlashCard from "../components/ofertas/FlashCard.jsx";
 import FlashDeals from "../components/ofertas/FlashDeals.jsx";
-export default function Home({productItems}) {
+// eslint-disable-next-line react/prop-types
+export default function Home({productItems, productos}) {
 
     return <div className='container'>
         <Carousel/>
-        <FlashDeals productItems={productItems}/>
+        <FlashDeals productItems={productItems} productos={productos} titulo="recien añadidos"/>
+        <FlashDeals productItems={productItems} productos={productos} titulo="Mas puntuado"/>
+        <FlashDeals productItems={productItems} productos={productos} titulo="Mas vendidos"/>
     </div>
 }

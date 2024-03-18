@@ -37,7 +37,7 @@ async function getUserById(userId) {
     return { uid: userId, ...docSnap.data() };
 }
 
-async function createUser(userData) {
+/*async function createUser(userData) {
     const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
     const user = userCredential.user;
     const userToSave = new User(user.uid, userData.address, userData.birthday_date, userData.ci, userData.email, userData.gender, userData.lastnames, userData.names, userData.user_type_id); // Asumiendo que userData incluye estos campos
@@ -54,8 +54,8 @@ async function createUser(userData) {
     });
     return user.uid;
 }
+*/
 
-/*
 // Crear un nuevo usuario en Firebase Authentication y almacenar sus datos en Firestore
 async function createUser(userData) {
     // Crear usuario en Firebase Authentication
@@ -70,7 +70,7 @@ async function createUser(userData) {
 
     return user.uid;
 }
-*/
+
 
 // Actualizar los datos de un usuario en Firestore y Firebase Authentication si es necesario
 async function updateUser(userId, updatedData) {

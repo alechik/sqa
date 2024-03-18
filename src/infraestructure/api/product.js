@@ -2,7 +2,7 @@ import { db } from "../firebase-connection.js";
 import { Product } from "../../domain/Product.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-async function getProducts() {
+export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
     const productsSnapshot = await getDocs(productsCollectionRef);
     const products = [];
@@ -75,10 +75,11 @@ async function deleteProduct(productId) {
     await deleteDoc(productDocRef);
 }
 
-export {
+export default {
     getProducts,
     getProductById,
     createProduct,
     updateProduct,
     deleteProduct
 };
+

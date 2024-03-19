@@ -7,6 +7,7 @@ import Datos from './assets/datos.js'
 import {getProducts} from '../infraestructure/api/product.js'
 import {useEffect, useState} from "react";
 import Register from "./views/Register.jsx";
+import AddProductForm from "./views/addProductform.jsx";
 function App() {
     //stpe 1: fetch data from database
     const { productItems } = Datos;
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/" element={<Home productItems={productItems} productos={productos}/>} />
                 <Route path="iniciarsesion" element={<Login/>}/>
                 <Route path="registrarse" element={<Register/>}/>
+                <Route path="addproduct" element={<AddProductForm />} />
             </Routes>
         </Router>
 

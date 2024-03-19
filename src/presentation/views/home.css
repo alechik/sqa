@@ -128,3 +128,33 @@ html {
 .f_flex {
     display: flex;
 }
+
+.add-product-link {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.add-product-link a {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #742424;
+    /* Color de fondo azul */
+    color: white;
+    /* Texto blanco */
+    text-decoration: none;
+    /* Elimina el subrayado del enlace */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Sombra ligera para darle profundidad */
+    transition: background-color 0.3s;
+    /* Transición suave para el hover */
+}
+
+.add-product-link a:hover,
+.add-product-link a:focus {
+    background-color: #b30000;
+    /* Color más oscuro al pasar el mouse o enfocar */
+    color: #fff;
+}

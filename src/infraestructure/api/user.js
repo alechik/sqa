@@ -1,7 +1,66 @@
 import { db, auth } from "../firebase--config.js";
 import { User } from "../../domain/User.js";
 import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
-import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+
+async function signInWithFacebook() {
+    const provider = new FacebookAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const userProfile = result.additionalUserInfo.profile; // Obtiene el perfil de usuario de Facebook
+
+        // Verificar si el usuario ya existe en Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userDocRef);
+
+        if (!docSnap.exists()) {
+            // Si el usuario no existe, lo creamos en Firestore
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                names: userProfile.first_name ? userProfile.first_name : "",
+                lastnames: userProfile.last_name ? userProfile.last_name : "",
+                gender: userProfile.gender ? userProfile.gender : "",
+                birthday_date: userProfile.birthday ? userProfile.birthday : "",
+                // Asegúrate de pedir permisos para estos campos en el diálogo de inicio de sesión de Facebook.
+            });
+        }
+
+        return user;
+    } catch (error) {
+        // Manejar errores aquí
+        console.error("Error al iniciar sesión con Facebook: ", error);
+    }
+}
+
+async function signInWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Verificar si el usuario ya existe en Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userDocRef);
+
+        if (!docSnap.exists()) {
+            // Si el usuario no existe, lo creamos en Firestore
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                names: userProfile.first_name ? userProfile.first_name : "",
+                lastnames: userProfile.last_name ? userProfile.last_name : "",
+                gender: userProfile.gender ? userProfile.gender : "",
+                birthday_date: userProfile.birthday ? userProfile.birthday : "",
+                // Agrega cualquier otro dato relevante por defecto o obtenido del perfil de Google
+            });
+        }
+
+        return user;
+    } catch (error) {
+        // Manejar errores aquí, por ejemplo, mostrar un mensaje al usuario
+        console.error("Error al iniciar sesión con Google: ", error);
+    }
+}
 
 async function getUsers() {
     const usersCollectionRef = collection(db, "users");
@@ -109,5 +168,7 @@ export {
     createUser,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    signInWithGoogle,
+    signInWithFacebook
 };

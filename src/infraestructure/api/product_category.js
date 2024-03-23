@@ -2,7 +2,7 @@ import { db } from '../firebase-connection.js';
 import { ProductCategory } from "../../domain/ProductCategory.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-async function getProductCategories() {
+export async function getProductCategories() {
     const productCategoryCollectionRef = collection(db, 'product_categories');
     const productCategoriesSnapshot = await getDocs(productCategoryCollectionRef);
     const productCategories = [];
@@ -18,7 +18,7 @@ async function getProductCategories() {
     return productCategories;
 }
 
-async function getProductCategoryById(productCategoryId) {
+export async function getProductCategoryById(productCategoryId) {
     const productCategoryDocRef = doc(db, 'product_categories', productCategoryId);
     const productCategoryDoc = await getDoc(productCategoryDocRef);
     if (!productCategoryDoc.exists()) {
@@ -32,7 +32,7 @@ async function getProductCategoryById(productCategoryId) {
     );
 }
 
-async function createProductCategory(productCategoryData) {
+export async function createProductCategory(productCategoryData) {
     const newProductCategory = new ProductCategory(
         null,
         productCategoryData.description,
@@ -46,7 +46,7 @@ async function createProductCategory(productCategoryData) {
     return docRef.id;
 }
 
-async function updateProductCategory(productCategoryId, updatedData) {
+export async function updateProductCategory(productCategoryId, updatedData) {
     const productDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
         if (value !== undefined) acc[key] = value;
         return acc;
@@ -55,11 +55,11 @@ async function updateProductCategory(productCategoryId, updatedData) {
     await updateDoc(doc(db, 'product_categories', productCategoryId), productDataForFirestore);
 }
 
-async function deleteProductCategory(productCategoryId) {
+export async function deleteProductCategory(productCategoryId) {
     await deleteDoc(doc(db, 'product_categories', productCategoryId));
 }
 
-export {
+export default {
     getProductCategories,
     getProductCategoryById,
     createProductCategory,

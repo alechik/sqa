@@ -1,18 +1,18 @@
 class Delivery {
-    constructor(id, userId, delivered, deliveryAddress, deliveryDetailId) {
+    constructor(id, user_id, delivered, delivery_address, delivery_detail_id) {
         this.id = id;
-        this.userId = userId;
+        this.user_id = user_id;
         this.delivered = delivered;
-        this.deliveryAddress = deliveryAddress;
-        this.deliveryDetailId = deliveryDetailId;
+        this.delivery_address = delivery_address;
+        this.delivery_detail_id = delivery_detail_id;
     }
 
     toFirestore() {
         return {
-            userId: this.userId,
+            user_id: this.user_id,
             delivered: this.delivered,
-            deliveryAddress: this.deliveryAddress,
-            deliveryDetailId: this.deliveryDetailId
+            delivery_address: this.delivery_address,
+            delivery_detail_id: this.delivery_detail_id
         };
     }
 }

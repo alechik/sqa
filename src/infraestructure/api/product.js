@@ -14,10 +14,12 @@ export async function getProducts() {
             doc.id,
             data.description,
             data.pictures,
+            data.banner_pictures,
             data.product_category_id,
             data.product_name,
             data.stock,
-            data.unitary_price
+            data.price_id,
+            data.state
         );
         products.push(product);
     });
@@ -35,10 +37,12 @@ export async function getProductById(productId) {
         productDoc.id,
         productData.description,
         productData.pictures,
+        productData.banner_pictures,
         productData.product_category_id,
         productData.product_name,
         productData.stock,
-        productData.unitary_price
+        productData.price_id,
+        productDoc.state
     );
 }
 
@@ -55,26 +59,31 @@ export async function uploadImage(file) {
 export async function createProduct(productData, file) {
     // Primero, carga la imagen al storage y obtiene la URL
     const imageUrl = await uploadImage(file);
+    const banner_imageUrl = await uploadImage(file);
 
     // Crea el objeto product con la URL de la imagen incluida
     const newProduct = new Product(
         null,
         productData.description,
-        imageUrl, // Usa la URL de la imagen cargada
+        imageUrl,
+        banner_imageUrl, // Usa la URL de la imagen cargada
         productData.product_category_id,
         productData.product_name,
         productData.stock,
-        productData.unitary_price
+        productData.price_id,
+        productData.state
     );
 
     // Prepara los datos para Firestore
     const productDataForFirestore = {
         description: newProduct.description,
-        pictures: newProduct.pictures, // Este es ahora la URL de la imagen
+        pictures: newProduct.pictures,
+        banner_pictures: newProduct.banner_pictures, // Este es ahora la URL de la imagen
         product_category_id: newProduct.product_category_id,
         product_name: newProduct.product_name,
         stock: newProduct.stock,
-        unitary_price: newProduct.unitary_price
+        price_id: newProduct.price_id,
+        state: newProduct.state
     };
 
     // Guarda el producto en Firestore

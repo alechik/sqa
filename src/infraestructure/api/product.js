@@ -1,7 +1,7 @@
 import { db } from "../firebase-connection.js";
 import { Product } from "../../domain/Product.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { storage } from "../firebase-connection"; // Importa la referencia a tu instancia de Firebase Storage
+import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export async function getProducts() {
@@ -45,7 +45,6 @@ export async function getProductById(productId) {
         productDoc.state
     );
 }
-
 
 export async function uploadImage(file) {
     if (!file) {

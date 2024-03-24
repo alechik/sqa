@@ -2,7 +2,7 @@ import { db } from './firebase-connection.js';
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { Delivery } from '../../domain/Delivery.js';
 
-async function getDeliveries() {
+export async function getDeliveries() {
     const deliveriesCollectionRef = collection(db, 'deliveries');
     const deliveriesSnapshot = await getDocs(deliveriesCollectionRef);
     return deliveriesSnapshot.docs.map(docSnap => new Delivery(
@@ -14,7 +14,7 @@ async function getDeliveries() {
     ));
 }
 
-async function getDeliveryById(deliveryId) {
+export async function getDeliveryById(deliveryId) {
     const deliveryDocRef = doc(db, 'deliveries', deliveryId);
     const deliveryDoc = await getDoc(deliveryDocRef);
     if (!deliveryDoc.exists()) throw new Error('Delivery not found');
@@ -27,7 +27,7 @@ async function getDeliveryById(deliveryId) {
     );
 }
 
-async function createDelivery(deliveryData) {
+export async function createDelivery(deliveryData) {
     const newDelivery = new Delivery(
         null,
         deliveryData.user_id,
@@ -42,7 +42,7 @@ async function createDelivery(deliveryData) {
     return docRef.id;
 }
 
-async function updateDelivery(delivery_id, updatedData) {
+export async function updateDelivery(delivery_id, updatedData) {
     const deliveryDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
         if (value !== undefined) acc[key] = value; // Filtra campos undefined
         return acc;
@@ -51,12 +51,12 @@ async function updateDelivery(delivery_id, updatedData) {
     await updateDoc(doc(db, 'deliveries', delivery_id), deliveryDataForFirestore);
 }
 
-async function deleteDelivery(delivery_id) {
+export async function deleteDelivery(delivery_id) {
     const delivertDocRef = doc(db, 'deliveries', delivery_id)
     await deleteDoc(delivertDocRef);
 }
 
-export default{
+export default {
     getDeliveries,
     getDeliveryById,
     createDelivery,

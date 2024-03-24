@@ -1,0 +1,60 @@
+.tusordenes{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    width: 95%;
+    height: 100%;
+    align-items: center;
+    position: relative;
+    margin: auto;
+}
+
+.tusordenes table{
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid rgb(16, 14, 14);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.tusordenes table tr{
+    border: 1px solid rgb(5, 5, 5);
+    border-radius: 5px;
+}
+.tusordenes table tr th{
+    padding: 10px 20px;
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    background-color: rgb(246,246,246);
+    color: rgb(128, 128, 128);
+}
+
+.tusordenes table tr td button{
+    padding: 5px 20px;
+    margin: 0;
+    font-size: 16px;
+}
+
+.tusordenes table tbody{
+    height: 200px;
+    overflow: scroll;
+}
+.yourorders .greenDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+}
+.yourorders .yellowDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: yellow;
+}
+.yourorders .redDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+}

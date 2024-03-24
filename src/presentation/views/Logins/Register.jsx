@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-import {createUser} from "../../infraestructure/api/user.js";
+import {createUser} from "../../../infraestructure/api/user.js";
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');

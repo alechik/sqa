@@ -1,5 +1,5 @@
 class User {
-    constructor(id, address, birthday_date, ci, email, gender, lastnames, names, user_type_id) {
+    constructor(id, address, birthday_date, ci, email, gender, lastnames, names, user_type_id, picture) {
         this.id = id;
         this.address = address;
         this.birthday_date = birthday_date;
@@ -9,6 +9,7 @@ class User {
         this.lastnames = lastnames;
         this.names = names;
         this.user_type_id = user_type_id;
+        this.picture = picture;
     }
 
     toFirestore() {
@@ -20,7 +21,8 @@ class User {
             gender: this.gender,
             lastnames: this.lastnames,
             names: this.names,
-            user_type_id: this.user_type_id
+            user_type_id: this.user_type_id,
+            picture: this.picture
         };
     }
 }

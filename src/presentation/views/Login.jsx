@@ -5,70 +5,139 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     GoogleAuthProvider,
-    FacebookAuthProvider
+    FacebookAuthProvider,
+    getAuth,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../infraestructure/firebase--config'; // Asegúrate de que esta ruta sea correcta
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../../infraestructure/firebase--config'; // Asegúrate de que esta ruta sea correcta
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+
+const CLIENT_USER_TYPE_ID = 'rxP2vj8KV3mt1Y5nMVrd'; 
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const auth = getAuth();
 
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
     const handleError = (error) => {
         console.error("Error de inicio de sesión:", error.code);
-        setError(`Error al iniciar sesión. ${error.message}`);
-    };
-
-    const saveUserData = async (user) => {
-        const userRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(userRef);
-
-        if (!docSnap.exists()) {
-            await setDoc(userRef, {
-                email: user.email,
-                names: user.displayName || '',
-                birtday: '',
-                gender: '',
-                // Agrega aquí más campos según necesites, por ejemplo:
-                avatar: user.photoURL || '',
-            });
+        let errorMessage = '';
+        switch (error.code) {
+            case 'auth/account-exists-with-different-credential':
+                errorMessage = 'Ya existe una cuenta con un método de inicio de sesión diferente.';
+                break;
+            case 'auth/email-already-in-use':
+                errorMessage = 'El correo electrónico ya está en uso con otra cuenta.';
+                break;
+            case 'auth/wrong-password':
+                errorMessage = 'La contraseña es incorrecta. Por favor, inténtalo de nuevo.';
+                break;
+            case 'auth/user-not-found':
+                errorMessage = 'No se encontró una cuenta con este correo electrónico.';
+                break;
+            case 'auth/user-disabled':
+                errorMessage = 'La cuenta ha sido deshabilitada. Contacta al soporte para más información.';
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = 'Hemos detectado demasiadas solicitudes desde tu dispositivo. Por favor, espera un momento e inténtalo de nuevo.';
+                break;
+            default:
+                errorMessage = `Error al iniciar sesión. ${error.message}`;
+                break;
         }
+        setError(errorMessage);
     };
+
 
     const loginUser = async (event) => {
         event.preventDefault();
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate('/');
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const userDocRef = doc(db, "users", userCredential.user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                const userTypeDocRef = doc(db, "user_types", userDocSnap.data().userTypeId);
+                const userTypeDocSnap = await getDoc(userTypeDocRef);
+
+                if (userTypeDocSnap.exists()) {
+                    const userType = userTypeDocSnap.data().name; // Suponiendo que cada tipo tiene un campo 'name'
+                    // Decide a dónde redirigir basado en el tipo de usuario
+                    switch (userType) {
+                        case 'Cliente':
+                            navigate('/');
+                            break;
+                        case 'Empleado':
+                            navigate('/');
+                            break;
+                        case 'Administrador':
+                            navigate('/');
+                            break;
+                        default:
+                            navigate('/'); // Ruta por defecto si no se reconoce el tipo
+                            break;
+                    }
+                } else {
+                    setError("No se pudo determinar el tipo de usuario.");
+                }
+            } else {
+                setError("No existe una cuenta asociada a este email.");
+            }
         } catch (error) {
             handleError(error);
         }
     };
 
+
     const signInWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
         try {
-            const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
-            await saveUserData(result.user);
-            navigate('/');
+            const user = result.user;
+            // Verificar si el usuario ya existe en Firestore
+            const userDocRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(userDocRef);
+
+            if (!docSnap.exists()) {
+                // Si el usuario no existe, lo creamos en Firestore
+                await setDoc(userDocRef, {
+                    email: user.email,
+                    names: user.displayName || '',
+                    avatar: user.photoURL || '',
+                    userTypeId: CLIENT_USER_TYPE_ID // Este es el ID para un usuario cliente
+                });
+            }
+            navigate('/Home'); // o la ruta que corresponda a tu aplicación
         } catch (error) {
             handleError(error);
         }
     };
 
     const signInWithFacebook = async () => {
+        const provider = new FacebookAuthProvider();
         try {
-            const provider = new FacebookAuthProvider();
             const result = await signInWithPopup(auth, provider);
-            await saveUserData(result.user);
-            navigate('/');
+            const user = result.user;
+            // Verificar si el usuario ya existe en Firestore
+            const userDocRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(userDocRef);
+
+            if (!docSnap.exists()) {
+                // Si el usuario no existe, lo creamos en Firestore
+                await setDoc(userDocRef, {
+                    email: user.email,
+                    names: user.displayName || '',
+                    avatar: user.photoURL || '',
+                    userTypeId: CLIENT_USER_TYPE_ID // Este es el ID para un usuario cliente
+                });
+            }
+            navigate('/Home'); // o la ruta que corresponda a tu aplicación
         } catch (error) {
             handleError(error);
         }

@@ -22,6 +22,7 @@ async function signInWithFacebook() {
                 lastnames: userProfile.last_name ? userProfile.last_name : "",
                 gender: userProfile.gender ? userProfile.gender : "",
                 birthday_date: userProfile.birthday ? userProfile.birthday : "",
+                userTypeId: userType,
                 // Asegúrate de pedir permisos para estos campos en el diálogo de inicio de sesión de Facebook.
             });
         }
@@ -51,6 +52,7 @@ async function signInWithGoogle() {
                 lastnames: userProfile.last_name ? userProfile.last_name : "",
                 gender: userProfile.gender ? userProfile.gender : "",
                 birthday_date: userProfile.birthday ? userProfile.birthday : "",
+                userTypeId: userType,
                 // Agrega cualquier otro dato relevante por defecto o obtenido del perfil de Google
             });
         }
@@ -61,6 +63,37 @@ async function signInWithGoogle() {
         console.error("Error al iniciar sesión con Google: ", error);
     }
 }
+
+// Función para determinar el tipo de usuario basado en una descripción o lógica específica
+async function determineUserType(description) {
+    const userTypesRef = collection(db, "user_types");
+    const snapshot = await getDocs(userTypesRef);
+    let typeId = '';
+    snapshot.forEach(doc => {
+        if (doc.data().description === description) {
+            typeId = doc.id;
+        }
+    });
+    return typeId;
+}
+
+async function createUser(userData) {
+    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+    const user = userCredential.user;
+
+    // Determinar el userTypeId basado en la lógica de tu aplicación
+    // Por defecto, esto asume un cliente, pero puedes adaptarlo según sea necesario
+    const userType = await determineUserType('Cliente');
+
+    // Almacena los datos del usuario en Firestore, incluido el userTypeId
+    await setDoc(doc(db, "users", user.uid), {
+        ...userData,
+        userTypeId: userType
+    });
+
+    return user.uid;
+}
+
 
 async function getUsers() {
     const usersCollectionRef = collection(db, "users");
@@ -77,7 +110,6 @@ async function getUsers() {
             data.gender,
             data.lastnames,
             data.names,
-            "", // La contraseña no se almacena en Firestore por razones de seguridad
             data.user_type_id
         );
         users.push(user);
@@ -95,41 +127,6 @@ async function getUserById(userId) {
 
     return { uid: userId, ...docSnap.data() };
 }
-
-/*async function createUser(userData) {
-    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-    const user = userCredential.user;
-    const userToSave = new User(user.uid, userData.address, userData.birthday_date, userData.ci, userData.email, userData.gender, userData.lastnames, userData.names, userData.user_type_id); // Asumiendo que userData incluye estos campos
-    await setDoc(doc(db, "users", user.uid), {
-        // Usamos los valores del objeto userToSave, excluyendo la propiedad de contraseña
-        address: userToSave.address,
-        birthday_date: userToSave.birthday_date,
-        ci: userToSave.ci,
-        email: userToSave.email,
-        gender: userToSave.gender,
-        lastnames: userToSave.lastnames,
-        names: userToSave.names,
-        user_type_id: userToSave.user_type_id
-    });
-    return user.uid;
-}
-*/
-
-// Crear un nuevo usuario en Firebase Authentication y almacenar sus datos en Firestore
-async function createUser(userData) {
-    // Crear usuario en Firebase Authentication
-    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-    const user = userCredential.user;
-
-    // Prepara los datos del usuario para Firestore (excluye la contraseña)
-    const { ...userDataForFirestore } = userData;
-
-    // Almacenar los datos adicionales del usuario en Firestore, incluyendo el email
-    await setDoc(doc(db, "users", user.uid), userDataForFirestore);
-
-    return user.uid;
-}
-
 
 // Actualizar los datos de un usuario en Firestore y Firebase Authentication si es necesario
 async function updateUser(userId, updatedData) {

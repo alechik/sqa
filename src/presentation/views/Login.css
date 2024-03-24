@@ -360,3 +360,38 @@ button {
     /* Espaciado entre el ícono y el texto */
 }
 
+.error-message {
+    position: fixed;
+    margin-top: 62px;
+    /* O absolute si estás dentro de un contenedor posicionado */
+    top: 20px;
+    right: 20px;
+    background-color: #f44336;
+    /* Rojo para errores */
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    /* Asegúrate de que esté sobre otros elementos */
+    opacity: 5;
+    /* Inicia oculto */
+    animation: slideInOut 5s ease-in-out forwards;
+}
+
+@keyframes slideInOut {
+
+    0%,
+    100% {
+        top: -50px;
+        /* Empieza escondido fuera del viewport */
+        opacity: 0;
+    }
+
+    10%,
+    90% {
+        top: 20px;
+        /* La posición final visible */
+        opacity: 1;
+    }
+}

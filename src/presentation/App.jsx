@@ -9,6 +9,7 @@ import {useEffect, useState} from "react";
 import Register from "./views/Logins/Register.jsx";
 import AddProductForm from "./views/addProductform.jsx";
 import Profile from "./views/user/Profile.jsx";
+import AdminProfile from "./views/user/AdminProfile.jsx";
 function App() {
     //stpe 1: fetch data from database
     const { productItems } = Datos;
@@ -28,10 +29,11 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home productItems={productItems} productos={productos}/>} />
-                <Route path="iniciarsesion" element={<Login/>}/>
-                <Route path="registrarse" element={<Register/>}/>
-                <Route path="addproduct" element={<AddProductForm />} />
-                <Route path='perfil' element={<Profile/>}/>
+                <Route path="/iniciarsesion" element={<Login/>}/>
+                <Route path="/registrarse" element={<Register/>}/>
+                <Route path="/addproduct" element={<AddProductForm />} />
+                <Route path='/perfil' element={<Profile/>}/>
+                <Route path='/admin/:activepage' element={<AdminProfile/>}/>
             </Routes>
         </Router>
 

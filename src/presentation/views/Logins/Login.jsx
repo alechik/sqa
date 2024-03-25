@@ -57,7 +57,7 @@ export default function Login() {
             await signInWithGoogle();
             navigate('/client-home');
         } catch (error) {
-            setError(error.message);
+            handleError(error);
         }
     };
 
@@ -66,7 +66,7 @@ export default function Login() {
             await signInWithFacebook();
             navigate('/client-home');
         } catch (error) {
-            setError(error.message); // Actualiza el estado con el mensaje de error
+            handleError(error);
         }
     };
 

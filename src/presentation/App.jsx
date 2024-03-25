@@ -42,7 +42,7 @@ function App() {
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                        <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile /></PrivateRoute>} />
+                        <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
                     </Routes>
                 </Router>
             </AuthProvider>

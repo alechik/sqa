@@ -15,8 +15,5 @@ export default function Home({productItems, productos}) {
         <FlashDeals productItems={productItems} productos={productos} titulo="recien añadidos"/>
         <FlashDeals productItems={productItems} productos={productos} titulo="Mas puntuado"/>
         <FlashDeals productItems={productItems} productos={productos} titulo="Mas vendidos"/>
-        <div className="add-product-link">
-            <Link to="/addproduct">Agregar Producto</Link>
-        </div>
     </div>
 }

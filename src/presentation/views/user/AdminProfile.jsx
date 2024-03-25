@@ -3,10 +3,11 @@ import AdminInfo from "./AdminInfo.jsx";
 import AdminSideBar from "./AdminSideBar.jsx";
 import {useParams} from "react-router-dom";
 
-export default function AdminProfile(){
+// eslint-disable-next-line react/prop-types
+export default function AdminProfile({productos}){
 
     return <>
     <AdminInfo/>
-        <AdminSideBar />
+        <AdminSideBar productos={productos} />
     </>
 }

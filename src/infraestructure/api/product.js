@@ -4,6 +4,8 @@ import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "
 import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+
+
 export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
     const productsSnapshot = await getDocs(productsCollectionRef);
@@ -18,7 +20,7 @@ export async function getProducts() {
             data.product_category_id,
             data.product_name,
             data.stock,
-            data.price_id,
+            data.unitary_price,
             data.state
         );
         products.push(product);
@@ -41,7 +43,7 @@ export async function getProductById(productId) {
         productData.product_category_id,
         productData.product_name,
         productData.stock,
-        productData.price_id,
+        productData.unitary_price,
         productDoc.state
     );
 }
@@ -56,39 +58,27 @@ export async function uploadImage(file) {
 }
 
 export async function createProduct(productData, file) {
-    // Primero, carga la imagen al storage y obtiene la URL
-    const imageUrl = await uploadImage(file);
-    const banner_imageUrl = await uploadImage(file);
+    const imageUrl = file ? await uploadImage(file) : null;
 
-    // Crea el objeto product con la URL de la imagen incluida
-    const newProduct = new Product(
-        null,
-        productData.description,
-        imageUrl,
-        banner_imageUrl, // Usa la URL de la imagen cargada
-        productData.product_category_id,
-        productData.product_name,
-        productData.stock,
-        productData.price_id,
-        productData.state
-    );
+    // Determina el estado del producto basado en el stock
+    const productState = productData.stock >= 1 ? "disponible" : "No disponible";
 
-    // Prepara los datos para Firestore
     const productDataForFirestore = {
-        description: newProduct.description,
-        pictures: newProduct.pictures,
-        banner_pictures: newProduct.banner_pictures, // Este es ahora la URL de la imagen
-        product_category_id: newProduct.product_category_id,
-        product_name: newProduct.product_name,
-        stock: newProduct.stock,
-        price_id: newProduct.price_id,
-        state: newProduct.state
+        description: productData.description,
+        pictures: imageUrl, // Asume que solo hay una imagen
+        banner_pictures: imageUrl, // Puede ajustarse si manejas imágenes de banner diferentes
+        product_category_id: productData.product_category_id,
+        product_name: productData.product_name,
+        stock: productData.stock,
+        unitary_price: productData.unitary_price,
+        state: productState // Usamos el valor determinado basado en el stock
     };
 
-    // Guarda el producto en Firestore
     const productRef = await addDoc(collection(db, "products"), productDataForFirestore);
-    return productRef.id; // Retorna el ID del nuevo producto
+    return productRef.id;
 }
+
+
 
 export async function updateProduct(productId, updatedData) {
     const productDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
@@ -114,4 +104,3 @@ export default {
     updateProduct,
     deleteProduct
 };
-

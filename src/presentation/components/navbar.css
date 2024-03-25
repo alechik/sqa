@@ -12,7 +12,7 @@ body{
     color: #FFFFFF;
     margin: 0 0 -3px;
     font-family: "Roboto", sans-serif;
-   height: 5em;
+    height: 5em;
     background-image: linear-gradient(to right, #522b46, #633154);
 }
 
@@ -35,10 +35,18 @@ body{
     list-style: none;
 
 }
-.navegacion a{
-    margin: 0 5px 0 5px;
+.navegacion a,
+.logout-button {
+    margin: 0 15px;
     text-decoration: none;
     color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
 }
 
 .search{
@@ -103,3 +111,27 @@ body{
     display: flex;
 }
 
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin-left: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.logout-button:focus {
+    outline: none;
+}
+
+.logout-icon {
+    font-size: 24px; 
+    color: #FFFFFF;
+}

@@ -42,8 +42,8 @@ const FlashCard = ({productItems, productos}) => {
             <Slider {...settings}>
                 {/* eslint-disable-next-line react/prop-types */}
         {productos.map((productos) => {
-            // eslint-disable-next-line react/jsx-key
-            return (<div className='box' >
+            // eslint-disable-next-line react/jsx-key,react/prop-types
+            return (<div className='box' key={productos.id}>
                     <div className='product mtop'>
                         {/* eslint-disable-next-line react/prop-types */}
                         <div className='img' id={productItems.id}>

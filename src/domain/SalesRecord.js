@@ -1,14 +1,14 @@
 class SalesRecord {
-    constructor(id, userId, deliveryId) {
+    constructor(id, user_id, delivery_id) {
         this.id = id;
-        this.userId = userId;
-        this.deliveryId = deliveryId;
+        this.user_id = user_id;
+        this.delivery_id = delivery_id;
     }
 
     toFirestore() {
         return {
-            userId: this.userId,
-            deliveryId: this.deliveryId
+            user_id: this.user_id,
+            delivery_id: this.delivery_id
         };
     }
 }

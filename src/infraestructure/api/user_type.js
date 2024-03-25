@@ -2,7 +2,7 @@ import { db } from './firebase-connection.js';
 import { UserType } from "../domain/UserType.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-async function getUserTypes() {
+export async function getUserTypes() {
     const userTypesCollectionRef = collection(db, 'user_types');
     const userTypesSnapshot = await getDocs(userTypesCollectionRef);
     const userTypes = [];
@@ -18,7 +18,7 @@ async function getUserTypes() {
     return userTypes;
 }
 
-async function getUserTypeById(userTypeId) {
+export async function getUserTypeById(userTypeId) {
     const userTypeDocRef = doc(db, 'user_types', userTypeId);
     const docSnap = await getDoc(userTypeDocRef);
     if (!docSnap.exists()) {
@@ -32,7 +32,7 @@ async function getUserTypeById(userTypeId) {
     );
 }
 
-async function createUserType(userTypeData) {
+export async function createUserType(userTypeData) {
     const newUserType = new UserType(
         null,
         userTypeData.description,
@@ -46,7 +46,7 @@ async function createUserType(userTypeData) {
     return docRef.id;
 }
 
-async function updateUserType(userTypeId, updatedData) {
+export async function updateUserType(userTypeId, updatedData) {
     const userTypeDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
         if (value !== undefined) acc[key] = value;
         return acc;
@@ -60,7 +60,7 @@ async function deleteUserType(userTypeId) {
     await deleteDoc(userTypeDocRef);
 }
 
-export {
+export default {
     getUserTypes,
     getUserTypeById,
     createUserType,

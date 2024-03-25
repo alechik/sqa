@@ -8,7 +8,7 @@
 
 }
 
-.register-container{
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -62,7 +62,7 @@ input[type='password'] {
 }
 
 .input-box.active label,
-.input-box input:focus ~ label {
+.input-box input:focus~label {
     top: -15px;
     font-size: 14px;
     color: #cb5fdf;
@@ -174,8 +174,8 @@ h2 {
     transition: .5s;
 }
 
-.input-box input:focus ~ label,
-.input-box input:valid ~ label {
+.input-box input:focus~label,
+.input-box input:valid~label {
     top: -5px;
 }
 
@@ -207,7 +207,7 @@ h2 {
 }
 
 .remember-forget label input {
-    margin-right:  3px;
+    margin-right: 3px;
 }
 
 .remember-forget a {
@@ -256,6 +256,7 @@ button {
         border: none;
         border-radius: 0;
     }
+
     .input-box {
         width: 290px;
     }

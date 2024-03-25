@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { db } from '../../infraestructure/firebase--config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { signInWithGoogle, signInWithFacebook } from '../../infraestructure/api/user'; 
+import { signInWithGoogle, signInWithFacebook } from '../../infraestructure/api/user';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -49,7 +49,7 @@ export default function Login() {
         }
         setError(errorMessage);
         setShowError(true);
-        setTimeout(() => setShowError(false), 5000); 
+        setTimeout(() => setShowError(false), 5000);
     };
 
 
@@ -84,7 +84,7 @@ export default function Login() {
             }
         } catch (error) {
             handleError(error);
-        
+
         }
     };
 
@@ -93,7 +93,7 @@ export default function Login() {
             await signInWithGoogle();
             navigate('/client-home');
         } catch (error) {
-            setError(error.message); 
+            setError(error.message);
         }
     };
 

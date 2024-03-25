@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { db } from '../../infraestructure/firebase--config';
+import { db } from '../../../infraestructure/firebase--config';
+import { doc, getDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { signInWithGoogle, signInWithFacebook } from '../../infraestructure/api/user';
+import { signInWithGoogle, signInWithFacebook } from '../../../infraestructure/api/user';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -17,42 +18,6 @@ export default function Login() {
 
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
-
-    const handleError = (error) => {
-        console.error("Error de inicio de sesión:", error.code);
-        let errorMessage = '';
-        switch (error.code) {
-            case 'auth/account-exists-with-different-credential':
-                errorMessage = 'Ya existe una cuenta con un método de inicio de sesión diferente.';
-                break;
-            case 'auth/email-already-in-use':
-                errorMessage = 'El correo electrónico ya está en uso con otra cuenta.';
-                break;
-            case 'auth/wrong-password':
-                errorMessage = 'La contraseña es incorrecta. Por favor, inténtalo de nuevo.';
-                break;
-            case 'auth/user-not-found':
-                errorMessage = 'No se encontró una cuenta con este correo electrónico.';
-                break;
-            case 'auth/user-disabled':
-                errorMessage = 'La cuenta ha sido deshabilitada. Contacta al soporte para más información.';
-                break;
-            case 'auth/too-many-requests':
-                errorMessage = 'Hemos detectado demasiadas solicitudes desde tu dispositivo. Por favor, espera un momento e inténtalo de nuevo.';
-                break;
-            case 'auth/invalid-credential':
-                errorMessage = 'La credencial proporcionada es inválida. Por favor, verifica tus datos e inténtalo de nuevo.';
-                break;
-            default:
-                errorMessage = `Error al iniciar sesión. ${error.message}`;
-                break;
-        }
-        setError(errorMessage);
-        setShowError(true);
-        setTimeout(() => setShowError(false), 5000);
-    };
-
-
 
     const loginUser = async (event) => {
         event.preventDefault();
@@ -84,7 +49,6 @@ export default function Login() {
             }
         } catch (error) {
             handleError(error);
-
         }
     };
 
@@ -105,6 +69,46 @@ export default function Login() {
             setError(error.message); // Actualiza el estado con el mensaje de error
         }
     };
+
+    const handleError = (error) => {
+        console.error("Error de inicio de sesión:", error.code || error.message);
+        let errorMessage = '';
+        switch (error.code) {
+            case 'auth/account-exists-with-different-credential':
+                errorMessage = 'Ya existe una cuenta con un método de inicio de sesión diferente.';
+                break;
+            case 'auth/email-already-in-use':
+                errorMessage = 'El correo electrónico ya está en uso con otra cuenta.';
+                break;
+            case 'auth/wrong-password':
+                errorMessage = 'La contraseña es incorrecta. Por favor, inténtalo de nuevo.';
+                break;
+            case 'auth/user-not-found':
+                errorMessage = 'No se encontró una cuenta con este correo electrónico.';
+                break;
+            case 'auth/user-disabled':
+                errorMessage = 'La cuenta ha sido deshabilitada. Contacta al soporte para más información.';
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = 'Hemos detectado demasiadas solicitudes desde tu dispositivo. Por favor, espera un momento e inténtalo de nuevo.';
+                break;
+            case 'auth/invalid-credential':
+                errorMessage = 'La credencial proporcionada es inválida. Por favor, verifica tus datos e inténtalo de nuevo.';
+                break;
+            default:
+                errorMessage = `Error al iniciar sesión. ${error.message}`;
+                break;
+        }
+        setError(errorMessage);
+        setShowError(true);
+        // Oculta el mensaje de error después de 5 segundos
+        setTimeout(() => {
+            setShowError(false);
+            setError(''); // También limpia el mensaje de error
+        }, 5000);
+
+    };
+
 
 
     return (

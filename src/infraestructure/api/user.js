@@ -104,7 +104,7 @@ async function signInWithGoogle() {
     }
 }
 
-export const createUser = async (userData) => {
+const createUser = async (userData) => {
     const { email, password, ...profileData } = userData; // Excluye la contraseña de los datos del perfil
     try {
         // Crea un usuario con correo electrónico y contraseña en Firebase Authentication

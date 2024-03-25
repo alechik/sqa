@@ -39,18 +39,14 @@ function AddProductForm() {
             ...product,
             unitary_price: Number(product.unitary_price),
             stock: Number(product.stock),
-            picture: imageUrl, // Usamos la URL de la imagen subida
+            // No necesitas establecer 'state' aquí si se maneja automáticamente en la clase Product
         };
 
         try {
             await createProduct({
-                // Asegúrate de pasar los campos del producto correctamente
-                description: product.description,
-                product_category_id: product.product_category_id, // Ajusta según sea necesario
-                product_name: product.product_name,
-                stock: product.stock,
-                unitary_price: product.unitary_price,
-            }, product.image); // Pasa el archivo de imagen aquí
+                ...productData,
+                pictures: imageUrl, // Asegúrate de que este campo coincide con lo esperado en Firestore y la clase Product
+            }, product.image); // Considera si necesitas pasar realmente la imagen aquí, dado que ya has manejado la subida
             alert('Producto agregado con éxito');
             // Opcional: resetear el estado del formulario aquí
         } catch (error) {
@@ -58,6 +54,7 @@ function AddProductForm() {
             alert('Error al agregar el producto. Por favor, revisa la consola para más detalles.');
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit} className='add-product-form'>

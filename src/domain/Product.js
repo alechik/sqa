@@ -8,7 +8,7 @@ class Product {
         this.product_name = product_name;
         this.stock = stock;
         this.unitary_price = unitary_price;
-        this.state = state;
+        this.state = state || (stock >= 1 ? "disponible" : "No disponible");
     }
 
     toFirestore() {

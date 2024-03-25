@@ -150,6 +150,20 @@ async function getUsers() {
     return users;
 }
 
+export const getUserProfile = async () => {
+    const user = auth.currentUser;
+    if (!user) return null; // No hay usuario logueado
+
+    const userDocRef = doc(db, "users", user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    if (!userDocSnap.exists()) {
+        console.error("No se encontró el perfil del usuario en Firestore.");
+        return null;
+    }
+
+    return userDocSnap.data(); // Devuelve todos los datos del perfil del usuario
+};
+
 async function getUserById(userId) {
     const userDocRef = doc(db, "users", userId);
     const docSnap = await getDoc(userDocRef);

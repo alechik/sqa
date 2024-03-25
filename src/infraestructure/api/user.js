@@ -2,35 +2,74 @@ import { db, auth } from "../firebase--config.js";
 import { User } from "../../domain/User.js";
 import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
 import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+// Constantes para los IDs de tipos de usuario
+const ADMIN_ID = "1";
+const WORKER_ID = "2";
+const CLIENT_ID = "3";
+
+const handleAuthError = (error) => {
+    console.error("Error de inicio de sesión:", error.code);
+    let errorMessage = '';
+    switch (error.code) {
+        case 'auth/account-exists-with-different-credential':
+            errorMessage = 'Ya existe una cuenta con un método de inicio de sesión diferente.';
+            break;
+        case 'auth/email-already-in-use':
+            errorMessage = 'El correo electrónico ya está en uso con otra cuenta.';
+            break;
+        case 'auth/wrong-password':
+            errorMessage = 'La contraseña es incorrecta. Por favor, inténtalo de nuevo.';
+            break;
+        case 'auth/user-not-found':
+            errorMessage = 'No se encontró una cuenta con este correo electrónico.';
+            break;
+        case 'auth/user-disabled':
+            errorMessage = 'La cuenta ha sido deshabilitada. Contacta al soporte para más información.';
+            break;
+        case 'auth/too-many-requests':
+            errorMessage = 'Hemos detectado demasiadas solicitudes desde tu dispositivo. Por favor, espera un momento e inténtalo de nuevo.';
+            break;
+        default:
+            errorMessage = `Error al iniciar sesión. ${error.message}`;
+            break;
+    }
+    return errorMessage;
+};
+
 
 async function signInWithFacebook() {
     const provider = new FacebookAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        const userProfile = result.additionalUserInfo.profile; // Obtiene el perfil de usuario de Facebook
+        // Obtiene el perfil de usuario de Facebook
+        // Accediendo a los datos directamente desde user, no desde profile
+        const email = user.email || "";
+        const displayName = user.displayName || "";
+        const photoURL = user.photoURL || "";
 
-        // Verificar si el usuario ya existe en Firestore
+
+        // Verifica si el usuario ya existe en Firestore
         const userDocRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(userDocRef);
+        const userDocSnap = await getDoc(userDocRef);
 
-        if (!docSnap.exists()) {
-            // Si el usuario no existe, lo creamos en Firestore
-            await setDoc(doc(db, "users", user.uid), {
-                email: user.email,
-                names: userProfile.first_name ? userProfile.first_name : "",
-                lastnames: userProfile.last_name ? userProfile.last_name : "",
-                gender: userProfile.gender ? userProfile.gender : "",
-                birthday_date: userProfile.birthday ? userProfile.birthday : "",
-                userTypeId: userType,
-                // Asegúrate de pedir permisos para estos campos en el diálogo de inicio de sesión de Facebook.
+        if (!userDocSnap.exists()) {
+            // Si el usuario no existe, crea el registro en Firestore
+            await setDoc(userDocRef, {
+                avatar: photoURL,
+                email,
+                names: displayName, // Asumiendo que queremos el nombre completo
+                gender: "",
+                birthday_date: "",
+                address: "", // Dejar en blanco
+                ci: "", // Dejar en blanco
+                userTypeId: CLIENT_ID, // Cliente por defecto
             });
         }
 
         return user;
     } catch (error) {
-        // Manejar errores aquí
-        console.error("Error al iniciar sesión con Facebook: ", error);
+        throw new Error(handleAuthError(error)); 
     }
 }
 
@@ -38,61 +77,54 @@ async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
+        console.log(result);
         const user = result.user;
 
-        // Verificar si el usuario ya existe en Firestore
+        // Verifica si el usuario ya existe en Firestore
         const userDocRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(userDocRef);
+        const userDocSnap = await getDoc(userDocRef);
 
-        if (!docSnap.exists()) {
-            // Si el usuario no existe, lo creamos en Firestore
-            await setDoc(doc(db, "users", user.uid), {
-                email: user.email,
-                names: userProfile.first_name ? userProfile.first_name : "",
-                lastnames: userProfile.last_name ? userProfile.last_name : "",
-                gender: userProfile.gender ? userProfile.gender : "",
-                birthday_date: userProfile.birthday ? userProfile.birthday : "",
-                userTypeId: userType,
-                // Agrega cualquier otro dato relevante por defecto o obtenido del perfil de Google
+        if (!userDocSnap.exists()) {
+            // Si el usuario no existe, crea el registro en Firestore
+            await setDoc(userDocRef, {
+                avatar: user.photoURL || "", 
+                email: user.email || "",
+                names: user.displayName || "", 
+                gender: "", // Dejar en blanco
+                birthday_date: "", // Dejar en blanco
+                address: "", // Dejar en blanco
+                ci: "", // Dejar en blanco
+                userTypeId: CLIENT_ID, // Cliente por defecto
             });
         }
 
         return user;
     } catch (error) {
-        // Manejar errores aquí, por ejemplo, mostrar un mensaje al usuario
-        console.error("Error al iniciar sesión con Google: ", error);
+        throw new Error(handleAuthError(error)); 
     }
 }
 
-// Función para determinar el tipo de usuario basado en una descripción o lógica específica
-async function determineUserType(description) {
-    const userTypesRef = collection(db, "user_types");
-    const snapshot = await getDocs(userTypesRef);
-    let typeId = '';
-    snapshot.forEach(doc => {
-        if (doc.data().description === description) {
-            typeId = doc.id;
-        }
-    });
-    return typeId;
-}
+export const createUser = async (userData) => {
+    const { email, password, ...profileData } = userData; // Excluye la contraseña de los datos del perfil
+    try {
+        // Crea un usuario con correo electrónico y contraseña en Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-async function createUser(userData) {
-    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-    const user = userCredential.user;
+        // Crea/actualiza el perfil del usuario en Firestore sin incluir la contraseña
+        await setDoc(doc(db, "users", user.uid), {
+            ...profileData,
+            userTypeId: CLIENT_ID, // Establece el tipo de usuario como 'cliente' por defecto
+        });
 
-    // Determinar el userTypeId basado en la lógica de tu aplicación
-    // Por defecto, esto asume un cliente, pero puedes adaptarlo según sea necesario
-    const userType = await determineUserType('Cliente');
+        console.log("Usuario creado con éxito:", user.uid);
+        return user.uid; // Retorna el UID del usuario para cualquier procesamiento posterior necesario
+    } catch (error) {
+        console.error("Error al crear el usuario:", error);
+        throw error; // Esto permite que el llamador maneje el error, por ejemplo, mostrando un mensaje al usuario
+    }
+};
 
-    // Almacena los datos del usuario en Firestore, incluido el userTypeId
-    await setDoc(doc(db, "users", user.uid), {
-        ...userData,
-        userTypeId: userType
-    });
-
-    return user.uid;
-}
 
 
 async function getUsers() {
@@ -103,14 +135,15 @@ async function getUsers() {
         const data = docSnap.data();
         const user = new User(
             docSnap.id, // Se asume que este es el UID proporcionado por Firebase Authentication
-            data.address,
-            data.birthday_date,
-            data.ci,
             data.email,
-            data.gender,
-            data.lastnames,
+            data.avatar,
             data.names,
-            data.user_type_id
+            data.gender,
+            data.birthday_date,
+            data.address,
+            data.ci,
+            data.userTypeId
+
         );
         users.push(user);
     });
@@ -167,5 +200,8 @@ export {
     updateUser,
     deleteUser,
     signInWithGoogle,
-    signInWithFacebook
+    signInWithFacebook,
+    ADMIN_ID,
+    WORKER_ID,
+    CLIENT_ID
 };

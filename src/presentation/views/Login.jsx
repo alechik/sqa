@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
-    FacebookAuthProvider,
-    getAuth,
-} from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '../../infraestructure/firebase--config'; // Asegúrate de que esta ruta sea correcta
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { db } from '../../infraestructure/firebase--config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-
-const CLIENT_USER_TYPE_ID = 'rxP2vj8KV3mt1Y5nMVrd'; 
+import { signInWithGoogle, signInWithFacebook } from '../../infraestructure/api/user'; 
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [showError, setShowError] = useState(false);
     const navigate = useNavigate();
     const auth = getAuth();
 
@@ -47,12 +40,18 @@ export default function Login() {
             case 'auth/too-many-requests':
                 errorMessage = 'Hemos detectado demasiadas solicitudes desde tu dispositivo. Por favor, espera un momento e inténtalo de nuevo.';
                 break;
+            case 'auth/invalid-credential':
+                errorMessage = 'La credencial proporcionada es inválida. Por favor, verifica tus datos e inténtalo de nuevo.';
+                break;
             default:
                 errorMessage = `Error al iniciar sesión. ${error.message}`;
                 break;
         }
         setError(errorMessage);
+        setShowError(true);
+        setTimeout(() => setShowError(false), 5000); 
     };
+
 
 
     const loginUser = async (event) => {
@@ -62,93 +61,58 @@ export default function Login() {
             const userDocRef = doc(db, "users", userCredential.user.uid);
             const userDocSnap = await getDoc(userDocRef);
 
-            if (userDocSnap.exists()) {
-                const userTypeDocRef = doc(db, "user_types", userDocSnap.data().userTypeId);
-                const userTypeDocSnap = await getDoc(userTypeDocRef);
-
-                if (userTypeDocSnap.exists()) {
-                    const userType = userTypeDocSnap.data().name; // Suponiendo que cada tipo tiene un campo 'name'
-                    // Decide a dónde redirigir basado en el tipo de usuario
-                    switch (userType) {
-                        case 'Cliente':
-                            navigate('/');
-                            break;
-                        case 'Empleado':
-                            navigate('/');
-                            break;
-                        case 'Administrador':
-                            navigate('/');
-                            break;
-                        default:
-                            navigate('/'); // Ruta por defecto si no se reconoce el tipo
-                            break;
-                    }
-                } else {
-                    setError("No se pudo determinar el tipo de usuario.");
-                }
-            } else {
+            if (!userDocSnap.exists()) {
                 setError("No existe una cuenta asociada a este email.");
+                return;
+            }
+
+            const userType = userDocSnap.data().userTypeId;
+            switch (userType) {
+                case '1': // ID para administrador
+                    navigate('/admin-dashboard');
+                    break;
+                case '2': // ID para trabajador
+                    navigate('/worker-dashboard');
+                    break;
+                case '3': // ID para cliente
+                    navigate('/client-home');
+                    break;
+                default:
+                    setError("Tipo de usuario no definido.");
+                    navigate('/'); // Ruta por defecto
+                    break;
             }
         } catch (error) {
             handleError(error);
+        
         }
     };
 
-
-    const signInWithGoogle = async () => {
-        const provider = new GoogleAuthProvider();
+    const signInWithGoogleHandler = async () => {
         try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            // Verificar si el usuario ya existe en Firestore
-            const userDocRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userDocRef);
-
-            if (!docSnap.exists()) {
-                // Si el usuario no existe, lo creamos en Firestore
-                await setDoc(userDocRef, {
-                    email: user.email,
-                    names: user.displayName || '',
-                    avatar: user.photoURL || '',
-                    userTypeId: CLIENT_USER_TYPE_ID // Este es el ID para un usuario cliente
-                });
-            }
-            navigate('/Home'); // o la ruta que corresponda a tu aplicación
+            await signInWithGoogle();
+            navigate('/client-home');
         } catch (error) {
-            handleError(error);
+            setError(error.message); 
         }
     };
 
-    const signInWithFacebook = async () => {
-        const provider = new FacebookAuthProvider();
+    const signInWithFacebookHandler = async () => {
         try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            // Verificar si el usuario ya existe en Firestore
-            const userDocRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userDocRef);
-
-            if (!docSnap.exists()) {
-                // Si el usuario no existe, lo creamos en Firestore
-                await setDoc(userDocRef, {
-                    email: user.email,
-                    names: user.displayName || '',
-                    avatar: user.photoURL || '',
-                    userTypeId: CLIENT_USER_TYPE_ID // Este es el ID para un usuario cliente
-                });
-            }
-            navigate('/Home'); // o la ruta que corresponda a tu aplicación
+            await signInWithFacebook();
+            navigate('/client-home');
         } catch (error) {
-            handleError(error);
+            setError(error.message); // Actualiza el estado con el mensaje de error
         }
     };
+
 
     return (
         <section className="login-container">
             <div className="login-box">
                 <form onSubmit={loginUser}>
                     <h2>Iniciar sesión</h2>
-                    {error && <div className="error-message">{error}</div>}
+                    {showError && <div className="error-message">{error}</div>}
                     <div className={`input-box ${email ? 'active' : ''}`}>
                         <span className="icon">
                             <ion-icon name="mail"></ion-icon>
@@ -174,11 +138,11 @@ export default function Login() {
                         <label>Contraseña</label>
                     </div>
                     <button type="submit" className="login-btn">Iniciar sesión</button>
-                    <button type="button" onClick={signInWithGoogle} className="google-btn">
+                    <button type="button" onClick={signInWithGoogleHandler} className="google-btn">
                         <FontAwesomeIcon icon={faGoogle} className="google-icon" />
                         <span className="btn-text">Google</span>
                     </button>
-                    <button type="button" onClick={signInWithFacebook} className="facebook-btn">
+                    <button type="button" onClick={signInWithFacebookHandler} className="facebook-btn">
                         <FontAwesomeIcon icon={faFacebookF} className="icon" />
                         <span className="btn-text">Facebook</span>
                     </button>

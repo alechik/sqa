@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-import {createUser} from "../../infraestructure/api/user.js";
+import { createUser } from "../../infraestructure/api/user.js";
+
+const CLIENT_USER_TYPE_ID = '3'; // Asegúrate de que este es el ID correcto para clientes en tu base de datos
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');
@@ -11,56 +13,39 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [address, setAddress] = useState('');
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-    const [isClicked, setIsClicked] = useState(false);
     const navigate = useNavigate();
-    const handleFirstNameChange = (event) => {
-        setFirstName(event.target.value);
-    };
 
-    const handleLastNameChange = (event) => {
-        setLastName(event.target.value);
-    };
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
-
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-
-        if (isClicked) {
-            setIsPasswordMatch(event.target.value === confirmPassword);
-        }
-    };
-
-    const handleConfirmPasswordChange = (event) => {
-        setConfirmPassword(event.target.value);
-
-        if (isClicked) {
-            setIsPasswordMatch(event.target.value === password);
-        }
-    };
-
-    const handleAddressChange = (event) => {
-        setAddress(event.target.value);
-    };
+    const handleFirstNameChange = (event) => setFirstName(event.target.value);
+    const handleLastNameChange = (event) => setLastName(event.target.value);
+    const handleEmailChange = (event) => setEmail(event.target.value);
+    const handlePasswordChange = (event) => setPassword(event.target.value);
+    const handleConfirmPasswordChange = (event) => setConfirmPassword(event.target.value);
+    const handleAddressChange = (event) => setAddress(event.target.value);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        setIsClicked(true);
-
-        if (password === confirmPassword) {
-            try {
-                await createUser({ firstName, lastName, email, password, address });
-                navigate('/');
-            } catch (error) {
-                console.error('Error al registrar usuario:', error.message);
-                // Maneja el error aquí, muestra un mensaje de error al usuario, por ejemplo
-            }
+        if (password !== confirmPassword) {
+            setIsPasswordMatch(false);
+            return;
         }
 
-        setIsPasswordMatch(password === confirmPassword);
+        try {
+            await createUser({
+                email,
+                password,
+                names: `${firstName} ${lastName}`, // Concatenación del nombre y apellido
+                address: '', // Dejar en blanco
+                gender: '', // Dejar en blanco
+                birthday_date: '', // Dejar en blanco
+                ci: '', // Dejar en blanco
+                avatar: '', // Dejar en blanco
+                userTypeId: CLIENT_USER_TYPE_ID, 
+            });
+            navigate('/'); // Redirecciona al inicio o a la página que prefieras tras el registro exitoso
+        } catch (error) {
+            console.error('Error al registrar usuario:', error.message);
+            // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
+        }
     };
 
     return (

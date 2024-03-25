@@ -69,7 +69,7 @@ async function signInWithFacebook() {
 
         return user;
     } catch (error) {
-        throw new Error(handleAuthError(error)); 
+        throw new Error(handleAuthError(error));
     }
 }
 
@@ -87,9 +87,9 @@ async function signInWithGoogle() {
         if (!userDocSnap.exists()) {
             // Si el usuario no existe, crea el registro en Firestore
             await setDoc(userDocRef, {
-                avatar: user.photoURL || "", 
+                avatar: user.photoURL || "",
                 email: user.email || "",
-                names: user.displayName || "", 
+                names: user.displayName || "",
                 gender: "", // Dejar en blanco
                 birthday_date: "", // Dejar en blanco
                 address: "", // Dejar en blanco
@@ -100,11 +100,11 @@ async function signInWithGoogle() {
 
         return user;
     } catch (error) {
-        throw new Error(handleAuthError(error)); 
+        throw new Error(handleAuthError(error));
     }
 }
 
-export const createUser = async (userData) => {
+const createUser = async (userData) => {
     const { email, password, ...profileData } = userData; // Excluye la contraseña de los datos del perfil
     try {
         // Crea un usuario con correo electrónico y contraseña en Firebase Authentication

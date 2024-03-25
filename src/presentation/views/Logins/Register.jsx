@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-import { createUser } from "../../infraestructure/api/user.js";
+import { createUser } from "../../../infraestructure/api/user.js";
 
 const CLIENT_USER_TYPE_ID = '3'; // Asegúrate de que este es el ID correcto para clientes en tu base de datos
 
@@ -39,7 +39,7 @@ export default function Register() {
                 birthday_date: '', // Dejar en blanco
                 ci: '', // Dejar en blanco
                 avatar: '', // Dejar en blanco
-                userTypeId: CLIENT_USER_TYPE_ID, 
+                userTypeId: CLIENT_USER_TYPE_ID,
             });
             navigate('/'); // Redirecciona al inicio o a la página que prefieras tras el registro exitoso
         } catch (error) {

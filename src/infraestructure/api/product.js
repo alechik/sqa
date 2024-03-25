@@ -3,7 +3,6 @@ import { Product } from "../../domain/Product.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
 export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
     const productsSnapshot = await getDocs(productsCollectionRef);
@@ -18,7 +17,7 @@ export async function getProducts() {
             data.product_category_id,
             data.product_name,
             data.stock,
-            data.price_id,
+            data.unitary_price,
             data.state
         );
         products.push(product);
@@ -41,7 +40,7 @@ export async function getProductById(productId) {
         productData.product_category_id,
         productData.product_name,
         productData.stock,
-        productData.price_id,
+        productData.unitary_price,
         productDoc.state
     );
 }
@@ -69,7 +68,7 @@ export async function createProduct(productData, file) {
         productData.product_category_id,
         productData.product_name,
         productData.stock,
-        productData.price_id,
+        productData.unitary_price,
         productData.state
     );
 
@@ -81,7 +80,7 @@ export async function createProduct(productData, file) {
         product_category_id: newProduct.product_category_id,
         product_name: newProduct.product_name,
         stock: newProduct.stock,
-        price_id: newProduct.price_id,
+        unitary_price: newProduct.unitary_price,
         state: newProduct.state
     };
 
@@ -114,4 +113,3 @@ export default {
     updateProduct,
     deleteProduct
 };
-

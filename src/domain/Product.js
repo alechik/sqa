@@ -1,5 +1,5 @@
 class Product {
-    constructor(id, description, pictures, banner_pictures, product_category_id, product_name, stock, price_id, state) {
+    constructor(id, description, pictures, banner_pictures, product_category_id, product_name, stock, unitary_price, state) {
         this.id = id;
         this.description = description;
         this.pictures = pictures;
@@ -7,7 +7,7 @@ class Product {
         this.product_category_id = product_category_id;
         this.product_name = product_name;
         this.stock = stock;
-        this.price_id = price_id;
+        this.unitary_price = unitary_price;
         this.state = state;
     }
 
@@ -19,7 +19,7 @@ class Product {
             product_category_id: this.product_category_id,
             product_name: this.product_name,
             stock: this.stock,
-            price_id: this.price_id,
+            unitary_price: this.unitary_price,
             state: this.state
         };
     }

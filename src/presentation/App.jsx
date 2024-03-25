@@ -17,12 +17,17 @@ function App() {
 
     useEffect(() => {
         // Llamada a la función getProducts() para obtener los productos
-        getProducts().then((productos) => {
-            setProductos(productos);
-        }).catch((error) => {
-            console.error('Error fetching products:', error);
-        });
+        getProducts()
+            .then((productos) => {
+                console.log("Productos obtenidos:", productos); // Agrega un console.log() para verificar los productos obtenidos
+                setProductos(productos);
+            })
+            .catch((error) => {
+                console.error('Error fetching products:', error);
+            });
     }, []); // El segundo argumento [] significa que esta función se ejecutará solo una vez después del montaje del componente
+
+    console.log("Productos en el estado:", productos); // Agrega un console.log() para verificar los productos en el estado
 
     return (
         <Router>
@@ -33,7 +38,7 @@ function App() {
                 <Route path="/registrarse" element={<Register/>}/>
                 <Route path="/addproduct" element={<AddProductForm />} />
                 <Route path='/perfil' element={<Profile/>}/>
-                <Route path='/admin/:activepage' element={<AdminProfile/>}/>
+                <Route path='/admin/:activepage' element={<AdminProfile productos={productos}/>}/>
             </Routes>
         </Router>
 

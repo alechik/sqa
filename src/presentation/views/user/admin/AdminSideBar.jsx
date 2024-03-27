@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import './admin.css'
-import Sidebar from "./Sidebar.jsx";
+import Sidebar from "../Sidebar.jsx";
 import {useParams} from "react-router-dom";
 import CrudProductos from "./CrudProductos.jsx";
 import CrudEmpleados from "./CrudEmpleados.jsx";
-import Dashboard from "./Dashboard.jsx";
-import AddProductForm from "../addProductform.jsx";
+import Dashboard from "../Dashboard.jsx";
+import AddProductForm from "../../addProductform.jsx";
 
 // eslint-disable-next-line react/prop-types
 export default function AdminSideBar({productos}) {

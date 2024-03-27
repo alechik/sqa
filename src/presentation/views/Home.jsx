@@ -2,7 +2,6 @@ import './home.css'
 import React, { useState } from 'react';
 import Carousel from "../components/Carousel.jsx";
 import FlashDeals from "../components/ofertas/FlashDeals.jsx";
-import AddProductForm from './addProductform.jsx';
 import { Link } from 'react-router-dom';
 
 

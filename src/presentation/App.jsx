@@ -9,8 +9,8 @@ import {getProducts} from '../infraestructure/api/product.js'
 import {useEffect, useState} from "react";
 import Register from "./views/Logins/Register.jsx";
 import AddProductForm from "./views/addProductform.jsx";
-import Profile from "./views/user/Profile.jsx";
-import AdminProfile from "./views/user/AdminProfile.jsx";
+import Profile from "./views/user/client/Profile.jsx";
+import AdminProfile from "./views/user/admin/AdminProfile.jsx";
 import { AuthProvider } from './components/context/AuthContext.jsx';
 
 

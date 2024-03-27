@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { createUser } from "../../../infraestructure/api/user.js";
 
-const CLIENT_USER_TYPE_ID = '3'; // Asegúrate de que este es el ID correcto para clientes en tu base de datos
+const CLIENT_USER_TYPE_ID = '3';
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');
@@ -41,7 +41,7 @@ export default function Register() {
                 avatar: '', // Dejar en blanco
                 userTypeId: CLIENT_USER_TYPE_ID,
             });
-            navigate('/'); // Redirecciona al inicio o a la página que prefieras tras el registro exitoso
+            navigate('/'); 
         } catch (error) {
             console.error('Error al registrar usuario:', error.message);
             // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
@@ -73,16 +73,6 @@ export default function Register() {
                         />
                         <label>Apellido</label>
                     </div>
-                    <div className={`input-box ${email ? 'active' : ''}`}>
-                        <input
-                            type="email"
-                            autoComplete='nope'
-                            required
-                            value={email}
-                            onChange={handleEmailChange}
-                        />
-                        <label>Email</label>
-                    </div>
                     <div className={`input-box ${address ? 'active' : ''}`}>
                         <input
                             type="text"
@@ -92,6 +82,16 @@ export default function Register() {
                             onChange={handleAddressChange}
                         />
                         <label>Dirección</label>
+                    </div>
+                    <div className={`input-box ${email ? 'active' : ''}`}>
+                        <input
+                            type="email"
+                            autoComplete='nope'
+                            required
+                            value={email}
+                            onChange={handleEmailChange}
+                        />
+                        <label>Email</label>
                     </div>
                     <div className={`input-box ${password ? 'active' : ''}`}>
                         <input

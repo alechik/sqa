@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './crudproductos.css'
 import {Link} from "react-router-dom";
-import {deleteProduct} from "../../../infraestructure/api/product.js";
+import {deleteProduct} from "../../../../infraestructure/api/product.js";
 // eslint-disable-next-line no-unused-vars
 export default function CrudProductos({productos}){
     const [productList, setProductList] = useState(productos); // Estado local para la lista de productos

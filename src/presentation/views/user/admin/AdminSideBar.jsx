@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom";
 import CrudProductos from "./CrudProductos.jsx";
 import CrudEmpleados from "./CrudEmpleados.jsx";
 import Dashboard from "../Dashboard.jsx";
-import AddProductForm from "../../addProductform.jsx";
+import AddProductForm from "../../Products/addProductform.jsx";
 
 // eslint-disable-next-line react/prop-types
 export default function AdminSideBar({productos}) {

@@ -67,12 +67,17 @@ export async function createProduct(productData, file) {
         description: productData.description,
         pictures: imageUrl, // Asume que solo hay una imagen
         banner_pictures: imageUrl, // Puede ajustarse si manejas imágenes de banner diferentes
-        product_category_id: productData.product_category_id,
+        CategoryID: productData.CategoryID,
         product_name: productData.product_name,
         stock: productData.stock,
         unitary_price: productData.unitary_price,
+        gramaje: productData.gramaje,
         state: productState // Usamos el valor determinado basado en el stock
     };
+    
+    if (!productDataForFirestore.CategoryID) {
+        throw new Error("CategoryID is undefined or not set.");
+    }
 
     const productRef = await addDoc(collection(db, "products"), productDataForFirestore);
     return productRef.id;

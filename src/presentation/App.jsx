@@ -8,10 +8,11 @@ import Datos from './assets/datos.js'
 import {getProducts} from '../infraestructure/api/product.js'
 import {useEffect, useState} from "react";
 import Register from "./views/Logins/Register.jsx";
-import AddProductForm from "./views/addProductform.jsx";
+import AddProductForm from "./views/Products/addProductform.jsx";
 import Profile from "./views/user/client/Profile.jsx";
 import AdminProfile from "./views/user/admin/AdminProfile.jsx";
 import { AuthProvider } from './components/context/AuthContext.jsx';
+import EditProductForm from './views/Products/editProductform.jsx';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                         <Route path="/registrarse" element={<Register />} />
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
+                        <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
                     </Routes>

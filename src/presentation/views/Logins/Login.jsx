@@ -19,6 +19,7 @@ export default function Login() {
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
+
     const loginUser = async (event) => {
         event.preventDefault();
         try {
@@ -30,23 +31,9 @@ export default function Login() {
                 setError("No existe una cuenta asociada a este email.");
                 return;
             }
-
             const userType = userDocSnap.data().userTypeId;
-            switch (userType) {
-                case '1': // ID para administrador
-                    navigate('/');
-                    break;
-                case '2': // ID para trabajador
-                    navigate('/');
-                    break;
-                case '3': // ID para cliente
-                    navigate('/');
-                    break;
-                default:
-                    setError("Tipo de usuario no definido.");
-                    navigate('/'); // Ruta por defecto
-                    break;
-            }
+
+            window.location.href = `/?userType=${userType}`;
         } catch (error) {
             handleError(error);
         }
@@ -55,7 +42,7 @@ export default function Login() {
     const signInWithGoogleHandler = async () => {
         try {
             await signInWithGoogle();
-            navigate('/');
+            window.location.href = '/';
         } catch (error) {
             handleError(error);
         }
@@ -64,7 +51,7 @@ export default function Login() {
     const signInWithFacebookHandler = async () => {
         try {
             await signInWithFacebook();
-            navigate('/');
+            window.location.href = '/';
         } catch (error) {
             handleError(error);
         }

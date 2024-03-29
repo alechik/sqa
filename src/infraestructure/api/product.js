@@ -17,9 +17,10 @@ export async function getProducts() {
             data.description,
             data.pictures,
             data.banner_pictures,
-            data.product_category_id,
+            data.CategoryID,
             data.product_name,
             data.stock,
+            data.gramaje,
             data.unitary_price,
             data.state
         );
@@ -40,9 +41,10 @@ export async function getProductById(productId) {
         productData.description,
         productData.pictures,
         productData.banner_pictures,
-        productData.product_category_id,
+        productData.CategoryID,
         productData.product_name,
         productData.stock,
+        productData.gramaje,
         productData.unitary_price,
         productDoc.state
     );
@@ -67,12 +69,17 @@ export async function createProduct(productData, file) {
         description: productData.description,
         pictures: imageUrl, // Asume que solo hay una imagen
         banner_pictures: imageUrl, // Puede ajustarse si manejas imágenes de banner diferentes
-        product_category_id: productData.product_category_id,
+        CategoryID: productData.CategoryID,
         product_name: productData.product_name,
         stock: productData.stock,
         unitary_price: productData.unitary_price,
+        gramaje: productData.gramaje,
         state: productState // Usamos el valor determinado basado en el stock
     };
+    
+    if (!productDataForFirestore.CategoryID) {
+        throw new Error("CategoryID is undefined or not set.");
+    }
 
     const productRef = await addDoc(collection(db, "products"), productDataForFirestore);
     return productRef.id;
@@ -96,6 +103,20 @@ export async function deleteProduct(productId) {
     const productDocRef = doc(db, "products", productId);
     await deleteDoc(productDocRef);
 }
+
+export async function getCategories() {
+    const categoriesCollectionRef = collection(db, "product_categories");
+    const categoriesSnapshot = await getDocs(categoriesCollectionRef);
+    const categories = [];
+    categoriesSnapshot.forEach((doc) => {
+        categories.push({
+            id: doc.id,
+            ...doc.data()
+        });
+    });
+    return categories;
+}
+
 
 export default {
     getProducts,

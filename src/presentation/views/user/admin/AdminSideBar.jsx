@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import './admin.css'
-import Sidebar from "./Sidebar.jsx";
+import Sidebar from "../Sidebar.jsx";
 import {useParams} from "react-router-dom";
 import CrudProductos from "./CrudProductos.jsx";
 import CrudEmpleados from "./CrudEmpleados.jsx";
-import Dashboard from "./Dashboard.jsx";
-import AddProductForm from "../addProductform.jsx";
+import Dashboard from "../Dashboard.jsx";
+import AddProductForm from "../../Products/addProductform.jsx";
+import EditProductForm from '../../Products/editProductform.jsx';
 
 // eslint-disable-next-line react/prop-types
 export default function AdminSideBar({productos}) {
@@ -22,6 +23,7 @@ export default function AdminSideBar({productos}) {
                         {activepage === 'crud-empleados' && <CrudEmpleados/> }
                         {activepage === 'dashboard' && <Dashboard/> }
                         {activepage === 'add-product' && <AddProductForm/>}
+                        {activepage === 'edit-product' && <EditProductForm/>}
                     </div>
                 </div>
             </div>

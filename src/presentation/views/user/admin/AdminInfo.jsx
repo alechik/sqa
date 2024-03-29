@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { auth, db } from '../../../infraestructure/firebase--config'; // Asegúrate de que este archivo contiene tus exportaciones de Firebase
+import { auth, db } from '../../../../infraestructure/firebase--config'; // Asegúrate de que este archivo contiene tus exportaciones de Firebase
 import { doc, getDoc } from "firebase/firestore";
 
 class AdminInfo extends Component {

@@ -2,26 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "./navbar.css";
 
 export default function Navbar() {
     const [userProfile, setUserProfile] = useState(null);
     const navigate = useNavigate(); // Hook para navegar
+    const auth = getAuth(); // Inicializa la autenticación de Firebase
 
     useEffect(() => {
-        const checkUserAuthentication = async () => {
-            const profile = await getUserProfile();
-            if (profile) {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // El usuario ha iniciado sesión, obtén su perfil
+                const profile = await getUserProfile(user.uid); // Asume que getUserProfile puede tomar un UID y retornar datos de perfil
                 setUserProfile(profile);
+            } else {
+                // El usuario ha cerrado sesión
+                setUserProfile(null);
             }
-        };
+        });
 
-        checkUserAuthentication();
+        return () => unsubscribe(); // Desuscribirse al desmontar el componente
     }, []);
 
     const logout = () => {
-        localStorage.removeItem('isLoggedIn'); // Remover el indicador de sesión
-        setUserProfile(null); // Resetear el estado de perfil de usuario
+        auth.signOut(); // Cierra sesión en Firebase
         navigate('/iniciarsesion'); // Redirige al usuario a la página de inicio de sesión
     };
 

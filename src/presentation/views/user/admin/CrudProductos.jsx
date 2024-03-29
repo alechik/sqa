@@ -1,10 +1,13 @@
 import React, {useState} from "react";
 import './crudproductos.css'
 import {Link} from "react-router-dom";
-import {deleteProduct} from "../../../infraestructure/api/product.js";
-// eslint-disable-next-line no-unused-vars
+import {deleteProduct} from "../../../../infraestructure/api/product.js";
+import { useNavigate } from 'react-router-dom';
+
 export default function CrudProductos({productos}){
-    const [productList, setProductList] = useState(productos); // Estado local para la lista de productos
+    const [productList, setProductList] = useState(productos); 
+    const navigate = useNavigate();
+
 
     const handleDeleteProduct = async (productId) => {
         try {
@@ -16,6 +19,13 @@ export default function CrudProductos({productos}){
             alert('Error al eliminar el producto. Por favor, revisa la consola para más detalles.');
         }
     };
+
+    const handleEditProduct = (productId) => {
+        // Navega a la ruta de edición con el ID del producto
+        navigate(`/admin/edit-product/${productId}`);
+    };
+
+
     return <div className='crud-productos'>
         <div className="crud-options">
             <Link to='/admin/add-product'><button>
@@ -40,7 +50,7 @@ export default function CrudProductos({productos}){
             {/* eslint-disable-next-line react/prop-types */}
             {productos.map((productos) => {
                 return (
-                    <tr>
+                    <tr key={productos.id}>
                         <td>{productos.id}</td>
                         <td>{productos.product_name}</td>
                         <td>
@@ -50,7 +60,8 @@ export default function CrudProductos({productos}){
                         </td>
                         <td>{productos.stock}</td>
                         <td id='acciones'>
-                            <button id='editar'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <button id='editar'
+                                onClick={() => handleEditProduct(productos.id)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                             </svg>
                             </button>

@@ -5,7 +5,7 @@ import {deleteProduct} from "../../../../infraestructure/api/product.js";
 import { useNavigate } from 'react-router-dom';
 
 export default function CrudProductos({productos}){
-    const [productList, setProductList] = useState(productos); // Estado local para la lista de productos
+    const [productList, setProductList] = useState(productos); 
     const navigate = useNavigate();
 
 

@@ -17,9 +17,10 @@ export async function getProducts() {
             data.description,
             data.pictures,
             data.banner_pictures,
-            data.product_category_id,
+            data.CategoryID,
             data.product_name,
             data.stock,
+            data.gramaje,
             data.unitary_price,
             data.state
         );
@@ -40,9 +41,10 @@ export async function getProductById(productId) {
         productData.description,
         productData.pictures,
         productData.banner_pictures,
-        productData.product_category_id,
+        productData.CategoryID,
         productData.product_name,
         productData.stock,
+        productData.gramaje,
         productData.unitary_price,
         productDoc.state
     );
@@ -101,6 +103,20 @@ export async function deleteProduct(productId) {
     const productDocRef = doc(db, "products", productId);
     await deleteDoc(productDocRef);
 }
+
+export async function getCategories() {
+    const categoriesCollectionRef = collection(db, "product_categories");
+    const categoriesSnapshot = await getDocs(categoriesCollectionRef);
+    const categories = [];
+    categoriesSnapshot.forEach((doc) => {
+        categories.push({
+            id: doc.id,
+            ...doc.data()
+        });
+    });
+    return categories;
+}
+
 
 export default {
     getProducts,

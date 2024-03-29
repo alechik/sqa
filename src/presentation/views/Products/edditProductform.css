@@ -1,48 +1,99 @@
 /* EditProductForm.css */
 .edit-product-form {
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 1rem;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    max-width: 700px;
+    /* Más ancho para acomodar mejor los campos */
+    margin: 40px auto;
+    /* Más margen para centrar mejor el formulario */
+    padding: 2rem;
+    background: #ffffff;
+    /* Fondo blanco puro para un look más limpio */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    /* Sombra más pronunciada para un efecto "elevado" */
+    border-radius: 15px;
+    /* Bordes más redondeados */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /* Fuente más moderna */
 }
 
 .edit-product-form h2 {
-    text-align: center;
     color: #333;
+    /* Color de texto más oscuro para mejor contraste */
+    margin-bottom: 2.5rem;
+    /* Más espacio después del título */
 }
 
 .edit-product-form form {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
+    /* Espacio entre campos aumentado */
 }
 
 .edit-product-form label {
-    font-weight: bold;
-    margin-top: 0.5rem;
+    font-size: 1rem;
+    /* Tamaño de fuente más grande para las etiquetas */
+    margin-bottom: 0.5rem;
+    /* Espacio antes del campo de entrada */
+    color: #444;
+    /* Color más oscuro para las etiquetas */
 }
 
 .edit-product-form input,
 .edit-product-form select,
 .edit-product-form textarea {
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 1rem;
+    /* Más padding para hacer los campos más grandes y fáciles de interactuar */
+    border: 2px solid #ccc;
+    /* Borde más grueso */
+    border-radius: 8px;
+    /* Bordes ligeramente más redondeados */
+    background: #fafafa;
+    /* Fondo ligeramente gris para los campos para diferenciar del fondo */
+    font-size: 1rem;
+    /* Tamaño de fuente más grande para la entrada */
+}
+
+.edit-product-form textarea {
+    height: 150px;
+    /* Espacio más grande para la descripción */
+}
+
+.edit-product-form input[type="file"] {
+    background: none;
+    /* Quitar fondo para el input de archivo */
+    border: none;
+    /* Quitar borde para el input de archivo */
 }
 
 .edit-product-form button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #5c6bc0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: #007bff;
+    /* Un azul más brillante y moderno */
+    padding: 10px 15px;
+    /* Padding más grande */
+    font-size: 1.1rem;
+    /* Fuente más grande para el botón */
 }
 
 .edit-product-form button:hover {
-    background-color: #3949ab;
+    background-color: #0056b3;
+    /* Azul más oscuro al pasar el mouse */
+}
+
+.product-image {
+    width: 100%;
+    /* Asegura que la imagen ocupe el ancho disponible del contenedor padre */
+    max-width: 300px;
+    /* Establece un ancho máximo para evitar que la imagen sea demasiado grande */
+    height: auto;
+    /* Mantiene la proporción de la imagen */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombra suave para dar profundidad */
+    object-fit: cover;
+    /* Asegura que la imagen cubra el área designada sin perder su proporción */
+    display: block;
+    /* Asegura que la imagen no tenga espacio extra debajo (elimina espacio como si fuera una línea de texto) */
+    margin: 0 auto;
+    /* Centra la imagen si es más pequeña que el ancho del contenedor */
 }

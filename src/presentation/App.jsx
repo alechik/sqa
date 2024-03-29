@@ -45,6 +45,7 @@ function App() {
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
                     </Routes>
                 </Router>
+                
             </AuthProvider>
         );
     }

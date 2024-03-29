@@ -66,7 +66,7 @@
 }
 
 .edit-product-form button {
-    background-color: #007bff;
+    background-color: #ff0000;
     /* Un azul más brillante y moderno */
     padding: 10px 15px;
     /* Padding más grande */
@@ -75,7 +75,7 @@
 }
 
 .edit-product-form button:hover {
-    background-color: #0056b3;
+    background-color: #b30000;
     /* Azul más oscuro al pasar el mouse */
 }
 
@@ -96,4 +96,23 @@
     /* Asegura que la imagen no tenga espacio extra debajo (elimina espacio como si fuera una línea de texto) */
     margin: 0 auto;
     /* Centra la imagen si es más pequeña que el ancho del contenedor */
+}
+
+.image-preview img {
+    width: 100%;
+        /* Asegura que la imagen ocupe el ancho disponible del contenedor padre */
+        max-width: 300px;
+        /* Establece un ancho máximo para evitar que la imagen sea demasiado grande */
+        height: auto;
+        /* Mantiene la proporción de la imagen */
+        border-radius: 10px;
+        /* Bordes redondeados */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Sombra suave para dar profundidad */
+        object-fit: cover;
+        /* Asegura que la imagen cubra el área designada sin perder su proporción */
+        display: block;
+        /* Asegura que la imagen no tenga espacio extra debajo (elimina espacio como si fuera una línea de texto) */
+        margin: 0 auto;
+        /* Centra la imagen si es más pequeña que el ancho del contenedor */
 }

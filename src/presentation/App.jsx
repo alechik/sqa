@@ -1,15 +1,20 @@
-
+import React from 'react';
 import Navbar from "./components/Navbar.jsx";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Home from "./views/Home.jsx";
 import Login from "./views/Logins/Login.jsx";
+import PrivateRoute from './components/PrivateRoute.jsx';
 import Datos from './assets/datos.js'
 import {getProducts} from '../infraestructure/api/product.js'
 import {useEffect, useState} from "react";
 import Register from "./views/Logins/Register.jsx";
-import AddProductForm from "./views/addProductform.jsx";
-import Profile from "./views/user/Profile.jsx";
-import AdminProfile from "./views/user/AdminProfile.jsx";
+import AddProductForm from "./views/Products/addProductform.jsx";
+import Profile from "./views/user/client/Profile.jsx";
+import AdminProfile from "./views/user/admin/AdminProfile.jsx";
+import { AuthProvider } from './components/context/AuthContext.jsx';
+import EditProductForm from './views/Products/editProductform.jsx';
+
+
 function App() {
     //stpe 1: fetch data from database
     const { productItems } = Datos;
@@ -27,22 +32,23 @@ function App() {
             });
     }, []); // El segundo argumento [] significa que esta función se ejecutará solo una vez después del montaje del componente
 
-    console.log("Productos en el estado:", productos); // Agrega un console.log() para verificar los productos en el estado
+        return (
+            <AuthProvider>
+                <Router>
+                    <Navbar />
+                    <Routes>
+                        <Route path="/" element={<Home productItems={productItems} productos={productos} />} />
+                        <Route path="/iniciarsesion" element={<Login />} />
+                        <Route path="/registrarse" element={<Register />} />
+                        {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
+                        <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
+                        <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
+                        <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                        <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
+                    </Routes>
+                </Router>
+            </AuthProvider>
+        );
+    }
 
-    return (
-        <Router>
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<Home productItems={productItems} productos={productos}/>} />
-                <Route path="/iniciarsesion" element={<Login/>}/>
-                <Route path="/registrarse" element={<Register/>}/>
-                <Route path="/addproduct" element={<AddProductForm />} />
-                <Route path='/perfil' element={<Profile/>}/>
-                <Route path='/admin/:activepage' element={<AdminProfile productos={productos}/>}/>
-            </Routes>
-        </Router>
-
-    )
-}
-
-export default App
+    export default App;

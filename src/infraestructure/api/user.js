@@ -150,6 +150,25 @@ async function getUsers() {
     return users;
 }
 
+export const getUserProfile = async () => {
+    const user = auth.currentUser; // Obtiene el usuario actual de Firebase Authentication
+    if (!user) {
+        // Si no hay un usuario actual, devuelve null o maneja como consideres necesario
+        return null;
+    }
+
+    const userDocRef = doc(db, "users", user.uid); // Referencia al documento del usuario en Firestore
+    const userDocSnap = await getDoc(userDocRef); // Obtiene el documento del usuario
+
+    if (!userDocSnap.exists()) {
+        // Si el documento del usuario no existe, podría significar que el usuario no está completamente registrado
+        console.error("No se encontró el perfil del usuario en Firestore.");
+        return null; // O maneja como consideres necesario
+    }
+
+    return userDocSnap.data(); // Devuelve todos los datos del perfil del usuario
+};
+
 async function getUserById(userId) {
     const userDocRef = doc(db, "users", userId);
     const docSnap = await getDoc(userDocRef);

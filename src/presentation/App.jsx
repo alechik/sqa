@@ -13,6 +13,7 @@ import Profile from "./views/user/client/Profile.jsx";
 import AdminProfile from "./views/user/admin/AdminProfile.jsx";
 import { AuthProvider } from './components/context/AuthContext.jsx';
 import EditProductForm from './views/Products/editProductform.jsx';
+import Footer from './components/Footer.jsx';
 
 
 function App() {
@@ -46,8 +47,8 @@ function App() {
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
                     </Routes>
-                </Router>
-                
+                    <Footer/>
+                </Router>     
             </AuthProvider>
         );
     }

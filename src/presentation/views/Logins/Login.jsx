@@ -34,13 +34,13 @@ export default function Login() {
             const userType = userDocSnap.data().userTypeId;
             switch (userType) {
                 case '1': // ID para administrador
-                    navigate('/admin-dashboard');
+                    navigate('/');
                     break;
                 case '2': // ID para trabajador
-                    navigate('/worker-dashboard');
+                    navigate('/');
                     break;
                 case '3': // ID para cliente
-                    navigate('/client-home');
+                    navigate('/');
                     break;
                 default:
                     setError("Tipo de usuario no definido.");
@@ -55,7 +55,7 @@ export default function Login() {
     const signInWithGoogleHandler = async () => {
         try {
             await signInWithGoogle();
-            navigate('/client-home');
+            navigate('/');
         } catch (error) {
             handleError(error);
         }
@@ -64,7 +64,7 @@ export default function Login() {
     const signInWithFacebookHandler = async () => {
         try {
             await signInWithFacebook();
-            navigate('/client-home');
+            navigate('/');
         } catch (error) {
             handleError(error);
         }

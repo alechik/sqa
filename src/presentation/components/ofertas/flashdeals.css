@@ -85,6 +85,7 @@
 }
 .product:hover .product-like {
     opacity: 1;
+    cursor: pointer;
 }
 /*---------product-----------*/
 /*----- control btn -------*/

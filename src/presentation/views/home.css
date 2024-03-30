@@ -127,6 +127,9 @@ html {
 .f_flex {
     display: flex;
 }
+.d_flex {
+    display: flex;
+}
 
 .add-product-link {
     display: flex;

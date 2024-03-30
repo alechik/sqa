@@ -27,7 +27,7 @@ const PrevArrow = (props) =>{
 }
 
 // eslint-disable-next-line react/prop-types
-const FlashCard = ({productItems, productos}) => {
+const FlashCard = ({productItems, productos , addtoCart}) => {
     var settings = {
         dots: false,
         infinite: true,
@@ -69,7 +69,7 @@ const FlashCard = ({productItems, productos}) => {
                             <div className="price">
                                 {/* eslint-disable-next-line react/prop-types */}
                                 <h4>{productos.unitary_price}.00</h4>
-                                <button>
+                                <button onClick={() => addtoCart(productos)}>
                                     <i className="fas fa-plus"></i>
                                 </button>
                             </div>

@@ -5,7 +5,7 @@ import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "./navbar.css";
 
-export default function Navbar() {
+export default function Navbar({cartitem}) {
     const [userProfile, setUserProfile] = useState(null);
     const navigate = useNavigate(); // Hook para navegar
     const auth = getAuth(); // Inicializa la autenticación de Firebase
@@ -37,6 +37,12 @@ export default function Navbar() {
             <ul className="navegacion">
                 {userProfile ? (
                     <li>
+                        <div className='cart'>
+                        <Link to='/cart'>
+                            <i className="fa fa-shopping-bag icon-circle"></i>
+                            <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
+                        </Link>
+                        </div>
                         {userProfile.userTypeId === '1' && <Link to="/admin/:activepage"><img
                             src={userProfile.avatar || '/user-profile.png'}
                             alt="Perfil"

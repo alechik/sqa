@@ -3,7 +3,7 @@ import React from "react";
 import FlashCard from "./FlashCard.jsx";
 /*import './flashdeals.css'*/
 // eslint-disable-next-line react/prop-types
-const FlashDeals = ({ productItems, addToCart, productos , titulo}) => {
+const FlashDeals = ({ productItems, addtoCart, productos , titulo}) => {
     return (
         <>
             <section className='flash'>
@@ -12,7 +12,7 @@ const FlashDeals = ({ productItems, addToCart, productos , titulo}) => {
                         <i className='fa fa-bolt'></i>
                         <h1>Productos {titulo}</h1>
                     </div>
-                    <FlashCard productItems={productItems} addToCart={addToCart} productos={productos} />
+                    <FlashCard productItems={productItems} addtoCart={addtoCart} productos={productos} />
                 </div>
             </section>
         </>

@@ -16,10 +16,16 @@ body{
     background-image: linear-gradient(to right, #522b46, #633154);
 }
 
+.nav img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
 .nombre-sitio{
     flex: 0;
     text-align: left;
-    padding-left: 30px;
+    padding-left: 10px;
     font-size: 20px;
     font-weight: bold;
     text-decoration: none;
@@ -31,11 +37,10 @@ body{
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-right: .5rem;
     list-style: none;
-
 }
 .navegacion a,
+
 .logout-button {
     margin: 0 15px;
     text-decoration: none;
@@ -47,6 +52,12 @@ body{
     font-weight: bold;
     align-items: center;
     justify-content: center;
+}
+
+.logout-button img{
+    width: 30px;
+    height: 30px;
+    margin-bottom: 50px;
 }
 
 .search{
@@ -141,7 +152,7 @@ body{
 }
 .cart span{
     position: absolute;
-    top: -10px;
+    top: -30px;
     right: 0;
     width: 20px;
     height: 20px;
@@ -149,4 +160,10 @@ body{
     text-align: center;
     background-color: #c82d5c;
     font-size: 12px;
+}
+
+.cart img{
+    width: 35px;
+    height: 35px;
+    margin-top: 30px;
 }

@@ -27,7 +27,6 @@ function Footer() {
                 console.error('Error al obtener las URL de los iconos:', error);
             }
         };
-
         fetchIconUrls();
     }, []);
 

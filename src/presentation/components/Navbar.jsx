@@ -4,11 +4,14 @@ import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "./navbar.css";
+import { getDownloadURL, ref } from 'firebase/storage';
+import { storage } from '../../infraestructure/firebase--config';
 
-export default function Navbar({cartitem}) {
+export default function Navbar({ cartitem }) {
     const [userProfile, setUserProfile] = useState(null);
     const navigate = useNavigate(); // Hook para navegar
     const auth = getAuth(); // Inicializa la autenticación de Firebase
+    const [iconUrls, setIconUrls] = useState({});
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -21,9 +24,26 @@ export default function Navbar({cartitem}) {
                 setUserProfile(null);
             }
         });
-
         return () => unsubscribe(); // Desuscribirse al desmontar el componente
     }, []);
+
+    useEffect(() => {
+        const fetchIconUrls = async () => {
+            try {
+                const storeIconUrl = await getDownloadURL(ref(storage, 'Iconos/shop.png'))
+                const shoppingCartIconUrl = await getDownloadURL(ref(storage, 'Iconos/shopping-cart.png'))
+                const logoutIconUrl = await getDownloadURL(ref(storage, 'Iconos/logout.png'))
+                setIconUrls({
+                    storeIcon: storeIconUrl,
+                    shoppingCartIcon: shoppingCartIconUrl,
+                    logoutIcon: logoutIconUrl
+                });
+            } catch (error) {
+                console.error('Error al obtener las URL de los iconos:', error);
+            }
+        };
+        fetchIconUrls();
+    })
 
     const logout = () => {
         auth.signOut(); // Cierra sesión en Firebase
@@ -32,16 +52,17 @@ export default function Navbar({cartitem}) {
 
     return (
         <nav className="nav">
-            <Link to="/" className="nombre-sitio">Tienda</Link>
+            <img src={iconUrls.storeIcon} />
+            <Link to="/" className="nombre-sitio">Store</Link>
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
                     <li>
                         <div className='cart'>
-                        <Link to='/cart'>
-                            <i className="fa fa-shopping-bag icon-circle"></i>
-                            <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
-                        </Link>
+                            <Link to='/cart'>
+                                <img src={iconUrls.shoppingCartIcon}></img>
+                                <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
+                            </Link>
                         </div>
                         {userProfile.userTypeId === '1' && <Link to="/admin/:activepage"><img
                             src={userProfile.avatar || '/user-profile.png'}
@@ -59,10 +80,10 @@ export default function Navbar({cartitem}) {
                             src={userProfile.avatar || '/user-profile.png'}
                             alt="Perfil"
                             className="navbar-avatar"
-                            style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover"}}
+                            style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
                         <button onClick={logout} className="logout-button" title="Cerrar Sesión">
-                            <i className="fas fa-sign-out-alt logout-icon"></i>
+                            <img src={iconUrls.logoutIcon}></img>
                         </button>
                     </li>
                 ) : (

@@ -1,0 +1,95 @@
+.footer {
+    background-color: #522b46;
+    color: #fff;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.footer a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #633154;
+    padding-bottom: 20px;
+}
+
+.footer-contact p,
+.footer-social a,
+.footer-nav a {
+    margin: 5px 0;
+}
+
+.footer-social a img,
+.footer-nav a img {
+    width: 40px;
+    /* Adjust the size of your icons as needed */
+    height: 40px;
+    margin-right: 8px;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.footer-legal a{
+    margin: 10px 10px;
+}
+
+.footer-brand,
+.footer-copy {
+    flex: 1;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.footer-brand img {
+    width: 60px;
+    /* Adjust according to your brand logo */
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+
+    .footer-top,
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-social a img,
+    .footer-nav a img {
+        margin: 0 4px;
+    }
+
+    .footer-legal a{
+        margin: 0 10px;
+    }
+
+    .footer-brand,
+    .footer-copy {
+        text-align: center;
+        width: 100%;
+    }
+}
+
+/* Accessibility and responsive styles */
+.footer a:hover,
+.footer a:focus {
+    outline: none;
+    color: #c7a2c7;
+}
+
+.separator {
+    flex-grow: 1;
+    border-top: 1px solid black;
+}

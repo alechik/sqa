@@ -27,15 +27,16 @@ function EditProductForm() {
                 const data = await getProductById(productId);
                 // Asume que 'data' tiene un campo 'imageUrl' con la URL de la imagen actual
                 setProduct({
-                    ...data, // Asume que esto incluye category_id y imageUrl
-                    CategoryID: data.category_id, // Asegúrate de que este campo coincida con el nombre en tu base de datos
-                    gramaje: data.gramaje, // Asume que esto es parte de los datos recuperados
-                    imageUrl: data.imageUrl, // URL de la imagen para la vista previa
+                    ...data,
+                    CategoryID: data.CategoryID,
+                    gramaje: data.gramaje,
+                    imageUrl: data.imageUrl,
                 });
             } catch (error) {
                 console.error("Error fetching product data:", error);
             }
         };
+
 
         const fetchCategoriesData = async () => {
             try {
@@ -62,38 +63,38 @@ function EditProductForm() {
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    // Initialize an object to collect the data you'll update
-    let updatedData = { ...product };
+        // Initialize an object to collect the data you'll update
+        let updatedData = { ...product };
 
-    // Check if an image file was selected
-    if (product.image instanceof File) {
-        try {
-            const imageRef = ref(storage, `products/${product.image.name}`);
-            const uploadResult = await uploadBytes(imageRef, product.image);
-            const imageUrl = await getDownloadURL(uploadResult.ref);
+        // Check if an image file was selected
+        if (product.image instanceof File) {
+            try {
+                const imageRef = ref(storage, `products/${product.image.name}`);
+                const uploadResult = await uploadBytes(imageRef, product.image);
+                const imageUrl = await getDownloadURL(uploadResult.ref);
 
-            // Add/Update imageUrl in the data to update
-            updatedData.imageUrl = imageUrl;
+                // Add/Update imageUrl in the data to update
+                updatedData.imageUrl = imageUrl;
 
-            // Remove the File object from the data sent to Firestore
-            delete updatedData.image;
-        } catch (error) {
-            console.error("Error uploading new image:", error);
-            // Optionally handle the error, e.g., by showing a message to the user
-            return; // Exit the function to avoid updating Firestore with incorrect data
+                // Remove the File object from the data sent to Firestore
+                delete updatedData.image;
+            } catch (error) {
+                console.error("Error uploading new image:", error);
+                // Optionally handle the error, e.g., by showing a message to the user
+                return; // Exit the function to avoid updating Firestore with incorrect data
+            }
         }
-    }
 
-    try {
-        await updateProduct(productId, updatedData);
-        navigate('/admin/crud-productos'); // Change to your actual route for the product list
-    } catch (error) {
-        console.error("Error updating product:", error);
-        // Optionally handle the error, e.g., by showing a message to the user
-    }
-};
+        try {
+            await updateProduct(productId, updatedData);
+            navigate('/admin/crud-productos'); // Change to your actual route for the product list
+        } catch (error) {
+            console.error("Error updating product:", error);
+            // Optionally handle the error, e.g., by showing a message to the user
+        }
+    };
 
 
     if (!product) {
@@ -131,12 +132,12 @@ function EditProductForm() {
                     <label htmlFor="category_id">Categoría</label>
                     <select
                         id="CategoryID"
-                        name="CategoryID"
+                        name="category_id"
                         value={product.category_id || ''}
                         onChange={handleChange}
-                        required
-                    >
-                        <option value="">Seleccione una categoría</option>
+                        required>
+
+                        <option value="">Categoría</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
@@ -179,7 +180,7 @@ function EditProductForm() {
                     />
                 </div>
 
-                
+
                 <img src={product.pictures} alt="Product" className="product-image" />
 
                 <div className="form-field">

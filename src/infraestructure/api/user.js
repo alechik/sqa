@@ -114,7 +114,8 @@ const createUser = async (userData) => {
         // Crea/actualiza el perfil del usuario en Firestore sin incluir la contraseña
         await setDoc(doc(db, "users", user.uid), {
             ...profileData,
-            userTypeId: CLIENT_ID, // Establece el tipo de usuario como 'cliente' por defecto
+            email: email,
+            userTypeId: CLIENT_ID,
         });
 
         console.log("Usuario creado con éxito:", user.uid);

@@ -76,6 +76,7 @@ function AddProductForm() {
 
     return (
         <form onSubmit={handleSubmit} className='add-product-form'>
+            <h2 className='name'>Agregar Producto</h2>
             <input type="text" name="product_name" placeholder="Nombre del Producto" onChange={handleChange} required />
             <textarea name="description" placeholder="Descripción" onChange={handleChange} required />
             <select name="category_id" onChange={handleChange} required>

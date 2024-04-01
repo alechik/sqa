@@ -1,7 +1,7 @@
 
 export const data = [
     {
-        id: 1, imgUrl: "src/presentation/assets/tienda.jpg"
+        id: 1, imgUrl: "src/presentation/assets/E-commerce.png"
     },
     {
         id: 2, imgUrl: "src/presentation/assets/tienda2.jpg"

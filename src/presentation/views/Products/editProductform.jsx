@@ -27,16 +27,17 @@ function EditProductForm() {
                 const data = await getProductById(productId);
                 // Asume que 'data' tiene un campo 'imageUrl' con la URL de la imagen actual
                 setProduct({
-                    ...data, // Asume que esto incluye category_id y imageUrl
-                    CategoryID: data.category_id, // Asegúrate de que este campo coincida con el nombre en tu base de datos
-                    gramaje: data.gramaje, // Asume que esto es parte de los datos recuperados
-                    imageUrl: data.imageUrl, // URL de la imagen para la vista previa
+                    ...data,
+                    CategoryID: data.CategoryID,
+                    gramaje: data.gramaje, 
+                    imageUrl: data.imageUrl, 
                 });
             } catch (error) {
                 console.error("Error fetching product data:", error);
             }
         };
 
+        
         const fetchCategoriesData = async () => {
             try {
                 const categoriesData = await getCategories();
@@ -131,12 +132,12 @@ function EditProductForm() {
                     <label htmlFor="category_id">Categoría</label>
                     <select
                         id="CategoryID"
-                        name="CategoryID"
+                        name="category_id"
                         value={product.category_id || ''}
                         onChange={handleChange}
-                        required
-                    >
-                        <option value="">Seleccione una categoría</option>
+                        required>
+
+                        <option value="">Categoría</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>{category.name}</option>
                         ))}

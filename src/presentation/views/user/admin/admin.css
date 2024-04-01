@@ -1,3 +1,4 @@
+
 .admin-sidebar{
     display: flex;
     width: 100%;
@@ -8,44 +9,101 @@
 
 .left{
     width: 20%;
-    border: 1px solid rgb(207,207,207);
+   /* border: 1px solid rgb(207,207,207); */
     border-radius: 5px;
     min-height: 50vh;
 }
 .right{
     width: 75%;
-    border: 1px solid rgb(207,207,207);
+   /* border: 1px solid rgb(207,207,207); */
     border-radius: 5px;
     min-height: 50vh;
 }
-.sidebar {
-    width: 100%;
-    height: 100%;
+
+.navwrapper {
+    display: flex;
+    gap: 1rem;
+    width: 14rem;
+}
+.subnav {
+    width: min-content;
     display: flex;
     flex-direction: column;
+    background: #633154;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    box-shadow: rgba(0,0,0, 0.2) 0px 7px 29px 0px;
 }
-
-.sidebar .s1 , .sidebar .s2{
+.navbutton {
+    position: relative;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 20px;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    isolation: isolate;
+    transition: width 300ms;
 }
-.sidebar svg{
-    width: 40px;
-    height: 40px;
-    color: rgb(128, 128, 128);
+.subnav:has(.navbutton:hover) > .navbutton,
+.subnav.demoanim > .navbutton {
+    width: 14rem;
 }
-
-.sidebar .s1:hover{
-    background-color: rgb(246,246,246);
-    border-radius: 5px;
-    cursor: pointer;
-    color: rgb(126,126,126);
+.navbutton:after {
+    position: absolute;
+    content: "";
+    inset: 1rem;
+    background: #6d3b65;
+    border-radius: 0.5rem;
+    z-index: -2;
+    opacity: 0;
+    transition: inset 300ms, opacity 300ms;
 }
-.sidebar .s2{
-    background-color: rgb(246,246,246);
-    border-radius: 5px;
-    cursor: pointer;
-    color: rgb(126,126,126);
+.navbutton:hover:after,
+.subnav.demoanim .navbutton.demoanimhover:after {
+    inset: 0;
+    opacity: 1;
 }
+.navicon {
+    flex-shrink: 0;
+    position: relative;
+    width: 3.5rem;
+    display: grid;
+    place-content: center;
+    padding-bottom: 0.125rem;
+    font-size: 10px;
+    --ionicon-stroke-width: 40px;
+    color: #c9c9ff;
+}
+.navicon:after {
+    position: absolute;
+    content: "";
+    inset: 1rem;
+    background: #734369;
+    border-radius: 0.5rem;
+    z-index: -1;
+    opacity: 0;
+    transition: inset 300ms, opacity 300ms, border-radius 300ms ease;
+}
+.subnav:not(:has(.navbutton:hover), .demoanim) .navbutton.selected > .navicon:after{
+    inset: 0;
+    opacity: 1;
+    border-radius: 0.5rem;
+}
+.navbutton:hover > .navicon:after,
+.subnav.demoanim .navbutton.demoanimhover > .navicon:after{
+    inset: 0;
+    opacity: 1;
+}
+.navlabel {
+    flex-shrink: 0;
+    display: grid;
+    place-content: center;
+    padding-bottom: 0.125rem;
+    padding-left: 0.5rem;
+    font-size: 1.125rem;
+    color: #c9c9ff;
+    text-decoration: nope;
+}
+a {
+    text-decoration: none;
+  }

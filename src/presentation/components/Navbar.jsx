@@ -52,42 +52,42 @@ export default function Navbar({ cartitem }) {
 
     return (
         <nav className="nav">
-            <img src={iconUrls.storeIcon} />
+            <img src={iconUrls.storeIcon} alt="Store Icon" />
             <Link to="/" className="nombre-sitio">Store</Link>
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
                     <li>
                         <div className='cart'>
-                            <Link to='/cart'>
-                                <img src={iconUrls.shoppingCartIcon}></img>
+                            <Link to='/cart' className="cart-link">
+                                <img src={iconUrls.shoppingCartIcon} alt="Carrito" ></img>
                                 <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
                             </Link>
                         </div>
-                        {userProfile.userTypeId === '1' && <Link to="/admin/:activepage"><img
+                        {userProfile.userTypeId === '1' && <Link to="/admin/:activepage" className="perfil-link"><img
                             src={userProfile.avatar || '/user-profile.png'}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
-                        {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos"><img
+                        {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos" className="perfil-link"><img
                             src={userProfile.avatar || '/user-profile.png'}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
-                        {userProfile.userTypeId === '3' && <Link to="/perfil"><img
-                            src={userProfile.avatar || '/user-profile.png'}
+                        {userProfile.userTypeId === '3' && <Link to="/perfil" className="perfil-link"><img
+                            src={userProfile.avatar || '/user-profile.png' }
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
-                        <button onClick={logout} className="logout-button" title="Cerrar Sesión">
+                        <button onClick={logout} className="logout-button" title="Cerrar Sesión" alt="Cerrar Sesión" >
                             <img src={iconUrls.logoutIcon}></img>
                         </button>
                     </li>
                 ) : (
-                    <li>
+                    <li className='links'>
                         <Link to="/iniciarsesion">Iniciar sesión</Link>
                         <Link to="/registrarse">Registrarse</Link>
                     </li>

@@ -12,7 +12,7 @@ function Footer() {
         const fetchIconUrls = async () => {
             try {
                 const whatsappUrl = await getDownloadURL(ref(storage, 'Iconos/whatsapp.png'));
-                const facebookUrl = await getDownloadURL(ref(storage, 'Iconos/facebookk.png'));
+                const facebookUrl = await getDownloadURL(ref(storage, 'Iconos/facebook.png'));
                 const instagramUrl = await getDownloadURL(ref(storage, 'Iconos/instagram.png'));
                 const twitterUrl = await getDownloadURL(ref(storage, 'Iconos/twitter.png'));
                 const storeIconUrl = await getDownloadURL(ref(storage, 'Iconos/shop.png'))

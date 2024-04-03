@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { auth, db } from '../../../../infraestructure/firebase--config'; // Asegúrate de que este archivo contiene tus exportaciones de Firebase
 import { doc, getDoc } from "firebase/firestore";
 
-class AdminInfo extends Component {
+class UserInfo extends Component {
     state = {
         userData: null,
     };
@@ -42,62 +42,18 @@ class AdminInfo extends Component {
         const { avatar, names, email, gender, address, birthday_date, ci, userTypeID } = userData;
 
         return (
-            <div className='user-profile-container'>
-                <div className="user-cont">
-                    <div className="user-image-cont">
-                        <div className="user-image-div">
-                            <img src={avatar || '/src/presentation/assets/user-profile.png'} alt='perfil' className='user-img' />
-                        </div>
-                        <div className="below-info">
-                            <span className='user-info-name'>{names || 'Nombre no disponible'}</span>
-                            <span className='user-info-email'>{email || 'Email no disponible'}</span>
-                        </div>
+            <div className="profile-container">
+                <div className="profile-card">
+                    <h2 className='my'>Mi cuenta</h2>
+                    <div className="avatar-container">
+                        <img src={avatar || 'default-avatar.png'} alt='Perfil' className='avatar' />
                     </div>
-
-                    <div className="user-info">
-                        <div className="user-info-div">
-                            <div className="stat">
-                                <h4>Nombre: </h4>
-                                <span className='user-info-span'>{names?.split(" ")[0] || 'Nombre'}</span>
-                            </div>
-                            <div className="stat">
-                                <h4>Apellido: </h4>
-                                <span>{names?.split(" ").slice(1).join(" ") || 'Apellido'}</span>
-                            </div>
-                            <div className="stat">
-                                <h4>Fecha de Nacimiento: </h4>
-                                <span>{birthday_date || ''}</span>
-                            </div>
-                        </div>
-                        <div className="user-info-div">
-                            <div className="stat">
-                                <h4>Dirección: </h4>
-                                <span>{address || ''}</span>
-                            </div>
-                            <div className="stat">
-                                <h4>Correo Electrónico: </h4>
-                                <span>{email || ''}</span>
-                            </div>
-                            <div className="stat">
-                                <h4>Género: </h4>
-                                <span>{gender || ''}</span>
-                            </div>
-                        </div>
-                        <div className="user-info-div">
-                            <div className="stat">
-                                <h4>Carnet de Identidad: </h4>
-                                <span>{ci || ''}</span>
-                            </div>
-                            <div className="stat">
-                                <h4>Tipo de Usuario:</h4>
-                                <span>{userTypeID || ''}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 className="name">{names || 'Nombre no disponible'}</h1>
+                    <p className="email">{email || 'Email no disponible'}</p>
                 </div>
             </div>
         );
     }
 }
 
-export default AdminInfo;
+export default UserInfo;

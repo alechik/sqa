@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar.jsx";
 import {useParams} from "react-router-dom";
 import CrudProductos from "./CrudProductos.jsx";
 import CrudEmpleados from "./CrudEmpleados.jsx";
+import AdminInfo from "./AdminInfo.jsx";
 import Dashboard from "../Dashboard.jsx";
 import AddProductForm from "../../Products/addProductform.jsx";
 import EditProductForm from '../../Products/editProductform.jsx';
@@ -24,6 +25,7 @@ export default function AdminSideBar({productos}) {
                         {activepage === 'dashboard' && <Dashboard/> }
                         {activepage === 'add-product' && <AddProductForm/>}
                         {activepage === 'edit-product' && <EditProductForm/>}
+                        {activepage === 'AdminInfo' && <AdminInfo/>}
                     </div>
                 </div>
             </div>

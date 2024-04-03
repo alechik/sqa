@@ -5,8 +5,7 @@ html {
 }
 
 .container{
-    background-color: #FFF;;
-    height: 100vh;
+    background-color: #ffffffd2;;
     margin: 0 auto;
     padding: 0;
 
@@ -126,6 +125,9 @@ html {
     padding-top: 15px;
 }
 .f_flex {
+    display: flex;
+}
+.d_flex {
     display: flex;
 }
 

@@ -1,11 +1,18 @@
 .add-product-form {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 40px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 650px;
+    padding: 1.5rem;
+    background: #f7f7f7;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 30px auto;
+}
+
+.name{
+    color: black;
+    margin: 10px;
+
 }
 
 .add-product-form input,

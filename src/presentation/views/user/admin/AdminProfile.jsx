@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom";
 export default function AdminProfile({productos}){
 
     return <>
-    <AdminInfo/>
+    
         <AdminSideBar productos={productos} />
     </>
 }

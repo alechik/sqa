@@ -1,67 +1,50 @@
 import React from "react";
-import {Link} from "react-router-dom";
-export default function Sidebar({ activepage , productos}){
-    return <div className='sidebar'>
-        {
-            activepage === 'crud-productos' ?
-                <div className='s2'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                    </svg>
+import { Link } from "react-router-dom";
 
-                    <span>Crud Productos</span>
-                </div>
+import PeopleIcon from "./admin/icons/people-outline.svg";
+import Create from "./admin/icons/create-outline.svg";
+import Stats from "./admin/icons/stats-chart-outline.svg";
+import Admin from "./admin/icons/person-circle-outline.svg";
+import AdminInfo from "../user/admin/AdminInfo.jsx"; 
 
-                    :
-                <Link to='/admin/crud-productos'>
-                    <div className='s1'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
+export default function Sidebar({ activepage, productos }) {
+  return (
+    <div className='navwrapper'>
+      <div className='subnav secondnav'>
 
-                        <span>Crud Productos</span>
-                    </div>
-                </Link>
-        }
-        {
-            activepage === 'dashboard' ?
+      <Link to='/admin/AdminInfo' className={activepage === 'AdminInfo' ? 'navbutton selected' : 'navbutton'}>
+        <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+            <img src={Admin} alt="Admin" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
+          </div>
+          <div className='navlabel'>Usuario</div>
+        </Link>
 
-                <div className='s2'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
-                    </svg>
-                    <span>Dashboard</span>
-                </div>
+        <Link to='/admin/crud-productos' className={activepage === 'crud-productos' ? 'navbutton selected' : 'navbutton'}>
+          <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+            <img src={Create} alt="Create" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
+          </div>
+          <div className='navlabel'>Crud Productos</div>
+        </Link>
 
-                :
-                <Link to='/admin/dashboard'>
-                    <div className='s1'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
-                        </svg>
-                        <span>Dashboard</span>
-                    </div>
-                </Link>
-        }
-        {
-            activepage === 'crud-empleados' ?
+        <Link to='/admin/dashboard' className={activepage === 'dashboard' ? 'navbutton selected' : 'navbutton'}>
+          <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+            <img src={Stats} alt="Stats" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
+          </div>
+          <div className='navlabel'>Dashboard</div>
+        </Link>
 
-                <div className='s2'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
-                    <span>Ver Empleados</span>
-                </div>
+        <Link to='/admin/crud-empleados' className={activepage === 'crud-empleados' ? 'navbutton selected' : 'navbutton'}>
+          <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+            <img src={PeopleIcon} alt="People" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
+          </div>
+          <div className='navlabel'>Ver Empleados</div>
+        </Link>
 
-                :
-                <Link to='/admin/crud-empleados'>
-                    <div className='s1'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                        </svg>
-                        <span>Ver Empleados</span>
-                    </div>
-                </Link>
-        }
+        </div>
+      
+     
     </div>
+  );
 }
+
+

@@ -34,7 +34,6 @@ function Footer() {
         <footer className="footer">
             <div className="footer-top">
                 <div className="footer-contact">
-                    <p><strong>Dirección:</strong> Av. Alemana 3er Anillo a dos cuadras del Centro Comercial Norte, calle #7, N° 148</p>
                     <p><strong>Teléfono:</strong> +591 60032422, +591 70841830</p>
                     <p><strong>Email:</strong> <a href="mailto:tienda@Chambicitos.com">tienda@Chambicitos.com</a></p>
                 </div>

@@ -43,10 +43,10 @@ export default function CrudProductos({productos}){
                 {/* Encabezados de la tabla */}
                 <thead>
                     <tr>
-                        <th>ID producto</th>
                         <th>Nombre producto</th>
                         <th>Descripción</th>
                         <th>Stock</th>
+                        <th>Unidad de medida</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -57,10 +57,10 @@ export default function CrudProductos({productos}){
                     <tbody>
                         {productos.map((producto) => (
                             <tr key={producto.id}>
-                                <td>{producto.id}</td>
                                 <td>{producto.product_name}</td>
-                                <td><p>{producto.description}</p></td>
+                                <td className="product_description">{producto.description}</td>
                                 <td>{producto.stock}</td>
+                                <td>{producto.gramaje}</td>
                                 <td id='acciones'>
                                     <button id='editar' onClick={() => handleEditProduct(producto.id)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

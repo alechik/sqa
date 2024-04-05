@@ -1,0 +1,138 @@
+/* ProductPopup.css */
+.product-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* Asegura que el popup esté en la parte superior */
+}
+
+.product-popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* Sombra */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.product-details-container {
+    display: flex;
+}
+
+.product-left {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.product-right {
+    flex: 1;
+}
+
+.product-right h2 {
+    color: black;
+}
+
+.product-details h2 {
+    color: black;
+    margin-bottom: 10px;
+}
+
+.product-details p {
+    margin-bottom: 20px;
+}
+
+.product-details button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product-details button:hover {
+    background-color: #0056b3;
+}
+
+.rate .fa-star.fas {
+    color: #ffcd4e;
+}
+
+.rate i {
+    font-size: 15px;
+    color: #ffcd4e;
+}
+
+
+.buttons-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-to-cart,
+.ask-on-whatsapp {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px ;
+}
+
+.add-to-cart {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 30px; /* Ajustado el padding para aumentar el ancho */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+    width: 12rem;
+    height: 48px;
+}
+
+.ask-on-whatsapp {
+    background-color: #25d366;
+    color: white;
+    display: flex; /* Añadido */
+    align-items: center; /* Añadido */
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.ask-on-whatsapp i {
+    margin-right: 8px; /* Añadido */
+}
+
+.add-to-cart:hover,
+.ask-on-whatsapp:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart:focus,
+.ask-on-whatsapp:focus {
+    outline: none;
+}

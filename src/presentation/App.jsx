@@ -17,7 +17,7 @@ import Footer from './components/Footer.jsx';
 import Cart from "./views/carrito/Cart.jsx";
 import Compra from "./views/compra/compra.jsx";
 import 'react-toastify/dist/ReactToastify.css';
-
+import Pagoqr from "./views/compra/qrcompra.jsx";
 
 function App() {
     //stpe 1: fetch data from database
@@ -65,6 +65,7 @@ function App() {
                         <Route path="/registrarse" element={<Register />} />
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
+                        <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />

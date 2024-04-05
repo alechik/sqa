@@ -70,12 +70,12 @@ export default function Navbar({ cartitem }) {
         <nav className="nav">
             <img src={iconUrls.storeIcon} alt="Store Icon" />
             <Link to="/" className="nombre-sitio">Store</Link>
-            <select name="category" id="category" className='select-custom'>
+        {/*    <select name="category" id="category" className='select-custom'>
                 <option value="">Categorías</option>
                 {categories.map(category => (
                     <option key={category.id} value={category.id}>{category.name}</option>
                 ))}
-            </select>
+            </select>*/}    
             <Search />
             <ul className="navegacion">
                 {userProfile ? (

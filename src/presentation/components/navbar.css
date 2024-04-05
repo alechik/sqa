@@ -98,7 +98,7 @@ postcss-color-function postcss-nested body {
 .navegacion {
     display: flex;
     align-items: center;
-
+    padding: 0;
     margin: 0;
 }
 
@@ -224,7 +224,6 @@ postcss-color-function postcss-nested body {
     margin-right: 20px;
     /* Margen a la derecha para separarlo del siguiente elemento */
     background-color: #522b46;
-    top: -5px;
 }
 
 .cart:hover,

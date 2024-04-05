@@ -4,7 +4,7 @@
     align-items: center;
     margin: auto;
     transform: translateX(-35px);
-    
+    margin-bottom: 50px;
 }
 .crud-productos table tbody tr:hover td {
     background-color: #f2f2f2;

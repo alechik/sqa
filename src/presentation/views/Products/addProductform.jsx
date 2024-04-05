@@ -87,8 +87,17 @@ function AddProductForm() {
             </select>
             <input type="number" name="unitary_price" placeholder="Precio Unitario" onChange={handleChange} required />
             <input type="number" name="stock" placeholder="Stock" onChange={handleChange} required />
-            <input type="number" name="gramaje" placeholder="Gramaje (g/m²)" onChange={handleChange} required />
-            <input type="file" name="image" onChange={handleChange} required />
+            <select name="gramaje" id="gramaje" placeholder="Unidad de medida" onChange={handleChange} required>
+                <option value="">Unidad de medida</option>
+                <option value="Litro">Litro</option>
+                <option value="Gramos">Gramos</option>
+                <option value="Kilogramos">Kilogramos</option>
+                <option value="Mililitros">Mililitros</option>
+                <option value="Piezas sueltas">Piezas sueltas</option>
+                <option value="Kit">Kit</option>
+                <option value="Metros">Metros</option>
+                <option value="Centímetros">Centímetros</option>
+            </select>            <input type="file" name="image" onChange={handleChange} required />
             <button type="submit">Agregar Producto</button>
         </form>
     );

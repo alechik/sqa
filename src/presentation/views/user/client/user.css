@@ -1,15 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+:root {
+    --primary-bg-color: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --hover-shadow-color: rgb(82, 43, 70);
+    --text-color: #333;
+    --secondary-text-color: #555;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
 }
 
-.loading-container {
+.loading-container,
+.error-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    text-align: center;
 }
 
 .profile-container {
@@ -17,16 +27,24 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    
 }
 
 .profile-card {
     width: 100%;
     max-width: 350px;
-    background-color: #fff;
+    background-color: var(--primary-bg-color);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-color) 0 2px 5px;
     text-align: center;
     padding: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+.profile-container:hover .profile-card,
+.profile-container:hover .avatar-container {
+    box-shadow: var(--hover-shadow-color) 0 0 15px 5px;
+    transition: box-shadow 0.3s ease;
 }
 
 .avatar-container {
@@ -36,6 +54,7 @@ body {
     border-radius: 50%;
     margin: 0 auto 20px;
     overflow: hidden;
+    transition: box-shadow 0.3s ease;
 }
 
 .avatar {
@@ -45,19 +64,23 @@ body {
     border-radius: 50%;
 }
 
-.name {
-    font-size: 1.5rem;
-    color: #333;
+.name,
+.email {
     margin-bottom: 10px;
 }
 
-.my{
-    color: black;
-    font-family:Georgia, 'Times New Roman', Times, serif;
+.name {
+    font-size: 1.5rem;
+    color: var(--text-color);
 }
 
 .email {
     font-size: 1rem;
-    color: #555;
-    margin-bottom: 10px;
+    color: var(--secondary-text-color);
+}
+
+.my {
+    color: black;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin: 10px;
 }

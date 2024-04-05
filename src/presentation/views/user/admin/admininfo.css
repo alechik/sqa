@@ -1,0 +1,158 @@
+:root {
+    --primary-color: #633154;
+    /* Color principal morado */
+    --hover-color: #5c2d50;
+    /* Color morado más oscuro para efectos hover */
+    --background-color: #fff;
+    /* Fondo blanco */
+    --text-color: #333;
+    /* Texto principal oscuro para contraste */
+    --accent-color: rgba(243, 156, 18, 0.6);
+    /* Naranja con mayor opacidad para mejor visibilidad */
+    --accent-colorr: rgb(82, 43, 70);
+    /* Detalles y acentos */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Fuente general */
+    --border-radius: 10px;
+    /* Bordes redondeados */
+    --card-padding: 20px;
+    /* Espaciado interno para las tarjetas */
+    --transition-speed: 0.3s;
+    /* Velocidad uniforme de transición */
+}
+
+/* Base Layout y Mejoras */
+.admin-sidebar {
+    display: flex;
+    align-items: center;
+    margin-top: 5vh;
+    /* Menos espacio en la parte superior */
+    gap: 20px;
+    font-family: var(--font-family);
+}
+
+/* Tarjeta de Perfil del Administrador */
+.user-profile-container {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-radius: var(--border-radius);
+    padding: var(--card-padding);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Sombra más suave */
+    transition: box-shadow var(--transition-speed);
+}
+
+.below-info {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.user-info-name,
+.user-info-email {
+    display: block;
+    /* asegura que cada uno ocupe su propia línea */
+    color: var(--text-color);
+    /* color de texto principal oscuro para contraste */
+    font-weight: bold;
+    /* opcional, para destacar */
+}
+
+.user-profile-container.hovered,
+.user-image-div.hovered {
+    box-shadow: 0 0 20px var(--accent-colorr);
+    /* Sombra más destacada y consistente al hacer hover */
+}
+
+.user-cont {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.user-image-cont,
+.user-info {
+    flex: 1;
+    padding: 1rem;
+}
+
+/* Imagen de Perfil con Mejoras Visuales */
+.user-image-div {
+    width: 150px;
+    /* Tamaño optimizado */
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+    /* Centrar en dispositivos móviles */
+    box-shadow: 0 2px 4px var(--accent-color);
+    /* Sombra más ligera */
+    transition: box-shadow var(--transition-speed), transform var(--transition-speed);
+}
+
+.user-image-div:hover {
+    transform: scale(1.05);
+    /* Efecto de crecimiento sutil */
+}
+
+.user-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Mejoras en la Navegación */
+.subnav,
+.navbutton {
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.navbutton:hover,
+.navbutton:focus,
+.navbutton:hover .navlabel,
+.navbutton:focus .navlabel {
+    background-color: var(--hover-color);
+    /* Fondo más oscuro para el hover */
+    color: var(--background-color);
+    /* Contraste */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-profile-container {
+        max-width: 100%;
+        padding: var(--card-padding);
+    }
+
+    .user-cont {
+        flex-direction: column;
+    }
+
+    .user-image-cont,
+    .user-info {
+        padding: 0.5rem;
+    }
+
+    /* Para que el nombre y correo electrónico no se vean apretados */
+    .below-info {
+        margin-top: 0.5rem;
+    }
+
+    /* Ajustar el tamaño de la imagen para dispositivos móviles */
+    .user-image-div {
+        width: 120px;
+        /* más pequeño en móviles */
+        height: 120px;
+        /* más pequeño en móviles */
+    }
+
+    /* Aumentar la legibilidad del texto en dispositivos móviles */
+    h4,
+    .stat span {
+        font-size: 0.9rem;
+    }
+}

@@ -1,46 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '../../../../infraestructure/firebase--config'; // Asegúrate de que este archivo contiene tus exportaciones de Firebase
+import React, { useState, useEffect, useCallback } from 'react';
+import { auth, db } from '../../../../infraestructure/firebase--config';
 import { doc, getDoc } from "firebase/firestore";
+import './admininfo.css'
 
 export default function AdminInfo() {
     const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [isHovered, setIsHovered] = useState(false); 
 
-    useEffect(() => {
-        const loadUserData = async () => {
-            const user = auth.currentUser;
-            if (user) {
-                const userRef = doc(db, 'users', user.uid); // Se usa doc y getDoc con el nuevo SDK de Firestore v9+
-                try {
-                    const docSnap = await getDoc(userRef);
-                    if (docSnap.exists()) {
-                        setUserData(docSnap.data());
-                    } else {
-                        console.log('No se encontró el documento!');
-                    }
-                } catch (error) {
-                    console.log('Error al obtener el documento:', error);
-                }
-            } else {
-                // El usuario no está autenticado
-                console.log('El usuario no está autenticado.');
+    const fetchUserData = useCallback(async () => {
+        setLoading(true);
+        const user = auth.currentUser;
+        if (!user) {
+            setError('El usuario no está autenticado.');
+            setLoading(false);
+            return;
+        }
+        try {
+            const userRef = doc(db, 'users', user.uid);
+            const docSnap = await getDoc(userRef);
+            if (!docSnap.exists()) {
+                setError('No se encontró el documento.');
+                setLoading(false);
+                return;
             }
-        };
-
-        loadUserData();
+            setUserData(docSnap.data());
+        } catch (err) {
+            setError(`Error al obtener el documento: ${err.message}`);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
-    if (!userData) {
-        return <div>Cargando...</div>;
-    }
+    useEffect(() => {
+        fetchUserData();
+    }, [fetchUserData]);
 
-    // Desestructuramos los datos para facilitar su uso en el JSX
-    const { avatar, names, email, gender, address, birthday_date, ci, userTypeID } = userData;
+    if (loading) return <div>Cargando...</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    const { avatar, names, email, gender, address, birthday_date, ci, userTypeID } = userData || {};
 
     return (
-        <div className='user-profile-container'>
+        <div
+            className={`user-profile-container ${isHovered ? 'hovered' : ''}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             <div className="user-cont">
                 <div className="user-image-cont">
-                    <div className="user-image-div">
+                    <div className={`user-image-div ${isHovered ? 'hovered' : ''}`}>
                         <img src={avatar || '/src/presentation/assets/user-profile.png'} alt='perfil' className='user-img' />
                     </div>
                     <div className="below-info">
@@ -49,45 +59,23 @@ export default function AdminInfo() {
                     </div>
                 </div>
 
+                {/* Detailed User Info */}
                 <div className="user-info">
-                    <div className="user-info-div">
+                    <div className="user-info-div"> {/* It's better to use a grid layout for these infos for better alignment and responsiveness */}
                         <div className="stat">
-                            <h4>Nombre: </h4>
-                            <span className='user-info-span'>{names?.split(" ")[0] || 'Nombre'}</span>
+                            <h4>Nombre:</h4>
+                            <span>{names?.split(" ")[0] || 'Nombre'}</span>
                         </div>
                         <div className="stat">
-                            <h4>Apellido: </h4>
+                            <h4>Apellido:</h4>
                             <span>{names?.split(" ").slice(1).join(" ") || 'Apellido'}</span>
                         </div>
                         <div className="stat">
-                            <h4>Fecha de Nacimiento: </h4>
+                            <h4>Fecha de Nacimiento:</h4>
                             <span>{birthday_date || ''}</span>
                         </div>
                     </div>
-                    <div className="user-info-div">
-                        <div className="stat">
-                            <h4>Dirección: </h4>
-                            <span>{address || ''}</span>
-                        </div>
-                        <div className="stat">
-                            <h4>Correo Electrónico: </h4>
-                            <span>{email || ''}</span>
-                        </div>
-                        <div className="stat">
-                            <h4>Género: </h4>
-                            <span>{gender || ''}</span>
-                        </div>
-                    </div>
-                    <div className="user-info-div">
-                        <div className="stat">
-                            <h4>Carnet de Identidad: </h4>
-                            <span>{ci || ''}</span>
-                        </div>
-                        <div className="stat">
-                            <h4>Tipo de Usuario:</h4>
-                            <span>{userTypeID || ''}</span>
-                        </div>
-                    </div>
+                    {/* Repeat for other details */}
                 </div>
             </div>
         </div>

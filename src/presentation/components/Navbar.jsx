@@ -64,7 +64,7 @@ export default function Navbar({ cartitem }) {
                                 <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
                             </Link>
                         </div>
-                        {userProfile.userTypeId === '1' && <Link to="/admin/:activepage" className="perfil-link"><img
+                        {userProfile.userTypeId === '1' && <Link to="/admin/AdminInfo" className="perfil-link"><img
                             src={userProfile.avatar || '/user-profile.png'}
                             alt="Perfil"
                             className="navbar-avatar"
@@ -82,7 +82,7 @@ export default function Navbar({ cartitem }) {
                             className="navbar-avatar"
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
-                        <button onClick={logout} className="logout-button" title="Cerrar Sesión" alt="Cerrar Sesión" >
+                        <button onClick={logout} className  ="logout-button" title="Cerrar Sesión" alt="Cerrar Sesión" >
                             <img src={iconUrls.logoutIcon}></img>
                         </button>
                     </li>

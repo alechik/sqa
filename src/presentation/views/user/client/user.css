@@ -33,7 +33,7 @@ body {
 .profile-card {
     width: 100%;
     max-width: 350px;
-    background-color: var(--primary-bg-color);
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: var(--shadow-color) 0 2px 5px;
     text-align: center;

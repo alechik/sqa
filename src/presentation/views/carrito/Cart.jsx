@@ -50,6 +50,9 @@ export default function Cart({cartitem, addtoCart, decreaseQty}){
                             <h4>Precio total :</h4>
                             <h3 id='precio-total'>${totalPrice}.00</h3>
                         </div>
+                        <div className="botoncompra">
+                            <button>Comprar Productos</button>
+                        </div>
                     </div>
             </div>
         </section>

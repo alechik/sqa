@@ -54,6 +54,11 @@
 }
 .cart-total .d_flex h3{
     font-size: 19px;
+    padding: 20px;
+        /* ajusta según necesites */
+        box-sizing: border-box;
+        /* asegúrate de que el padding no afecte el ancho total */
+        text-align: center;
 }
 .cartControl{
     margin-top: 50px ;
@@ -101,4 +106,44 @@
 #precio-total{
     flex: 1;
     text-align: right;
+}
+
+
+
+.botoncompra {
+    text-align: center;
+    /* Centrar el botón si es solo uno en la línea */
+    padding: 20px 0;
+    /* Agregar algo de espacio arriba y abajo del botón */
+}
+
+.botoncompra button {
+    width: auto;
+    /* Permitir que el botón se ajuste al contenido */
+    padding: 10px 20px;
+    /* Aumenta el padding para dar más espacio al texto */
+    background-color: #c82d5c;
+    /* Color distintivo para el botón */
+    color: white;
+    /* Texto blanco para contraste */
+    border: none;
+    /* Remover el borde por defecto */
+    border-radius: 5px;
+    /* Bordes redondeados ligeramente */
+    font-size: 18px;
+    /* Tamaño de fuente para mejorar la legibilidad */
+    cursor: pointer;
+    /* Cambiar el cursor para indicar que es clickeable */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra sutil para profundidad */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    /* Transición suave para hover y active */
+}
+
+.botoncompra button:hover,
+.botoncompra button:active {
+    background-color: #a6204a;
+    /* Color más oscuro al pasar el ratón o hacer clic */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Sombra más pronunciada para efecto de elevación */
 }

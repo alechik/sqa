@@ -15,7 +15,8 @@ import { AuthProvider } from './components/context/AuthContext.jsx';
 import EditProductForm from './views/Products/editProductform.jsx';
 import Footer from './components/Footer.jsx';
 import Cart from "./views/carrito/Cart.jsx";
-import Compra from "./views/compra/compra.jsx"
+import Compra from "./views/compra/compra.jsx";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {

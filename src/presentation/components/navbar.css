@@ -60,7 +60,7 @@ body {
     &__input {
         width: 100%;
         padding: 12px 80px;
-
+        color: white;
         background-color: transparent;
         transition: transform 250ms ease-in-out;
         font-size: 14px;
@@ -81,7 +81,7 @@ body {
         transform-style: preserve-3d;
 
         &::placeholder {
-            color: color(#ffffff a(0.8));
+            color: white;
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }

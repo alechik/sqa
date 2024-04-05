@@ -12,7 +12,7 @@ function AddProductForm() {
         description: '',
         unitary_price: '',
         stock: '',
-        category_id: '', 
+        category_id: '',
         gramaje: '',
         image: null,
     });
@@ -53,7 +53,7 @@ function AddProductForm() {
 
         const productData = {
             ...product,
-            CategoryID: product.category_id,   
+            CategoryID: product.category_id,
             unitary_price: Number(product.unitary_price),
             stock: Number(product.stock),
             gramaje: Number(product.gramaje),
@@ -97,7 +97,8 @@ function AddProductForm() {
                 <option value="Kit">Kit</option>
                 <option value="Metros">Metros</option>
                 <option value="Centímetros">Centímetros</option>
-            </select>            <input type="file" name="image" onChange={handleChange} required />
+            </select>
+            <input type="file" name="image" onChange={handleChange} required />
             <button type="submit">Agregar Producto</button>
         </form>
     );

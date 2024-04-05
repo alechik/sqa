@@ -15,6 +15,7 @@ import { AuthProvider } from './components/context/AuthContext.jsx';
 import EditProductForm from './views/Products/editProductform.jsx';
 import Footer from './components/Footer.jsx';
 import Cart from "./views/carrito/Cart.jsx";
+import Compra from "./views/compra/compra.jsx"
 
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
                         <Route path="/iniciarsesion" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
+                        <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />

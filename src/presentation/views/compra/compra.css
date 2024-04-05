@@ -1,0 +1,73 @@
+/* compra.css */
+
+.compra-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.user-info-form {
+    flex: 1;
+    max-width: 500px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    margin-right: 20px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.user-info-form input,
+.user-info-form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.user-info-form button {
+    background-color: #c82d5c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.user-info-form button:hover {
+    background-color: #a6204a;
+}
+
+.order-summary {
+    flex: 1;
+    max-width: 500px;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.order-summary h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.order-summary .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.order-summary h3 {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+button[disabled] {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+/* Si necesitas más estilos para elementos específicos, puedes agregarlos aquí. */

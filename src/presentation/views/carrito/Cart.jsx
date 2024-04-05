@@ -1,9 +1,15 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
 import './cart.css'
 
 export default function Cart({cartitem, addtoCart, decreaseQty}){
+    const navigate = useNavigate();
     // eslint-disable-next-line react/prop-types
     const totalPrice = cartitem.reduce((price,item) => price + item.qty * item.unitary_price, 0)
+
+    const handleProceedToCheckout = () => {
+        navigate('/compra');
+    };
     return (<>
         <section className="cart-items">
             <div className="contenedor d_flex">
@@ -51,7 +57,7 @@ export default function Cart({cartitem, addtoCart, decreaseQty}){
                             <h3 id='precio-total'>${totalPrice}.00</h3>
                         </div>
                         <div className="botoncompra">
-                            <button>Comprar Productos</button>
+                        <button onClick={handleProceedToCheckout}>Pagar Productos</button>
                         </div>
                     </div>
             </div>

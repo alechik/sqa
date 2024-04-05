@@ -45,6 +45,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* Sombra más suave */
     transition: box-shadow var(--transition-speed);
+    margin-bottom: 50px;
 }
 
 .below-info {

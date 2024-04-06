@@ -141,9 +141,9 @@ export default function Compra({ cartItems }) {
           <div key={item.id} className="cart-item">
             <img src={item.imageUrl} alt={item.productid} className="product-image" />
             <div>
-              <h4>{item.product_name}</h4>
-              <p>Cantidad: {item.qty}</p>
-              <p>Precio: ${item.unitary_price.toFixed(2)}</p>
+                <h4>{item.product_name}</h4>
+                <p>Cantidad: {item.qty}</p>
+                <p>Precio: ${item.unitary_price.toFixed(2)}</p>
               <p>Subtotal: ${(item.qty * item.unitary_price).toFixed(2)}</p>
             </div>
           </div>

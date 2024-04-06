@@ -11,7 +11,7 @@ function EditProductForm() {
         description: '',
         unitary_price: '',
         stock: '',
-        category_id: '',
+        CategoryID: '',
         gramaje: '',
         image: null, // Para el archivo de imagen
         imageUrl: '' // Para la URL de la vista previa de la imagen
@@ -129,11 +129,11 @@ function EditProductForm() {
                 </div>
 
                 <div className="form-field">
-                    <label htmlFor="category_id">Categoría</label>
+                    <label htmlFor="CategoryID">Categoría</label>
                     <select
                         id="CategoryID"
-                        name="category_id"
-                        value={product.category_id || ''}
+                        name="CategoryID"
+                        value={product.CategoryID || ''}
                         onChange={handleChange}
                         required>
 

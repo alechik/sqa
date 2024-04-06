@@ -26,7 +26,7 @@ export default function CrudProductos({productos}){
     };
 
 
-   return (
+    return (
     <div className='crud-productos'>
         <div className="crud-options">
             <Link to='/admin/add-product'>

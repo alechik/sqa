@@ -26,14 +26,14 @@
                     center: myLocation,
                 });
         
-                const marker = new google.maps.marker.AdvancedMarkerElement({
+                const marker = new google.maps.Marker({
                     position: myLocation,
                     map: map,
                     draggable: true,
                     title: "Arrástrame!",
                 });
         
-                marker.addListener('dragend', () => {
+                google.maps.event.addListener(marker, 'dragend', () => {
                     const geocoder = new google.maps.Geocoder();
                     geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
                         if (status === "OK" && results[0]) {
@@ -54,7 +54,7 @@
             const loadGoogleMapScript = () => {
                 if (!window.google) {
                     const script = document.createElement('script');
-                    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places,marker&callback=initMap`;
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places&callback=initMap`;
                     script.async = true;
                     script.defer = true;
                     document.body.appendChild(script);

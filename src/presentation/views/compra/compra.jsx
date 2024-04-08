@@ -52,16 +52,25 @@
         
             // Función para cargar el script de Google Maps
             const loadGoogleMapScript = () => {
-                if (!window.google) {
-                    const script = document.createElement('script');
-                    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places&callback=initMap`;
-                    script.async = true;
-                    script.defer = true;
-                    document.body.appendChild(script);
-                } else {
-                    window.initMap(); // Si Google Maps ya está cargado, inicializa el mapa directamente
+                // Verificar si el script de Google Maps ya está cargado
+                if (window.google && window.google.maps) {
+                    // Google Maps ya está cargado
+                    window.initMap();
+                    return;
                 }
+
+                // Verificar si ya estamos intentando cargar el script
+                if (document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]')) {
+                    return; // El script ya está siendo cargado
+                }
+
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                document.body.appendChild(script);
             };
+
         
             if (user) {
                 const userRef = doc(firestore, 'users', user.uid);
@@ -69,7 +78,7 @@
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         setUserData(data);
-                        // Cualquier otra lógica que necesites ejecutar una vez que tengas los datos del usuario
+                        checkDataCompletion(data);
                     }
                 });
             } else {

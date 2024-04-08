@@ -4,8 +4,8 @@ import './navbar.css'; // Asegúrate de tener este archivo CSS en la ruta correc
 export default function Search() {
     return (
         <section className="search">
-            <div class="search__container">
-                <input class="search__input" type="text" placeholder="Search"/>
+            <div className="search__container">
+                <input className="search__input" type="text" placeholder="Search"/>
             </div>
         </section>
     );

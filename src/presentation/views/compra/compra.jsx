@@ -16,37 +16,70 @@
         const mapRef = useRef(null);
 
         useEffect(() => {
+            // Asigna la función initMap a window para hacerla globalmente accesible
+            window.initMap = () => {
+                const google = window.google; // Asegúrate de que google está definido
+                const myLocation = { lat: -17.72213363647461, lng: -63.174591064453125 };
+        
+                const map = new google.maps.Map(mapRef.current, {
+                    zoom: 14,
+                    center: myLocation,
+                });
+        
+                const marker = new google.maps.marker.AdvancedMarkerElement({
+                    position: myLocation,
+                    map: map,
+                    draggable: true,
+                    title: "Arrástrame!",
+                });
+        
+                marker.addListener('dragend', () => {
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
+                        if (status === "OK" && results[0]) {
+                            const newAddress = results[0].formatted_address;
+                            setUserData(prevUserData => ({
+                                ...prevUserData, 
+                                address: newAddress
+                            }));
+                            saveAddressToFirebase(newAddress);
+                        } else {
+                            toast.error('No se pudo obtener la dirección de la nueva ubicación.');
+                        }
+                    });
+                });
+            };
+        
+            // Función para cargar el script de Google Maps
+            const loadGoogleMapScript = () => {
+                if (!window.google) {
+                    const script = document.createElement('script');
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places,marker&callback=initMap`;
+                    script.async = true;
+                    script.defer = true;
+                    document.body.appendChild(script);
+                } else {
+                    window.initMap(); // Si Google Maps ya está cargado, inicializa el mapa directamente
+                }
+            };
+        
             if (user) {
                 const userRef = doc(firestore, 'users', user.uid);
                 getDoc(userRef).then(docSnap => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         setUserData(data);
-                        checkDataCompletion(data);
+                        // Cualquier otra lógica que necesites ejecutar una vez que tengas los datos del usuario
                     }
                 });
             } else {
-                // Aquí debería ser navigate en lugar de history para redirigir
                 navigate('/login');
             }
-
-            const loadGoogleMapScript = () => {
-                if (!window.google) {
-                    var script = document.createElement('script');
-                    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places`;
-                    script.async = true;
-                    script.defer = true;
-                    document.body.appendChild(script);
-                    window.initMap = initMap;
-                } else {
-                    initMap();
-                }
-            };
-    
-            loadGoogleMapScript();
-        }, [user, firestore, navigate]);
-
         
+            loadGoogleMapScript(); // Asegúrate de llamar a esta función para cargar el script
+        }, [user, firestore, navigate]); // Dependencias del useEffect
+        
+
 
         const checkDataCompletion = (data) => {
             const requiredFields = ['address', 'birthday_date', 'ci', 'email', 'names'];
@@ -95,41 +128,6 @@
             return total;
             }
         }, 0);
-
-        // Función para inicializar el mapa
-        const initMap = () => {
-            const google = window.google;
-            const myLocation = { lat: -17.72213363647461, lng: -63.174591064453125 };
-            
-            const map = new google.maps.Map(mapRef.current, {
-                zoom: 14,
-                center: myLocation,
-            });
-    
-            const marker = new google.maps.Marker({
-                position: myLocation,
-                map: map,
-                draggable: true,
-                title: "Arrástrame!",
-            });
-    
-            google.maps.event.addListener(marker, 'dragend', () => {
-                const geocoder = new google.maps.Geocoder();
-                geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
-                    if (status === "OK" && results[0]) {
-                        const newAddress = results[0].formatted_address;
-                        setUserData(prevUserData => ({
-                            ...prevUserData, 
-                            address: newAddress
-                        }));
-                        saveAddressToFirebase(newAddress); // Guarda automáticamente la nueva dirección en Firebase
-                    } else {
-                        toast.error('No se pudo obtener la dirección de la nueva ubicación.');
-                    }
-                });
-            });
-            
-        };
 
         const saveAddressToFirebase = async (newAddress) => {
             if (!user) return;

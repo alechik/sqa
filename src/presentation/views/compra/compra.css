@@ -22,7 +22,7 @@
 
 .user-info-form input,
 .user-info-form button {
-    width: 100%;
+    width: 480px;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
@@ -78,6 +78,7 @@
 button[disabled] {
     background-color: #e0e0e0;
     color: #a0a0a0;
+    border-radius: 4px;
     cursor: not-allowed;
 }
 
@@ -98,10 +99,11 @@ button[disabled] {
     color: #ffffff;
     border: none;
     cursor: pointer;
+    border-radius: 4px;
     animation: pulse 2s infinite;
 }
 
-select {
+.selectcompra {
     padding: 10px;
     margin-bottom: 10px;
     border: 2px solid #ccc; /* Color de borde inicial */
@@ -110,15 +112,15 @@ select {
 }
 
 /* Estilo cuando el select está enfocado o cambiado */
-select:focus,
-select:active {
+.selectcompra:focus,
+.selectcompra:active {                                                                                                                  
     border-color: #994c4c; /* Cambia el color del borde al enfocar */
     box-shadow: 0 0 8px 0 rgba(199, 75, 75, 0.4); /* Añade una sombra sutil */
 }
 
-input:focus,
-input:active{
-    border-color: #994c4c; /* Cambia el color del borde al enfocar */
+.inputcompra:focus,
+.inputcompra:active{
+    border-color: #c26060; /* Cambia el color del borde al enfocar */
     box-shadow: 0 0 8px 0 rgba(199, 75, 75, 0.4);
 }
 

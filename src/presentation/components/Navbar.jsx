@@ -110,8 +110,7 @@ export default function Navbar({ cartitem }) {
                     </li>
                 ) : (
                     <li className='links'>
-                        <Link to="/iniciarsesion">Iniciar sesión</Link>
-                        <Link to="/registrarse">Registrarse</Link>
+                        <Link to="/iniciarsesion">Log in</Link>     
                     </li>
                 )}
             </ul>

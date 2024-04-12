@@ -1,21 +1,57 @@
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#app,
+.App,
+.container {
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    flex-grow: 1;
+
+}
+
 .footer {
     background-color: #522b46;
     color: #fff;
-    padding: 20px;
+    padding: 20px 40px;
+    /* Ajuste del padding para más espacio */
     font-family: 'Roboto', sans-serif;
+    transition: background-color 0.3s;
+    /* Transición suave del color de fondo */
 }
 
 .footer a {
     color: #fff;
     text-decoration: none;
+    transition: color 0.3s;
+    /* Transición suave del color */
 }
 
 .footer-top {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    border-bottom: 1px solid #633154;
     padding-bottom: 20px;
+    position: relative;
+    /* Para el detalle visual */
+}
+
+.footer-top::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(to right, #522b46, #fff, #522b46);
 }
 
 .footer-contact p,
@@ -27,9 +63,10 @@
 .footer-social a img,
 .footer-nav a img {
     width: 25px;
-    /* Adjust the size of your icons as needed */
     height: 25px;
     margin-right: 10px;
+    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    /* Preparación para animaciones */
 }
 
 .footer-bottom {
@@ -40,7 +77,7 @@
     margin-top: 20px;
 }
 
-.footer-legal a{
+.footer-legal a {
     margin: 10px 10px;
 }
 
@@ -53,7 +90,6 @@
 
 .footer-brand img {
     width: 60px;
-    /* Adjust according to your brand logo */
     height: 60px;
     margin-bottom: 10px;
 }
@@ -71,7 +107,7 @@
         margin: 0 4px;
     }
 
-    .footer-legal a{
+    .footer-legal a {
         margin: 0 10px;
     }
 
@@ -82,14 +118,22 @@
     }
 }
 
-/* Accessibility and responsive styles */
 .footer a:hover,
 .footer a:focus {
-    outline: none;
     color: #c7a2c7;
+    /* Cambio de color al interactuar */
 }
 
-.separator {
-    flex-grow: 1;
-    border-top: 1px solid black;
+.footer-social a:hover img,
+.footer-social a:focus img {
+    transform: scale(1.1);
+    /* Efecto de crecimiento */
+    filter: brightness(1.2);
+    /* Aclarar el ícono */
+}
+
+.footer-legal a:hover {
+    text-decoration: underline;
+    text-decoration-color: #c7a2c7;
+    /* Estilo de subrayado al pasar el mouse */
 }

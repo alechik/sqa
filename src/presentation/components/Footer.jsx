@@ -38,7 +38,6 @@ function Footer() {
                     <p><strong>Email:</strong> <a href="mailto:tienda@Chambicitos.com">tienda@Chambicitos.com</a></p>
                 </div>
                 <div className="footer-social">
-                    {/* Los enlaces reales a tus redes sociales deben ir en el href */}
                     <a href="https://wa.me/59160032422" target="_blank" rel="noopener noreferrer"><img src={iconUrls.whatsapp} alt="WhatsApp" /></a>
                     <a href="https://www.facebook.com/Chambis" target="_blank" rel="noopener noreferrer"><img src={iconUrls.facebook} alt="Facebook" /></a>
                     <a href="https://www.instagram.com/Chambis" target="_blank" rel="noopener noreferrer"><img src={iconUrls.instagram} alt="Instagram" /></a>

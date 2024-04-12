@@ -18,6 +18,8 @@ import Cart from "./views/carrito/Cart.jsx";
 import Compra from "./views/compra/compra.jsx";
 import 'react-toastify/dist/ReactToastify.css';
 import Pagoqr from "./views/compra/qrcompra.jsx";
+import ConfirmacionPedido from './views/pedido/ConfirmacionPedido.jsx';
+import './App.css';
 
 function App() {
     //stpe 1: fetch data from database
@@ -58,12 +60,14 @@ function App() {
             <AuthProvider>
                 <Router>
                     <Navbar cartitem={cartitem}/>
+                    <main >
                     <Routes>
                         <Route path="/" element={<Home productItems={productItems} productos={productos} addtoCart={addtoCart}  />} />
                         <Route path="/cart" element={<Cart cartitem={cartitem} addtoCart={addtoCart} decreaseQty={decreaseQty}/> } />
                         <Route path="/iniciarsesion" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
+                        <Route path='/confirmacion-Pedido' element={<PrivateRoute><ConfirmacionPedido ></ConfirmacionPedido></PrivateRoute>}></Route>
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
@@ -71,6 +75,7 @@ function App() {
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
                     </Routes>
+                    </main>
                     <Footer/>
                 </Router>     
             </AuthProvider>

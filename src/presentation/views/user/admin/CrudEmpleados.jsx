@@ -56,9 +56,11 @@ export default function CrudUsuarios() {
     return (
         <div className='crud-usuarios'>
             <div className="crud-options">
-                <button onClick={() => handleCreateUser(ADMIN_ID)}>
+                <Link to='/admin/add-empleado'>
+                <button >
                     Crear Usuario (Administrador/Trabajador)
                 </button>
+                </Link>
             </div>
             <div className="table-container">
                 <table>

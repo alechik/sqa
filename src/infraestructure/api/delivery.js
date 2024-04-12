@@ -62,10 +62,24 @@ export async function deleteDelivery(delivery_id) {
     await deleteDoc(delivertDocRef);
 }
 
+export async function getUserByDelivery(deliveryId) {
+    const delivery = await getDeliveryById(deliveryId);
+    const userRef = delivery.user_id; // Suponiendo que user_id es una referencia directa.
+    const userDoc = await getDoc(userRef);
+    
+    if (!userDoc.exists()) throw new Error('User not found');
+    return {
+        userId: userDoc.id,
+        ...userDoc.data()
+    };
+}
+
+
 export default {
     getDeliveries,
     getDeliveryById,
     createDelivery,
     updateDelivery,
-    deleteDelivery
+    deleteDelivery,
+    getUserByDelivery
 };

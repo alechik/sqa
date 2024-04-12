@@ -70,6 +70,7 @@ function App() {
                         <Route path='/confirmacion-Pedido' element={<PrivateRoute><ConfirmacionPedido ></ConfirmacionPedido></PrivateRoute>}></Route>
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartitem} /></PrivateRoute>} />
+                        <Route path="/confirmarpedido/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />

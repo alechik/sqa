@@ -2,60 +2,87 @@ import React from 'react';
 import emailjs from '@emailjs/browser';
 import "./qrcompra.css";
 import downloadIcon from '../../assets/descargas.png';
-import qrImagePath from '../../assets/qr.jpg'
+import qrImagePath from '../../assets/qr.jpg';
+import { placeOrder } from '../../../infraestructure/api/orderService';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function PagoQR({ total, userEmail }) {
 
-    function downloadImage(qrImagePath) {
-        // Crear un elemento <a> temporal
-        const tempLink = document.createElement('a');
-        tempLink.href = qrImagePath;
-        // Asignar el nombre que deseas para el archivo descargado
-        tempLink.download = 'CodigoQR.jpg';
-        // Simular un clic en el enlace
-        document.body.appendChild(tempLink);
-        tempLink.click();
-        // Limpiar al terminar
-        document.body.removeChild(tempLink);
+function PagoQR({ cart, user }) {
+
+  function downloadImage(imagePath) {
+    const tempLink = document.createElement('a');
+    tempLink.href = imagePath;
+    tempLink.download = 'CodigoQR.jpg';
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+  }
+
+  const onConfirmPayment = async () => {
+    try {
+      const orderData = {
+        // Asumiendo que cart y user contienen todos los datos necesarios
+        userId: user.id,
+        products: cart.items,
+        deliveryAddress: user.address,
+        status: 'Pending',
+        totalPrice: cart.total,
+        paymentMethod: 'QR',
+      };
+
+      const orderId = await placeOrder(orderData);
+
+      const emailParams = {
+        // Asegúrate de que estos campos coincidan con los parámetros de tu template de EmailJS
+        order_id: orderId,
+        to_name: user.name,
+        total: cart.total,
+        fecha: new Date().toLocaleDateString("es-ES"), 
+        to_email: user.email,
+        reply_to: 'ecommercesantillo@gmail.com',
+      };
+
+      const serviceId = 'service_f6wqud7';
+      const templateId = 'template_9ilml3q';
+      const userId = 'XnyTm9fLJd1grL1wx';
+
+      emailjs.send(serviceId, templateId, emailParams, userId)
+        .then(() => {
+          toast.success('Confirmación de pago enviada al correo!', {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
+        })
+        .catch((error) => {
+          toast.error('Error al enviar confirmación: ' + error.text, {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
+        });
+
+    } catch (error) {
+      toast.error('Error al procesar el pago: ' + error.message, {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
     }
+  };
 
-    const onConfirmPayment = () => {
-        // Aquí configuras tu service ID y template ID de EmailJS
-        const serviceId = 'service_f6wqud7';
-        const templateId = 'template_9ilml3q';
-
-        // Parámetros para el template de EmailJS
-        const templateParams = {
-            total: total, // Asegúrate de incluir el total si lo deseas en el correo
-            to_email: userEmail, // Suponiendo que pasas el correo del usuario como prop
-            // Añade todos los parámetros que necesites enviar a tu template
-        };
-
-        // Envía el correo utilizando EmailJS
-        emailjs.send(serviceId, templateId, templateParams)
-            .then((response) => {
-                console.log('Success!', response.status, response.text);
-                // Muestra un mensaje de éxito usando un modal, un toast, etc.
-            }, (error) => {
-                console.log('Failed...', error);
-                // Maneja el error adecuadamente en la UI
-            });
-    };
-
-    return (
-        <div className="payment-container">
-            <h2>Realiza tu pago</h2>
-            <div className="qr-image-container">
-                <img src={qrImagePath} alt="Código QR" className="qr-code-image" />
-            </div>
-            <div className="qr-actions">
-                <button onClick={() => downloadImage(qrImagePath)} className="download-button">
-                    <img src={downloadIcon} alt="Descargar QR" />
-                </button>
-            </div>
-            <button className="payment-button" onClick={onConfirmPayment}>He realizado el pago</button>
-        </div>
-    );
+  return (
+    <div className="payment-container">
+      <h2>Realiza tu pago</h2>
+      <div className="qr-image-container">
+        <img src={qrImagePath} alt="Código QR" className="qr-code-image" />
+      </div>
+      <div className="qr-actions">
+        <button onClick={() => downloadImage(qrImagePath)} className="download-button">
+          <img src={downloadIcon} alt="Descargar QR" />
+        </button>
+      </div>
+      <button className="payment-button" onClick={onConfirmPayment}>
+        He realizado el pago
+      </button>
+      <ToastContainer />
+    </div>
+  );
 }
 
 export default PagoQR;

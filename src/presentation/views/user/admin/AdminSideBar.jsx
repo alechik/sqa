@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom";
 import CrudProductos from "./CrudProductos.jsx";
 import CrudEmpleados from "./CrudEmpleados.jsx";
 import AdminInfo from "./AdminInfo.jsx";
-import Dashboard from "../Dashboard.jsx";
+import Dashboard from "./Dashboard.jsx";
 import AddProductForm from "../../Products/addProductform.jsx";
 import EditProductForm from '../../Products/editProductform.jsx';
 import userForm from "./UserForm.jsx";

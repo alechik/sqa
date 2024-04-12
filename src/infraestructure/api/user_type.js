@@ -1,5 +1,5 @@
-import { db } from './firebase-connection.js';
-import { UserType } from "../domain/UserType.js";
+import { db } from '../firebase-connection.js';
+import { UserType } from "../../domain/UserType.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
 export async function getUserTypes() {

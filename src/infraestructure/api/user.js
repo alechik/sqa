@@ -136,15 +136,15 @@ async function getUsers() {
         const data = docSnap.data();
         const user = new User(
             docSnap.id, // Se asume que este es el UID proporcionado por Firebase Authentication
-            data.email,
-            data.avatar,
-            data.names,
-            data.gender,
-            data.birthday_date,
             data.address,
+            data.birthday_date,
             data.ci,
-            data.userTypeId
-
+            data.email,
+            data.gender,
+            data.lastnames,
+            data.names,
+            data.userTypeId,
+            data.picture
         );
         users.push(user);
     });

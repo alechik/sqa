@@ -56,9 +56,12 @@ export default function CrudUsuarios() {
     return (
         <div className='crud-usuarios'>
             <div className="crud-options">
-                <button onClick={() => handleCreateUser(ADMIN_ID)}>
-                    Crear Usuario (Administrador/Trabajador)
-                </button>
+                <Link to='/admin/crud-empleados' className={activepage === 'crud-empleados' ? 'navbutton selected' : 'navbutton'}>
+                    <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+                        <img src={PeopleIcon} alt="People" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
+                    </div>
+                    <div className='navlabel'>Ver Empleados</div>
+                </Link>
             </div>
             <div className="table-container">
                 <table>

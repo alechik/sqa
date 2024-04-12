@@ -61,10 +61,24 @@ export async function deleteDeliveryDetail(deliveryDetailId) {
     await deleteDoc(deliveryDetailDocRef);
 }
 
+export async function getDeliveryDetailByDelivery(deliveryId) {
+    const delivery = await getDeliveryById(deliveryId);
+    const detailRef = delivery.delivery_detail_id; // Suponiendo que delivery_detail_id es una referencia directa.
+    const detailDoc = await getDoc(detailRef);
+    
+    if (!detailDoc.exists()) throw new Error('Delivery detail not found');
+    return {
+        detailId: detailDoc.id,
+        ...detailDoc.data()
+    };
+}
+
+
 export default {
     getDeliveryDetails,
     getDeliveryDetailById,
     createDeliveryDetail,
     updateDeliveryDetail,
-    deleteDeliveryDetail
+    deleteDeliveryDetail,
+    getDeliveryDetailByDelivery
 };

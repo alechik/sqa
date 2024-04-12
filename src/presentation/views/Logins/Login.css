@@ -188,6 +188,7 @@ h2 {
     font-size: 1em;
     color: #fff;
     padding: 0 35px 0 5px;
+    box-sizing: border-box;
 }
 
 .input-box .icon {

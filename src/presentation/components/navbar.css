@@ -4,7 +4,6 @@
 postcss-color-function postcss-nested body {
     margin: 0 auto;
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f4;
 }
 
 .links {
@@ -15,11 +14,11 @@ postcss-color-function postcss-nested body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
     background-color: #522b46;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    margin: auto;
+    margin: 1 ;
     max-width: 100%;
 }
 
@@ -100,6 +99,7 @@ postcss-color-function postcss-nested body {
     align-items: center;
     padding: 0;
     margin: 0;
+    justify-content: center;
 }
 
 

@@ -3,9 +3,17 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 
 const PrivateRoute = ({ children }) => {
-    const { currentUser } = useAuth();
+    const { currentUser, loading, error } = useAuth();
 
-    return currentUser ? children : < Navigate to="/iniciarsesion" />;
+    if (loading) {
+        return <div>Cargando...</div>;  // Opcionalmente, podrías usar un componente de carga
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;  // Muestra mensajes de error relacionados con la autenticación
+    }
+
+    return currentUser ? children : <Navigate to="/iniciarsesion" replace />;
 };
 
 export default PrivateRoute;

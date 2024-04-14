@@ -6,18 +6,29 @@ import './user.css'; // Asegúrate de tener el archivo CSS en la ruta correcta
 class UserInfo extends Component {
     state = {
         userData: null,
-        isLoading: true,
+        isLoading: false,
         error: null,
     };
 
-    async componentDidMount() {
-        const user = auth.currentUser;
-        if (!user) {
-            this.setState({ error: 'El usuario no está autenticado.', isLoading: false });
-            return;
-        }
+    componentDidMount() {
+        this.authUnsub = auth.onAuthStateChanged(this.handleAuthChange);
+    }
 
-        const userRef = doc(db, 'users', user.uid);
+    componentWillUnmount() {
+        this.authUnsub && this.authUnsub();
+    }
+
+    handleAuthChange = (user) => {
+        if (user) {
+            this.fetchUserData(user.uid);
+        } else {
+            this.setState({ userData: null, isLoading: false, error: 'El usuario no está autenticado.' });
+        }
+    };
+
+    fetchUserData = async (uid) => {
+        this.setState({ isLoading: true });
+        const userRef = doc(db, 'users', uid);
         try {
             const docSnap = await getDoc(userRef);
             if (docSnap.exists()) {
@@ -28,7 +39,7 @@ class UserInfo extends Component {
         } catch (error) {
             this.setState({ error: `Error al obtener el documento: ${error.message}`, isLoading: false });
         }
-    }
+    };
 
     renderContent() {
         const { avatar, names, email } = this.state.userData || {};
@@ -51,7 +62,7 @@ class UserInfo extends Component {
         if (error) return <div className="error-container">{error}</div>;
 
         return (
-            <div className="profile-container" onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
+            <div className="profile-container">
                 <div className="profile-card">
                     {this.renderContent()}
                 </div>

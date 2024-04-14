@@ -1,68 +1,61 @@
-import React from 'react';
-import emailjs from '@emailjs/browser';
-import "./qrcompra.css";
-import downloadIcon from '../../assets/descargas.png';
-import qrImagePath from '../../assets/qr.jpg';
-import { createOrder } from '../../../infraestructure/api/orders';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createOrder } from '../../../infraestructure/api/orders';
+import downloadIcon from '../../assets/descargas.png';
+import qrImagePath from '../../assets/qr.jpg';
+import "./qrcompra.css"
 
-function PagoQR({ cart, user }) {
+function QRCompra() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, cartItems } = location.state || {};  // Utiliza el operador de propagación para evitar undefined
 
-  function downloadImage(imagePath) {
+  useEffect(() => {
+    if (!user || !cartItems) {
+      toast.error('Información del usuario o del carrito no disponible.');
+      navigate('/iniciarsesion'); // Redirige al usuario si la información necesaria no está disponible
+    }
+  }, [user, cartItems, navigate]);
+
+  const downloadImage = (imagePath) => {
     const tempLink = document.createElement('a');
     tempLink.href = imagePath;
     tempLink.download = 'CodigoQR.jpg';
     document.body.appendChild(tempLink);
     tempLink.click();
     document.body.removeChild(tempLink);
-  }
+  };
 
   const onConfirmPayment = async () => {
+    if (!user || !cartItems) {
+      toast.error('Información del usuario o del carrito no disponible.');
+      return;
+    }
+
     try {
       const orderData = {
         userId: user.id,
-        products: cart.items,
+        products: cartItems,
         deliveryAddress: user.address,
         status: 'Pending',
-        totalPrice: cart.total,
+        totalPrice: cartItems.reduce((acc, item) => acc + item.qty * item.price, 0),
         paymentMethod: 'QR',
-      }; 
-      console.log("Order ID:", orderId);
-
-      console.log("Order Data:", orderData);
-      const orderId = await createOrder(orderData); // Intentar crear el pedido
-      console.log("Order ID:", orderId);// Loguear el ID del pedido
-
-      if (!orderId) {
-        throw new Error("Order creation failed: No order ID returned.");
-      }
-
-      const emailParams = {
-        order_id: orderId,
-        to_name: user.name,
-        total: cart.total,
-        fecha: new Date().toLocaleDateString("es-ES"),
-        to_email: user.email,
-        reply_to: 'ecommercesantillo@gmail.com',
       };
 
-      const serviceId = 'service_f6wqud7';
-      const templateId = 'template_9ilml3q';
-      const userId = 'XnyTm9fLJd1grL1wx';
+      const orderId = await createOrder(orderData);
+      if (!orderId) {
+        throw new Error("La creación del pedido falló: No se devolvió un ID de pedido.");
+      }
 
-      await emailjs.send(serviceId, templateId, emailParams, userId);
-      toast.success('Confirmación de pago enviada al correo!', {
-        position: "bottom-right"
-      });
+      toast.success('Pedido creado con éxito. ID del pedido: ' + orderId);
+      navigate('/ruta-de-confirmacion', { state: { orderId } });
     } catch (error) {
-      console.error("Error during payment processing or email sending:", error);
-      toast.error('Error al procesar el pago: ' + error.message, {
-        position: "bottom-right"
-      });
+      console.error("Error durante el proceso de pago:", error);
+      toast.error('Error al procesar el pago: ' + error.message);
     }
   };
-
 
   return (
     <div className="payment-container">
@@ -78,9 +71,9 @@ function PagoQR({ cart, user }) {
       <button className="payment-button" onClick={onConfirmPayment}>
         He realizado el pago
       </button>
-      <ToastContainer />
+      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
     </div>
   );
 }
 
-export default PagoQR;
+export default QRCompra;

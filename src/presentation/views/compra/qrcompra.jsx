@@ -3,10 +3,9 @@ import emailjs from '@emailjs/browser';
 import "./qrcompra.css";
 import downloadIcon from '../../assets/descargas.png';
 import qrImagePath from '../../assets/qr.jpg';
-import { placeOrder } from '../../../infraestructure/api/orderService';
+import { createOrder } from '../../../infraestructure/api/orders';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 function PagoQR({ cart, user }) {
 
@@ -22,23 +21,28 @@ function PagoQR({ cart, user }) {
   const onConfirmPayment = async () => {
     try {
       const orderData = {
-        // Asumiendo que cart y user contienen todos los datos necesarios
         userId: user.id,
         products: cart.items,
         deliveryAddress: user.address,
         status: 'Pending',
         totalPrice: cart.total,
         paymentMethod: 'QR',
-      };
+      }; 
+      console.log("Order ID:", orderId);
 
-      const orderId = await placeOrder(orderData);
+      console.log("Order Data:", orderData);
+      const orderId = await createOrder(orderData); // Intentar crear el pedido
+      console.log("Order ID:", orderId);// Loguear el ID del pedido
+
+      if (!orderId) {
+        throw new Error("Order creation failed: No order ID returned.");
+      }
 
       const emailParams = {
-        // Asegúrate de que estos campos coincidan con los parámetros de tu template de EmailJS
         order_id: orderId,
         to_name: user.name,
         total: cart.total,
-        fecha: new Date().toLocaleDateString("es-ES"), 
+        fecha: new Date().toLocaleDateString("es-ES"),
         to_email: user.email,
         reply_to: 'ecommercesantillo@gmail.com',
       };
@@ -47,24 +51,18 @@ function PagoQR({ cart, user }) {
       const templateId = 'template_9ilml3q';
       const userId = 'XnyTm9fLJd1grL1wx';
 
-      emailjs.send(serviceId, templateId, emailParams, userId)
-        .then(() => {
-          toast.success('Confirmación de pago enviada al correo!', {
-            position: toast.POSITION.BOTTOM_RIGHT
-          });
-        })
-        .catch((error) => {
-          toast.error('Error al enviar confirmación: ' + error.text, {
-            position: toast.POSITION.BOTTOM_RIGHT
-          });
-        });
-
+      await emailjs.send(serviceId, templateId, emailParams, userId);
+      toast.success('Confirmación de pago enviada al correo!', {
+        position: "bottom-right"
+      });
     } catch (error) {
+      console.error("Error during payment processing or email sending:", error);
       toast.error('Error al procesar el pago: ' + error.message, {
-        position: toast.POSITION.BOTTOM_RIGHT
+        position: "bottom-right"
       });
     }
   };
+
 
   return (
     <div className="payment-container">

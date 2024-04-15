@@ -34,7 +34,7 @@ export async function getAllOrders() {
         throw new Error('Order not found');
       }
       const orderData = orderSnapshot.data(); // Esto te da los datos crudos del documento
-      console.log(orderData); // Ahora puedes loguear y verificar que los datos son correctos
+      // Ahora puedes loguear y verificar que los datos son correctos
       return Order.fromFirestore(orderSnapshot); // Asumiendo que esta es una función que transforma los datos.
     } catch (error) {
       console.error("Error fetching order with ID", orderId, error);

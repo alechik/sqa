@@ -24,9 +24,9 @@ const UserForm = () => {
         const fetchUserTypes = async () => {
             try {
                 const types = await getUserTypes();
-                console.log(types);  // Verifica los tipos obtenidos antes de filtrar
+              // Verifica los tipos obtenidos antes de filtrar
                 const filteredTypes = types.filter(type => type.id === ADMIN_ID || type.id === WORKER_ID);
-                console.log(filteredTypes);  // Verifica los tipos después de filtrar
+                 // Verifica los tipos después de filtrar
                 setUserTypes(filteredTypes);
             } catch (error) {
                 console.error('Error al obtener los tipos de usuario:', error);

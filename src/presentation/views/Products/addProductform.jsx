@@ -60,7 +60,6 @@ function AddProductForm() {
         };
 
         try {
-            console.log(productData)
             await createProduct({
                 ...productData,
                 pictures: imageUrl, // Asegúrate de que este campo coincide con lo esperado en Firestore y la clase Product

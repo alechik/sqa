@@ -32,7 +32,7 @@ function App() {
         // Llamada a la función getProducts() para obtener los productos
         getProducts()
             .then((productos) => {
-                console.log("Productos obtenidos:", productos); // Agrega un console.log() para verificar los productos obtenidos
+                // Agrega un console.log() para verificar los productos obtenidos
                 setProductos(productos);
             })
             .catch((error) => {

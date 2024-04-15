@@ -21,7 +21,7 @@ function EditProductForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(productId);
+       
         const fetchProductData = async () => {
             try {
                 const data = await getProductById(productId);

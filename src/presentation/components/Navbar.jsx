@@ -6,12 +6,28 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "./navbar.css";
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../infraestructure/firebase--config';
+import { collection, getFirestore, getDocs } from 'firebase/firestore';
 
 export default function Navbar({ cartitem }) {
     const [userProfile, setUserProfile] = useState(null);
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate(); // Hook para navegar
     const auth = getAuth(); // Inicializa la autenticación de Firebase
     const [iconUrls, setIconUrls] = useState({});
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const db = getFirestore();
+            const categoriesCollection = collection(db, 'product_categories');
+            const categoriesSnapshot = await getDocs(categoriesCollection);
+            const categoriesData = categoriesSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setCategories(categoriesData);
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -54,6 +70,12 @@ export default function Navbar({ cartitem }) {
         <nav className="nav">
             <img src={iconUrls.storeIcon} alt="Store Icon" />
             <Link to="/" className="nombre-sitio">Store</Link>
+        {/*    <select name="category" id="category" className='select-custom'>
+                <option value="">Categorías</option>
+                {categories.map(category => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+            </select>*/}    
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
@@ -88,8 +110,7 @@ export default function Navbar({ cartitem }) {
                     </li>
                 ) : (
                     <li className='links'>
-                        <Link to="/iniciarsesion">Iniciar sesión</Link>
-                        <Link to="/registrarse">Registrarse</Link>
+                        <Link to="/iniciarsesion">Iniciar sesión</Link>     
                     </li>
                 )}
             </ul>

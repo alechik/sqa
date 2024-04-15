@@ -1,0 +1,96 @@
+/* qrcompra.css */
+
+.payment-container {
+    max-width: 500px;
+    /* Limita el ancho del contenedor para centrar el contenido */
+    margin: 0 auto;
+    /* Centra el contenedor horizontalmente */
+    padding: 20px;
+    background-color: #fff;
+    /* Un fondo blanco para resaltar el contenido */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Sombra sutil para dar profundidad */
+    border-radius: 10px;
+    /* Bordes redondeados suaves */
+    text-align: center;
+    /* Alinea el texto y los elementos internos al centro */
+}
+
+.qr-code-image {
+    width: 80%;
+    /* Hace que la imagen del QR sea responsive */
+    max-width: 300px;
+    /* Limita el tamaño máximo de la imagen */
+    margin: 20px 0;
+    /* Espacio antes y después de la imagen */
+    border: 1px solid #ddd;
+    /* Borde sutil alrededor de la imagen */
+    border-radius: 8px;
+    /* Bordes redondeados para la imagen */
+}
+
+.payment-button {
+    background-color: #4CAF50;
+    /* Color verde vibrante para el botón */
+    color: white;
+    /* Texto blanco para contraste */
+    padding: 12px 24px;
+    /* Espaciado interno generoso para hacer el botón grande y fácil de tocar */
+    font-size: 16px;
+    /* Tamaño de fuente legible */
+    border: none;
+    /* Sin borde para un look moderno */
+    cursor: pointer;
+    /* Cursor de puntero para indicar clickeabilidad */
+    border-radius: 5px;
+    /* Bordes redondeados para el botón */
+    transition: background-color 0.2s;
+    /* Transición suave para feedback visual */
+    display: inline-block;
+    /* Permite el margen automático */
+    margin: 10px 0 20px;
+    /* Margen arriba y abajo para separación del contenido */
+}
+
+.payment-button:hover {
+    background-color: #45a049;
+    /* Un tono ligeramente más oscuro al pasar el mouse */
+}
+
+.payment-button:active {
+    background-color: #3e8e41;
+    /* Un tono más oscuro para el efecto de clic */
+}
+
+.payment-link {
+    color: #4CAF50;
+    /* Hace que el enlace de descarga tenga el mismo color que el botón */
+    text-decoration: none;
+    /* Elimina el subrayado por defecto */
+    font-weight: bold;
+    /* Hace el texto un poco más grueso */
+}
+
+.payment-link:hover {
+    text-decoration: underline;
+    /* Añade un subrayado al pasar el mouse para indicar clickeabilidad */
+}
+
+.download-button {
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 50px;
+    /* Ajusta el tamaño del botón según tus preferencias */
+    height: 40px;
+    /* Ajusta el tamaño del botón según tus preferencias */
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    /* Agrega una transición suave al botón */
+}
+
+.download-button:hover {
+    transform: scale(1.1);
+    /* Hace que el botón aumente ligeramente al pasar el mouse */
+}

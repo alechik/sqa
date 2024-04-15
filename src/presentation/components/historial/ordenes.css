@@ -1,60 +1,78 @@
-.tusordenes{
+.tusordenes {
     display: flex;
     flex-direction: column;
-    align-content: center;
-    width: 95%;
-    height: 100%;
     align-items: center;
-
-    margin: auto;
+    width: 90%;
+    margin: 2rem auto;
+    max-width: 1200px; /* Limitar el ancho máximo */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidad */
+    animation: fadeIn 1s ease-in-out; /* Animación de entrada */
+    overflow-x: auto; /* Permitir scroll horizontal si es necesario */
 }
 
-.tusordenes table{
+.tusordenes Table {
     width: 100%;
+    table-layout: auto; /* Permitir que el navegador maneje el ancho de las columnas */
     border-collapse: collapse;
-    border: 1px solid rgb(16, 14, 14);
-    border-radius: 3px;
-    overflow: hidden;
     margin: auto;
+    background-color: white;
+    overflow: hidden; /* Asegura que la sombra interior se aplique correctamente */
 }
 
-.tusordenes table tr{
-    border: 1px solid rgb(5, 5, 5);
-    border-radius: 5px;
-}
-.tusordenes table tr th{
-    padding: 10px 20px;
-    border: 1px solid rgb(207, 207, 207);
-    border-radius: 5px;
-    background-color: rgb(246,246,246);
-    color: rgb(128, 128, 128);
+.tusordenes .order-number,
+.tusordenes .order-date,
+.tusordenes .order-status,
+.tusordenes .order-total {
+    text-align: left;
+    padding: 12px 15px;
 }
 
-.tusordenes table tr td button{
+.tusordenes .order-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+    position: relative;
+    top: 1px;
+}
+
+.tusordenes .greenDot { background-color: #4caf50; }
+.tusordenes .yellowDot { background-color: #ffeb3b; }
+.tusordenes .redDot { background-color: #f44336; }
+
+/* Animaciones suaves */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animación al pasar el cursor sobre las filas */
+.tusordenes tr {
+    transition: transform 0.3s ease;
+}
+
+.tusordenes tr:hover {
+    transform: scale(1.02); /* Escalar ligeramente al pasar el ratón */
+}
+
+.tusordenes td button {
     padding: 5px 20px;
     margin: 0;
     font-size: 16px;
+    cursor: pointer; /* Indica que es un elemento clickeable */
+    transition: all 0.3s ease;
 }
 
-.tusordenes table tbody{
-    height: 200px;
-    overflow: scroll;
+.tusordenes td button:hover {
+    background-color: #ddd; /* Cambiar color al pasar el ratón */
+    transform: scale(1.05); /* Efecto de zoom al pasar el ratón */
 }
-.yourorders .greenDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: green;
-}
-.yourorders .yellowDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: yellow;
-}
-.yourorders .redDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: red;
+
+/* Estilos adicionales para adultos */
+.tusordenes th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 2px solid #ddd; /* Línea inferior para resaltar encabezados */
 }

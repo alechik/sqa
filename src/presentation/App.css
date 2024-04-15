@@ -1,0 +1,61 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #f6f9fc;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: hidden;
+    /* Oculta el scroll horizontal */
+}
+
+#root {
+    background-color: #f6f9fc;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    background-color: #f6f9fc;
+    flex: 1;
+}
+
+.footer {
+    margin-top: auto;
+    /* Esto empujará el pie de página hacia abajo */
+}
+
+/* Estilos para Webkit (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+    width: 10px;
+    /* Ajusta el ancho del scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #ecf0f1;
+    /* Color del track */
+    border-radius: 10px;
+    /* Redondea los bordes del track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(transparent, #bdc3c7, transparent);
+    /* Gradient para "acortar" visualmente */
+    border-radius: 10px;
+    /* Redondea los bordes del thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a4a9ad;
+    /* Color del thumb al pasar el mouse */
+    border-radius: 15px;
+    /* Aumenta el border-radius para hacerlo visualmente más "redondo" y más pequeño */
+    width: 8px;
+    /* Hace el thumb visualmente más delgado al pasar el mouse */
+    margin: 0 1px;
+    /* Ajusta márgenes para compensar la disminución en el ancho */
+}

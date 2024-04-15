@@ -1,0 +1,102 @@
+.crud-usuarios {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    transform: translateX(-35px);
+    margin-bottom: 50px;
+}
+
+.crud-usuarios table tbody tr:hover td {
+    background-color: #f2f2f2;
+    transition: background-color 0.3s ease;
+}
+
+.crud-options {
+    height: 4em;
+    padding: 10px 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.crud-options button {
+    background-color: #c82d5c;
+    color: #f8f9fa;
+    border: none;
+    transition: 0.4s;
+    height: 3em; /* Ajusta la altura del botón */
+    border-radius: 14px;
+    width: 12em; /* Ajusta el ancho del botón */
+    font-size: 18px; /* Ajusta el tamaño del texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: auto;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    padding: 8px;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+}
+
+.table-container tbody {
+    height: 200px;
+    overflow: scroll;
+}
+
+.table-container tr td button {
+    padding: 5px;
+    margin: 10px 10px;
+    font-size: 3px;
+    background-color: #fff;
+    border: 1px solid #202020;
+    width: 30px;
+    border-radius: 8px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.table-container tr td button:hover {
+    background-color: #202020;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.table-container tr td button svg {
+    height: 20px;
+}
+
+#borrar {
+    background-color: #c82d5c;
+    color: #f8f9fa;
+    border: none;
+    transition: 0.4s;
+}
+
+#acciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#borrar:hover {
+    background-color: #f8f9fa;
+    color: #c82d5c;
+}

@@ -136,15 +136,15 @@ async function getUsers() {
         const data = docSnap.data();
         const user = new User(
             docSnap.id, // Se asume que este es el UID proporcionado por Firebase Authentication
-            data.email,
-            data.avatar,
-            data.names,
-            data.gender,
-            data.birthday_date,
             data.address,
+            data.birthday_date,
             data.ci,
-            data.userTypeId
-
+            data.email,
+            data.gender,
+            data.lastnames,
+            data.names,
+            data.userTypeId,
+            data.picture
         );
         users.push(user);
     });
@@ -212,6 +212,24 @@ async function deleteUser(userId) {
     // Eliminar los datos del usuario de Firestore
     await deleteDoc(doc(db, "users", userId));
 }
+
+
+export const getUserTypes = async () => {
+    try {
+        const userTypesRef = collection(db, "user_types");
+        const querySnapshot = await getDocs(userTypesRef);
+        const userTypes = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        console.log("User types fetched:", userTypes); // Muestra los datos obtenidos
+        return userTypes;
+    } catch (error) {
+        console.error("Error fetching user types:", error);
+        throw new Error("Failed to fetch user types: " + error.message);
+    }
+};
+
 
 export {
     getUsers,

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../infraestructure/firebase--config'; // Asegúrate de que esta ruta sea correcta
+import { auth } from '../../../infraestructure/firebase--config';
 
 export const AuthContext = createContext();
 
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         });
 
-        return unsubscribe; // Esto asegura la limpieza al desmontar el componente
+        return unsubscribe; 
     }, []);
 
     return (

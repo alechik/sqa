@@ -4,13 +4,15 @@
     align-items: center;
     margin: auto;
     transform: translateX(-35px);
-    
+    margin-bottom: 50px;
 }
+
 .crud-productos table tbody tr:hover td {
     background-color: #f2f2f2;
     transition: background-color 0.3s ease;
 }
-.crud-options{
+
+.crud-options {
     height: 4em;
     padding: 10px 0;
     width: 100%;
@@ -18,11 +20,13 @@
     align-items: center;
     justify-content: center;
 }
-.crud-options svg{
+
+.crud-options svg {
     height: 20px;
     margin: auto;
 }
-.crud-options button{
+
+.crud-options button {
     background-color: #c82d5c;
     color: #f8f9fa;
     border: none;
@@ -32,11 +36,12 @@
     width: 10em;
     font-size: 20px;
 }
-.crud-productos table{
+
+.crud-productos table {
     width: 100%;
     height: 100%;
-   
-  
+
+
     overflow: hidden;
     margin: auto;
 }
@@ -45,12 +50,13 @@
 
 
 
-.crud-productos table tbody{
+.crud-productos table tbody {
     height: 200px;
     overflow: scroll;
 }
-.crud-productos tr td button{
-    padding: 5px ;
+
+.crud-productos tr td button {
+    padding: 5px;
     margin: 10px 10px;
     font-size: 3px;
     background-color: #FFF;
@@ -60,57 +66,62 @@
     text-align: center;
     transition: 0.3s;
 }
-.crud-productos tr td button:hover{
+
+.crud-productos tr td button:hover {
     background-color: #202020;
     border: 1px solid #FFF;
     color: #FFF
 }
-.crud-productos tr td button svg{
+
+.crud-productos tr td button svg {
     height: 20px;
 }
-#borrar{
+
+#borrar {
     background-color: #c82d5c;
     color: #f8f9fa;
     border: none;
     transition: 0.4s;
 }
-#acciones{
+
+#acciones {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    
+
 }
-#borrar:hover{
+
+#borrar:hover {
     background-color: #f8f9fa;
     color: #c82d5c;
 }
 
 .scrollable-content {
     width: 1000px;
-    display: block; 
-    max-height: 320px; 
+    display: block;
+    max-height: 320px;
     height: 300px;
-    overflow-y: auto; 
-    
+    overflow-y: auto;
+
 }
 
 .crud-productos table {
     width: 100%;
-    border-collapse: collapse; 
+    border-collapse: collapse;
 }
 
-.crud-productos th, .crud-productos td {
+.crud-productos th,
+.crud-productos td {
     padding: 8px;
     text-align: left;
-     
+
 }
 
 .crud-productos th {
-    background-color: #f2f2f2; 
+    background-color: #f2f2f2;
 }
 
 /*
 .product_description{
     width: 100px;
 }*/
-

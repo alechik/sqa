@@ -11,7 +11,7 @@ function EditProductForm() {
         description: '',
         unitary_price: '',
         stock: '',
-        category_id: '',
+        CategoryID: '',
         gramaje: '',
         image: null, // Para el archivo de imagen
         imageUrl: '' // Para la URL de la vista previa de la imagen
@@ -29,8 +29,8 @@ function EditProductForm() {
                 setProduct({
                     ...data,
                     CategoryID: data.CategoryID,
-                    gramaje: data.gramaje, 
-                    imageUrl: data.imageUrl, 
+                    gramaje: data.gramaje,
+                    imageUrl: data.imageUrl,
                 });
             } catch (error) {
                 console.error("Error fetching product data:", error);
@@ -129,11 +129,11 @@ function EditProductForm() {
                 </div>
 
                 <div className="form-field">
-                    <label htmlFor="category_id">Categoría</label>
+                    <label htmlFor="CategoryID">Categoría</label>
                     <select
                         id="CategoryID"
-                        name="category_id"
-                        value={product.category_id || ''}
+                        name="CategoryID"
+                        value={product.CategoryID || ''}
                         onChange={handleChange}
                         required>
 
@@ -169,15 +169,18 @@ function EditProductForm() {
                 </div>
 
                 <div className="form-field">
-                    <label htmlFor="gramaje">Gramaje (g/m²)</label>
-                    <input
-                        id="gramaje"
-                        type="number"
-                        name="gramaje"
-                        value={product.gramaje || ''}
-                        onChange={handleChange}
-                        required
-                    />
+                    <label htmlFor="gramaje">Unidad de medida</label>
+                    <select name="gramaje" id="gramaje" placeholder="Unidad de medida" value={product.gramaje} onChange={handleChange} required>
+                        <option value="">Unidad de medida</option>
+                        <option value="Litro">Litro</option>
+                        <option value="Gramos">Gramos</option>
+                        <option value="Kilogramos">Kilogramos</option>
+                        <option value="Mililitros">Mililitros</option>
+                        <option value="Piezas sueltas">Piezas sueltas</option>
+                        <option value="Kit">Kit</option>
+                        <option value="Metros">Metros</option>
+                        <option value="Centímetros">Centímetros</option>
+                    </select>
                 </div>
 
 

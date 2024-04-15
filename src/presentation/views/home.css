@@ -1,4 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif
+}
 
 html {
     scroll-behavior: smooth;
@@ -159,4 +167,193 @@ html {
     background-color: #b30000;
     /* Color más oscuro al pasar el mouse o enfocar */
     color: #fff;
+}
+
+.contenedorr {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-inline:20vh;
+    margin-bottom: 100px;
+}
+
+.square {
+    position: relative;
+    top: 50px;
+    margin: 0 10px;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.square .span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid black;
+    border-radius: 32% 58% 69% 43% / 48% 32% 59% 55%;
+    transition: 0.5s;
+    animation: animate 6s linear infinite;
+}
+
+.colegio:hover .span:nth-child(1) {
+    border: none;
+    background: #522b46;
+}
+
+.square .span:nth-child(2) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid black;
+    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+    transition: 0.5s;
+    animation: animate 6s linear infinite;
+}
+
+.colegio:hover span:nth-child(2) {
+    border: none;
+    background: #522b46;
+}
+
+.square .span:nth-child(3) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid black;
+    border-radius: 31% 45% 74% 35% / 38% 56% 51% 87%;
+    transition: 0.5s;
+    animation: animate2 10s linear infinite;
+}
+
+.colegio:hover .span:nth-child(3) {
+    border: none;
+    background: #522b46;
+}
+
+.containerr {
+    position: relative;
+    padding: 40px 60px;
+    text-align: center;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.square:hover {
+    color: white;
+}
+
+.containerr a {
+    position: relative;
+    display: inline-block;
+    margin-top: 30px;
+    border: 2px solid white;
+    padding: 6px 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 73% 27% 44% 56% / 49% 44% 56% 51%;
+}
+
+.containerr:hover {
+    color: #ffffff;
+}
+
+@keyframes animate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes animate2 {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+
+@media (max-width: 768px) {
+    .contenedorr {
+        flex-direction: column;
+        /* Los elementos se apilan verticalmente */
+        margin-inline: 0;
+        /* Elimina los márgenes laterales */
+        align-items: center;
+        /* Centra los elementos horizontalmente */
+    }
+
+    .square {
+        width: 90%;
+        /* Hace que los cuadros sean más anchos para llenar el espacio disponible */
+        margin: 20px 0;
+        /* Espaciado vertical entre cuadros */
+        padding: 20px;
+        /* Agrega un poco de espacio interno para evitar que los textos toquen los bordes */
+        box-sizing: border-box;
+        /* Asegura que el padding no afecte el ancho total */
+    }
+
+    .square .span {
+        width: 100%;
+        /* Ocupan el ancho completo del cuadro */
+        height: 100%;
+        /* Igual altura que ancho para mantener la forma circular */
+        border-radius: 50%;
+        /* Hace que los spans sean completamente circulares */
+    }
+
+    .square:hover span {
+        background: #522b46;
+        /* Asegura un fondo sólido al pasar el mouse */
+    }
+
+    /* Ajusta el tamaño del texto y los elementos dentro de los cuadros para que se adapten mejor al espacio disponible */
+    .containerr h2 {
+        font-size: 1.5rem;
+        /* Tamaño más pequeño para el título */
+        margin: 0.5em 0;
+        /* Espaciado alrededor del título */
+    }
+
+    .containerr h3 {
+        font-size: 1.2rem;
+        /* Tamaño más pequeño para el subtítulo */
+        margin: 0.3em 0;
+        /* Espaciado alrededor del subtítulo */
+    }
+
+    .containerr p {
+        font-size: 0.9rem;
+        /* Tamaño más pequeño para el párrafo */
+        margin: 0.3em 0;
+        /* Espaciado alrededor del párrafo */
+    }
+
+    /* Ocultar las animaciones en dispositivos móviles si se sienten demasiado abrumadoras */
+    .square .span:nth-child(1),
+    .square .span:nth-child(2),
+    .square .span:nth-child(3) {
+        animation: none;
+    }
+}
+
+/* Estilos para transiciones más suaves en los círculos al pasar el mouse */
+.square:hover .span:nth-child(1),
+.square:hover .span:nth-child(2),
+.square:hover .span:nth-child(3) {
+    transition: background-color 0.3s ease-in-out;
 }

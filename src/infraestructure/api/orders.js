@@ -104,6 +104,37 @@ export async function getOrdersByUserId(userId) {
   }
 }
 
+async function updateOrderStatus(nuevoEstado) {
+  try {
+    // Obtener todos los pedidos
+    const orders = await getAllOrders();
+
+    // Verificar si hay pedidos
+    if (orders.length === 0) {
+      console.error('No hay pedidos en la base de datos.');
+      return;
+    }
+
+    // Ordenar los pedidos por fecha de creación de forma descendente
+    orders.sort((a, b) => b.createdAt - a.createdAt);
+
+    // Obtener el ID del último pedido
+    const ultimoPedidoId = orders[0].id;
+
+    // Actualizar el estado del último pedido utilizando updateOrderStatus
+    await updateOrderStatus(ultimoPedidoId, { status: nuevoEstado });
+
+    console.log(`El estado del último pedido con ID ${ultimoPedidoId} se ha actualizado correctamente a "${nuevoEstado}".`);
+  } catch (error) {
+    console.error('Error al actualizar el estado del último pedido:', error);
+    throw new Error('No se pudo actualizar el estado del último pedido.');
+  }
+}
+
+// Llamar a la función para actualizar el estado del último pedido
+const nuevoEstado = 'confirmado'; // Define el nuevo estado del pedido
+updateOrderStatus(nuevoEstado);
+
 export default{
   getOrdersByUserId,
   deleteOrder,
@@ -111,4 +142,5 @@ export default{
   getAllOrders,
   getOrderById,
   createOrder,
+  updateOrderStatus
 }

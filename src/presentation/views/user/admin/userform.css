@@ -2,48 +2,132 @@
 
 .user-form {
     max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.user-form label {
+.user-form .form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.user-form .form-label {
     display: block;
-    margin-bottom: 10px;
+    font-size: 18px;
+    color: #495057;
+    margin-bottom: 8px;
+    font-weight: 500;
 }
 
-.user-form input[type="text"],
-.user-form input[type="email"],
-.user-form select {
+.user-form .form-input,
+.user-form .form-select {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 15px;
+    border: 2px solid #ced4da;
+    border-radius: 5px;
+    background-color: #e9ecef;
     box-sizing: border-box;
+    font-size: 16px;
+    color: #495057;
+}
+
+.user-form .form-input::placeholder,
+.user-form .form-select::placeholder {
+    color: #6c757d;
+}
+
+.user-form .form-input:focus,
+.user-form .form-select:focus {
+    border-color: #80bdff;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
 .user-form input[type="file"] {
-    margin-top: 10px;
-}
-
-.user-form button {
-    display: block;
     width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 10px;
+    border: 2px solid #ced4da;
+    background-color: #e9ecef;
+    padding: 12px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-.user-form button:hover {
-    background-color: #45a049;
+.user-form .form-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.user-form button[type="submit"] {
-    margin-top: 20px;
+.user-form .form-button:hover {
+    background-color: #0069d9;
+}
+
+.user-form .form-button:active {
+    background-color: #005cbf;
+}
+
+.user-form .form-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5);
+}
+
+/* Añadir transiciones a los inputs y botones para una interactividad suave */
+.user-form .form-input,
+.user-form .form-select,
+.user-form .form-button {
+    transition: all 0.3s ease;
+}
+
+/* Para elementos no validados que utilizan la pseudoclase :invalid de CSS */
+.user-form .form-input:invalid,
+.user-form .form-select:invalid {
+    border-color: #dc3545;
+}
+
+/* Mensajes de validación de CSS para elementos que no pasan la validación */
+.user-form .form-input:invalid:focus,
+.user-form .form-select:invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+
+/* Espaciado para los elementos dentro de form-actions */
+.user-form .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Espacio entre botones si hay más de uno */
+}
+
+/* Asegúrate de que la clase .user-form-title que agregues al JSX se vea bien */
+.user-form-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Estilos específicos para dispositivos móviles */
+@media (max-width: 576px) {
+    .user-form {
+        padding: 20px;
+    }
 }

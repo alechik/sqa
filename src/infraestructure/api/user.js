@@ -213,6 +213,24 @@ async function deleteUser(userId) {
     await deleteDoc(doc(db, "users", userId));
 }
 
+
+export const getUserTypes = async () => {
+    try {
+        const userTypesRef = collection(db, "user_types");
+        const querySnapshot = await getDocs(userTypesRef);
+        const userTypes = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        console.log("User types fetched:", userTypes); // Muestra los datos obtenidos
+        return userTypes;
+    } catch (error) {
+        console.error("Error fetching user types:", error);
+        throw new Error("Failed to fetch user types: " + error.message);
+    }
+};
+
+
 export {
     getUsers,
     createUser,

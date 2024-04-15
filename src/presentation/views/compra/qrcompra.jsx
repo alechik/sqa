@@ -26,7 +26,7 @@ function QRCompra() {
       }
       const orderId = await createOrder({ items: cartItems, total: calculateTotal(cartItems) }, user);
       toast.success('Pedido creado con éxito. ID del pedido: ' + orderId);
-      navigate(`/confirmarpedido/${orderId}`);
+      navigate(`/pedidoconfirmado/${orderId}`);
     } catch (error) {
       console.error("Error during payment process:", error);
       toast.error('Error al procesar el pago: ' + error.message);

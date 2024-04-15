@@ -1,83 +1,92 @@
-/* Estilos específicos de la página de confirmación */
-.confirmar-pedido-container {
+/* Estilo del contenedor principal */
+.confirmar-pedido {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease-in-out;
-}
-
-.confirmar-pedido-container:hover {
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-}
-
-.confirmar-pedido-details {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    transition: transform 0.3s ease-in-out;
-}
-
-.confirmar-pedido-details:hover {
-    transform: translateY(-5px);
-    border-color: #ccc;
-}
-
-.confirmar-loading, .confirmar-error {
-    color: #333;
-    font-size: 16px;
-    padding: 20px;
     text-align: center;
+    max-width: 600px;
+    margin: 30px auto;
 }
 
-.confirmar-button {
+/* Estilos para las condiciones de carga y error */
+.loading, .error {
+    padding: 20px;
+    color: #d33;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Animación para el mensaje de éxito */
+.success-message {
+    font-size: 24px;
+    color: #4CAF50;
+    animation: fadeIn 2s ease-out;
+}
+
+/* Keyframes para la animación de aparición */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilo para los detalles del pedido */
+.order-details {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilo para listado de productos */
+.product-summary {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.product-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.product-info {
+    text-align: left;
+    flex-grow: 1;
+}
+
+/* Estilo general para botones */
+.confirm-button, .button {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 12px 24px;
-    text-align: center;
-    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
     display: inline-block;
     font-size: 16px;
-    margin: 10px 2px;
-    cursor: pointer;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    margin-top: 20px;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-.confirmar-button:hover {
+/* Efecto hover para botones */
+.confirm-button:hover, .button:hover {
     background-color: #45a049;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     transform: translateY(-2px);
-}
-
-/* Animación del botón */
-@keyframes buttonAnimation {
-    0% {
-        background-color: #4CAF50;
-        transform: scale(1);
-    }
-    50% {
-        background-color: #45a049;
-        transform: scale(1.1);
-    }
-    100% {
-        background-color: #4CAF50;
-        transform: scale(1);
-    }
-}
-
-.confirmar-button-active {
-    animation: buttonAnimation 2s infinite;
-}
-
-/* Estilos adicionales */
-.pedido-en-camino {
-    font-size: 18px;
-    color: #4CAF50;
-    text-align: center;
-    display: none;
 }

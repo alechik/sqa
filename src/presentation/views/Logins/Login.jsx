@@ -7,6 +7,9 @@ import { doc, getDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { signInWithGoogle, signInWithFacebook } from '../../../infraestructure/api/user';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -28,20 +31,38 @@ export default function Login() {
             const userDocSnap = await getDoc(userDocRef);
 
             if (!userDocSnap.exists()) {
-                setError("No existe una cuenta asociada a este email.");
+                toast.error("No existe una cuenta asociada a este email.", {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
                 return;
             }
             const userType = userDocSnap.data().userTypeId;
-
+            toast.success("Inicio de sesión exitoso!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
             window.location.href = `/?userType=${userType}`;
         } catch (error) {
             handleError(error);
         }
     };
 
+
     const signInWithGoogleHandler = async () => {
         try {
             await signInWithGoogle();
+            toast.success("Inicio de sesión con Google exitoso!");
             window.location.href = '/';
         } catch (error) {
             handleError(error);
@@ -51,6 +72,7 @@ export default function Login() {
     const signInWithFacebookHandler = async () => {
         try {
             await signInWithFacebook();
+            toast.success("Inicio de sesión con Facebook exitoso!");
             window.location.href = '/';
         } catch (error) {
             handleError(error);
@@ -86,23 +108,25 @@ export default function Login() {
                 errorMessage = `Error al iniciar sesión. ${error.message}`;
                 break;
         }
-        setError(errorMessage);
-        setShowError(true);
-        // Oculta el mensaje de error después de 5 segundos
-        setTimeout(() => {
-            setShowError(false);
-            setError(''); // También limpia el mensaje de error
-        }, 5000);
-
+        toast.error(errorMessage, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     };
 
 
 
     return (
         <section className="login-container">
+            <ToastContainer />
             <div className="login-box">
                 <form onSubmit={loginUser}>
-                    <h2>Iniciar sesión</h2>
+                    <h2 className='Inicio'>Iniciar sesión</h2>
                     {showError && <div className="error-message">{error}</div>}
                     <div className={`input-box ${email ? 'active' : ''}`}>
                         <span className="icon">
@@ -134,7 +158,7 @@ export default function Login() {
                         <span className="btn-text">Google</span>
                     </button>
                     <button type="button" onClick={signInWithFacebookHandler} className="facebook-btn">
-                        <FontAwesomeIcon icon={faFacebookF} className="icon" />
+                        <FontAwesomeIcon icon={faFacebookF} className="faceook-icon" />
                         <span className="btn-text">Facebook</span>
                     </button>
                     <div className="register-link">

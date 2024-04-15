@@ -52,7 +52,6 @@ export default function CrudUsuarios() {
         }
     };
 
-    console.log(users.userTypeId)
     return (
         <div className='crud-usuarios'>
             <div className="crud-options">

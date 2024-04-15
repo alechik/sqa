@@ -77,7 +77,7 @@ async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
-        console.log(result);
+       
         const user = result.user;
 
         // Verifica si el usuario ya existe en Firestore
@@ -118,7 +118,7 @@ const createUser = async (userData) => {
             userTypeId: CLIENT_ID,
         });
 
-        console.log("Usuario creado con éxito:", user.uid);
+       
         return user.uid; // Retorna el UID del usuario para cualquier procesamiento posterior necesario
     } catch (error) {
         console.error("Error al crear el usuario:", error);

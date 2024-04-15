@@ -28,7 +28,7 @@ export default function ConfirmarPedido() {
   }, [orderId]);
 
   const confirmOrder = async () => {
-    console.log('Attempting to confirm order with ID:', orderId);
+   
     try {
       await updateOrder(orderId, { status: 'En Camino' });
       toast.success('Pedido en camino!')

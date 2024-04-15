@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../../../infraestructure/firebase--config';  // Asegúrate de que la ruta es correcta
+import { collection, query, where, orderBy, limit, onSnapshot, getDocs } from 'firebase/firestore';
+import { db } from '../../../infraestructure/firebase--config';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,29 +9,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import "./ordenes.css"
+import "./ordenes.css";
 
-export default function Ordenes() {
+function Ordenes() {
     const { currentUser } = useAuth();
     const [ordenes, setOrdenes] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    async function fetchOrdenes(userEmail) {
-        const ordersCol = collection(db, "orders");
-        const q = query(ordersCol, where("userEmail", "==", userEmail));
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    }
-
     useEffect(() => {
-        if (currentUser && currentUser.email) {
-            fetchOrdenes(currentUser.email).then((orders) => {
-                setOrdenes(orders);
+        if (currentUser?.email) {
+            const ordersCol = collection(db, "orders");
+            const q = query(ordersCol, where("userEmail", "==", currentUser.email));
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const newOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                    .sort((a, b) => b.createdAt - a.createdAt) // Ordena por fecha de creación
+                    .slice(0, 5); // Limita a las últimas 5 órdenes
+                setOrdenes(newOrders);
                 setLoading(false);
-            }).catch(error => {
-                console.error("Error al cargar las ordenes:", error);
+            }, error => {
+                console.error("Error al escuchar las órdenes: ", error);
                 setLoading(false);
             });
+
+            return () => unsubscribe(); // Limpiar el escuchador
         }
     }, [currentUser]);
 
@@ -50,23 +50,25 @@ export default function Ordenes() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {ordenes.map((orden) => (
-                    <TableRow key={orden.id}>
-                        <TableCell component="th" scope="row">
-                            {orden.id}
-                        </TableCell>
-                        <TableCell align="right">{orden.date}</TableCell>
-                        <TableCell align="right">
-                            <span className={`order-dot ${orden.status === 'confirmado' ? 'greenDot' : orden.status === 'Pending' ? 'redDot' : 'yellowDot'}`}></span>
-                            {orden.status}
-                        </TableCell>
-                        <TableCell align="right">
-                            ${orden.totalPrice ? orden.totalPrice.toFixed(2) : 'N/A'}
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
+                    {ordenes.map((orden) => (
+                        <TableRow key={orden.id}>
+                            <TableCell component="th" scope="row">
+                                {orden.id}
+                            </TableCell>
+                            <TableCell align="right">{orden.date}</TableCell>
+                            <TableCell align="right">
+                                <span className={`order-dot ${orden.status === 'confirmado' ? 'greenDot' : orden.status === 'En Camino' ? 'yellowDot' : 'redDot'}`}></span>
+                                {orden.status}
+                            </TableCell>
+                            <TableCell align="right">
+                                ${orden.totalPrice ? orden.totalPrice.toFixed(2) : 'N/A'}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
             </Table>
         </TableContainer>
     );
 }
+
+export default Ordenes;

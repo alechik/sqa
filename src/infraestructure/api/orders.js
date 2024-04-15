@@ -1,111 +1,114 @@
-// orders.js
 import { Order } from '../../domain/Order';
 import { db } from '../firebase--config';
 import {
   collection,
   addDoc,
-  getDocs,
-  getDoc,
+  doc,
   updateDoc,
   deleteDoc,
-  doc,
   query,
   where,
-  Timestamp
+  getDocs,
+  getDoc
 } from 'firebase/firestore';
-import emailjs from '@emailjs/browser';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export async function getAllOrders() {
-  const ordersCollectionRef = collection(db, 'orders');
-  const ordersSnapshot = await getDocs(ordersCollectionRef);
-  return ordersSnapshot.docs.map(Order.fromFirestore);
+  try {
+    const ordersCollectionRef = collection(db, 'orders');
+    const ordersSnapshot = await getDocs(ordersCollectionRef);
+    return ordersSnapshot.docs.map(doc => Order.fromFirestore(doc));
+  } catch (error) {
+    console.error("Failed to fetch all orders:", error);
+    throw new Error('Unable to fetch orders.');
+  }
 }
 
-export async function getOrderById(orderId) {
-  const orderDocRef = doc(db, 'orders', orderId);
-  const orderSnapshot = await getDoc(orderDocRef);
-  if (!orderSnapshot.exists()) {
-    throw new Error('Order not found');
+  export async function getOrderById(orderId) {
+    if (!orderId) {
+      throw new Error('No order ID provided');
+    }
+    try {
+      const orderDocRef = doc(db, 'orders', orderId);
+      const orderSnapshot = await getDoc(orderDocRef);
+      if (!orderSnapshot.exists()) {
+        throw new Error('Order not found');
+      }
+      const orderData = orderSnapshot.data(); // Esto te da los datos crudos del documento
+      console.log(orderData); // Ahora puedes loguear y verificar que los datos son correctos
+      return Order.fromFirestore(orderSnapshot); // Asumiendo que esta es una función que transforma los datos.
+    } catch (error) {
+      console.error("Error fetching order with ID", orderId, error);
+      throw new Error('Unable to fetch order.');
+    }
   }
-  return Order.fromFirestore(orderSnapshot);
-}
+
+
 
 export async function createOrder(cart, user) {
+  if (!user || !user.email || !cart || !cart.items || cart.items.length === 0) {
+    console.error("Invalid user or cart data", { user, cart });
+    throw new Error("Invalid data: User email or cart items are missing.");
+  }
+
+  const orderData = {
+    userEmail: user.email,
+    products: cart.items.map(item => ({
+      productId: item.id,
+      quantity: item.qty,
+      unitPrice: item.unitary_price
+    })),
+    deliveryAddress: user.address || 'N/A',
+    status: 'Pending',
+    totalPrice: cart.total,
+    paymentMethod: 'QR',
+  };
+
   try {
-    const orderData = {
-      userId: user.id,
-      products: cart.items,
-      deliveryAddress: user.address,
-      status: 'Pending',
-      totalPrice: cart.total,
-      paymentMethod: 'QR',
-    };
-
-    const newOrder = new Order(
-      null,
-      orderData.userId,
-      orderData.products,
-      orderData.deliveryAddress,
-      orderData.status,
-      orderData.totalPrice,
-      Timestamp.now(), // Firestore timestamp for the creation date
-      null, // deliveryDetailsId: orderData.deliveryDetailsId,
-      orderData.paymentMethod
-    );
-
     const ordersCollectionRef = collection(db, 'orders');
-    const orderDocRef = await addDoc(ordersCollectionRef, newOrder.toFirestore());
-    const orderId = orderDocRef.id;
-    console.log("Order id:", orderId);
-
-    const emailParams = {
-      order_id: orderId,
-      to_name: user.name,
-      total: cart.total,
-      fecha: new Date().toLocaleDateString("es-ES"),
-      to_email: user.email,
-      reply_to: 'ecommercesantillo@gmail.com',
-    };
-
-    const serviceId = 'service_f6wqud7';
-    const templateId = 'template_9ilml3q';
-    const userId = 'XnyTm9fLJd1grL1wx';
-
-    await emailjs.send(serviceId, templateId, emailParams, userId);
-    toast.success('Confirmación de pago enviada al correo!', {
-      position: "bottom-right"
-    });
-
-    return orderId;
+    const orderDocRef = await addDoc(ordersCollectionRef, orderData);
+    return orderDocRef.id;
   } catch (error) {
-    console.error("Error during order creation:", error);
-    throw error;
+    console.error("Failed to create order:", error);
+    throw new Error('Unable to create order.');
   }
 }
 
 export async function updateOrder(orderId, updatedData) {
-  const orderDocRef = doc(db, 'orders', orderId);
-  await updateDoc(orderDocRef, updatedData);
+  try {
+    const orderDocRef = doc(db, 'orders', orderId);
+    await updateDoc(orderDocRef, updatedData);
+  } catch (error) {
+    console.error("Failed to update order:", error);
+    throw new Error('Unable to update order.');
+  }
 }
 
 export async function deleteOrder(orderId) {
-  const orderDocRef = doc(db, 'orders', orderId);
-  await deleteDoc(orderDocRef);
+  try {
+    const orderDocRef = doc(db, 'orders', orderId);
+    await deleteDoc(orderDocRef);
+  } catch (error) {
+    console.error("Failed to delete order:", error);
+    throw new Error('Unable to delete order.');
+  }
 }
 
 export async function getOrdersByUserId(userId) {
-  const ordersQuery = query(collection(db, 'orders'), where('user_id', '==', userId));
-  const querySnapshot = await getDocs(ordersQuery);
-  return querySnapshot.docs.map(Order.fromFirestore);
+  try {
+    const ordersQuery = query(collection(db, 'orders'), where('userId', '==', userId));
+    const querySnapshot = await getDocs(ordersQuery);
+    return querySnapshot.docs.map(doc => Order.fromFirestore(doc));
+  } catch (error) {
+    console.error("Failed to fetch orders by user ID:", error);
+    throw new Error('Unable to fetch orders for user.');
+  }
 }
 
-export default {
+export default{
+  getOrdersByUserId,
+  deleteOrder,
+  updateOrder,
   getAllOrders,
   getOrderById,
   createOrder,
-  updateOrder,
-  deleteOrder,
-  getOrdersByUserId
-};
+}

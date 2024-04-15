@@ -69,7 +69,6 @@ function App() {
                         <Route path="/iniciarsesion" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
-                        <Route path='/confirmacion-Pedido' element={<PrivateRoute><ConfirmacionPedido ></ConfirmacionPedido></PrivateRoute>}></Route>
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/confirmarpedido/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />

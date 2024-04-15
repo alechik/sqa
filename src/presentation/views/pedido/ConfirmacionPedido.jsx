@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getOrderById, updateOrder } from '../../../infraestructure/api/orders';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { TailSpin } from 'react-loader-spinner'; // Importar el spinner deseado
 import './ConfirmacionPedido.css'; // Asegúrate de que el camino de CSS es correcto
 
 export default function ConfirmarPedido() {
@@ -28,7 +29,6 @@ export default function ConfirmarPedido() {
   }, [orderId]);
 
   const confirmOrder = async () => {
-   
     try {
       await updateOrder(orderId, { status: 'En Camino' });
       toast.success('Pedido en camino!')
@@ -53,8 +53,21 @@ export default function ConfirmarPedido() {
     ));
   };
 
-  if (isLoading) return <div className="loading">Cargando los detalles del pedido...</div>;
-  if (error) return <div className="error">Ha ocurrido un error: {error}</div>;
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <TailSpin color="#00BFFF" height={50} width={50} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        Ha ocurrido un error: {error}
+      </div>
+    );
+  }
 
   return (
     <div className="confirmar-pedido">

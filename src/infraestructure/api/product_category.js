@@ -19,18 +19,29 @@ export async function getProductCategories() {
 }
 
 export async function getProductCategoryById(productCategoryId) {
-    const productCategoryDocRef = doc(db, 'product_categories', productCategoryId);
-    const productCategoryDoc = await getDoc(productCategoryDocRef);
-    if (!productCategoryDoc.exists()) {
-        throw new Error("Product category not found");
+    if (!productCategoryId) {
+        console.error("getProductCategoryById was called without a category ID.");
+        throw new Error("Product category ID is required");
     }
-    const productCategoryData = productCategoryDoc.data();
-    return new ProductCategory(
-        productCategoryDoc.id,
-        productCategoryData.description,
-        productCategoryData.name
-    );
+
+    const productCategoryDocRef = doc(db, 'product_categories', productCategoryId);
+    try {
+        const productCategoryDoc = await getDoc(productCategoryDocRef);
+        if (!productCategoryDoc.exists()) {
+            throw new Error("Product category not found");
+        }
+        const productCategoryData = productCategoryDoc.data();
+        return new ProductCategory(
+            productCategoryDoc.id,
+            productCategoryData.description,
+            productCategoryData.name
+        );
+    } catch (error) {
+        console.error("Failed to fetch product category:", error);
+        throw error; // Esto asegurará que el error se maneje más arriba en la cadena de llamadas
+    }
 }
+
 
 export async function createProductCategory(productCategoryData) {
     const newProductCategory = new ProductCategory(

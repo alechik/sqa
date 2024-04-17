@@ -68,7 +68,7 @@ export default function Navbar({ cartitem }) {
 
     return (
         <nav className="nav">
-            <img src={iconUrls.storeIcon} alt="Store Icon" />
+          
             <Link to="/" className="nombre-sitio">Store</Link>
         {/*    <select name="category" id="category" className='select-custom'>
                 <option value="">Categorías</option>

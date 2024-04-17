@@ -1,5 +1,4 @@
 .cart-items {
-    background-color: #f6f9fc;
     height: auto;
     padding: 50px 0;
 }
@@ -13,6 +12,7 @@
 .cart-items .img {
     width: 150px;
     height: 150px;
+    border-radius: 5px;
 
 }
 .cart-items .cart-details img{

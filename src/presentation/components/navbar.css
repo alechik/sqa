@@ -10,13 +10,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background-color: rgba(82, 43, 70, 0);
+    background-color: rgba(252, 245, 235, 0.582);
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 5000;
 }
 
 

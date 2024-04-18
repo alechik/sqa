@@ -7,6 +7,7 @@ import "./navbar.css";
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../infraestructure/firebase--config';
 import { collection, getFirestore, getDocs } from 'firebase/firestore';
+import tuImagen from '../assets/iconoW.png';
 
 export default function Navbar({ cartitem }) {
     const [userProfile, setUserProfile] = useState(null);
@@ -68,8 +69,7 @@ export default function Navbar({ cartitem }) {
 
     return (
         <nav className="nav">
-          
-            <Link to="/" className="nombre-sitio">Store</Link>
+            <Link to="/" className="nombre-sitio"> <img src={tuImagen} alt="logo" /></Link>
         {/*    <select name="category" id="category" className='select-custom'>
                 <option value="">Categorías</option>
                 {categories.map(category => (

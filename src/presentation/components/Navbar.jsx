@@ -7,6 +7,7 @@ import "./navbar.css";
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../infraestructure/firebase--config';
 import { collection, getFirestore, getDocs } from 'firebase/firestore';
+import tuImagen from '../assets/iconoW.png';
 
 export default function Navbar({ cartitem }) {
     const [userProfile, setUserProfile] = useState(null);
@@ -68,8 +69,7 @@ export default function Navbar({ cartitem }) {
 
     return (
         <nav className="nav">
-            <img src={iconUrls.storeIcon} alt="Store Icon" />
-            <Link to="/" className="nombre-sitio">Store</Link>
+            <Link to="/" className="nombre-sitio"> <img src={tuImagen} alt="logo" /></Link>
         {/*    <select name="category" id="category" className='select-custom'>
                 <option value="">Categorías</option>
                 {categories.map(category => (
@@ -87,19 +87,19 @@ export default function Navbar({ cartitem }) {
                             </Link>
                         </div>
                         {userProfile.userTypeId === '1' && <Link to="/admin/AdminInfo" className="perfil-link"><img
-                            src={userProfile.avatar || '/user-profile.png'}
+                            src={userProfile.avatar || 'src/presentation/assets/usuario.png'}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos" className="perfil-link"><img
-                            src={userProfile.avatar || '/user-profile.png'}
+                            src={userProfile.avatar || 'src/presentation/assets/usuario.png'}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '3' && <Link to="/perfil" className="perfil-link"><img
-                            src={userProfile.avatar || '/user-profile.png' }
+                            src={userProfile.avatar || 'src/presentation/assets/usuario.png' }
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}

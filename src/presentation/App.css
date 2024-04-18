@@ -3,24 +3,25 @@ html {
 }
 
 body {
-    background-color: #f6f9fc;
+    background-color: #FCF5EB;
     min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow-x: hidden;
+    margin-top: 120px;
     /* Oculta el scroll horizontal */
 }
 
 #root {
-    background-color: #f6f9fc;
+    background-color: #FCF5EB;
     min-height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 main {
-    background-color: #f6f9fc;
+    background-color: #FCF5EB;
     flex: 1;
 }
 

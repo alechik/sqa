@@ -13,7 +13,7 @@ html {
 }
 
 .container{
-    background-color: #ffffffd2;;
+    background-color: #FCF5EB;;
     margin: 0 auto;
     padding: 0;
 
@@ -21,7 +21,7 @@ html {
 .contenedor {
     max-width: 90%;
     margin: auto;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Open Sans', sans-serif
 }
 .mtop{
     margin-top: 40px;
@@ -36,7 +36,7 @@ html {
     box-shadow:rgb(3 0 71 / 9%) 0 1px 3px ;
     margin: 10px;
 }
-.product h3{
+.product .h3{
     font-weight: 400;
     font-size: 17px;
 }
@@ -75,7 +75,7 @@ html {
     transition: 0.5s;
 }
 .product-like label{
-    background-color: #0f3460;
+    background-color: #60140f;
     padding: 1px 10px;
     font-size: 12px;
     color: #fff;
@@ -99,7 +99,7 @@ html {
     width: 50px;
     height: 50px;
     line-height: 60px;
-    background: #0f3460;
+    background: #600f37;
     border-radius: 50%;
     transition: 0.5s;
     z-index: 5;

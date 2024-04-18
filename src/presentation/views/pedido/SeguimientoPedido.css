@@ -1,27 +1,30 @@
 /* Estilo del contenedor principal */
 .tracking-container {
     padding: 20px;
-    background-color: #ffffff; /* fondo claro */
+    background-color: #ffffff;
+    /* fondo claro */
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     margin: 20px auto;
     max-width: 800px;
     text-align: center;
-    font-family: 'Arial', sans-serif; /* Fuente moderna y legible */
+    font-family: 'Open-Sans', sans-serif;
+    /* Fuente moderna y legible */
 }
 
 /* Estilos para las condiciones de carga y error */
-.loading, .error {
-    color: #d33; /* Rojo para errores o carga */
+.loading,
+.error {
+    color: #d33;
+    /* Rojo para errores o carga */
     font-size: 16px;
     margin: 20px;
 }
 
-
-
 /* Estilo para los detalles y eventos del pedido */
 .timeline {
-    background-color: #f8f8f8; /* Fondo diferente para la sección de eventos */
+    background-color: #f8f8f8;
+    /* Fondo diferente para la sección de eventos */
     padding: 15px;
     border-radius: 8px;
     margin-top: 20px;
@@ -29,8 +32,10 @@
 
 .event {
     padding: 10px;
-    border-bottom: 1px solid #eee; /* Separación visual entre eventos */
-    color: #666; /* Texto más suave para eventos */
+    border-bottom: 1px solid #eee;
+    /* Separación visual entre eventos */
+    color: #666;
+    /* Texto más suave para eventos */
 }
 
 .event:last-child {
@@ -39,7 +44,8 @@
 
 /* Mejora visual para botones */
 .button {
-    background-color: #4CAF50; /* Verde característico */
+    background-color: #4CAF50;
+    /* Verde característico */
     color: white;
     border: none;
     padding: 12px 24px;
@@ -51,19 +57,74 @@
 }
 
 .button:hover {
-    background-color: #369638; /* Verde más oscuro al pasar el ratón */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background-color: #369638;
+    /* Verde más oscuro al pasar el ratón */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Información adicional y mejoras en la legibilidad */
 .info {
     font-size: 14px;
-    color: #444; /* Texto informativo */
+    color: #444;
+    /* Texto informativo */
 }
 
 /* Contenedor del mapa */
-.google-map {
+.order-map {
     width: 100%;
-    height: 400px; /* Altura adecuada para buena visibilidad */
+    height: 400px;
+    /* Altura adecuada para buena visibilidad */
     margin-top: 20px;
+    border-radius: 8px;
+    /* Bordes redondeados para el mapa */
+}
+
+/* Estilos para el encabezado del pedido y estado */
+.order-heading,
+.order-status {
+    color: #333;
+    font-weight: bold;
+}
+
+.order-status {
+    color: #28a745;
+    /* Color para destacar el estado del pedido */
+    margin-top: 5px;
+}
+
+/* Estilos para la dirección de entrega */
+.delivery-address {
+    font-size: 18px;
+    color: #666;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+/* Estilos para la ventana de información del marcador */
+.info-window p {
+    margin: 0;
+    font-size: 14px;
+    color: #444;
+}
+
+/* Animaciones para el cambio de estado del pedido */
+@keyframes pulse {
+    0% {
+        background-color: #fff;
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+    }
+
+    70% {
+        background-color: #28a745;
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+
+    100% {
+        background-color: #fff;
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+
+.order-status.changed {
+    animation: pulse 1s infinite;
 }

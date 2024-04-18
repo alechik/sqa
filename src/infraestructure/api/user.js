@@ -77,7 +77,7 @@ async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
-        console.log(result);
+       
         const user = result.user;
 
         // Verifica si el usuario ya existe en Firestore
@@ -118,7 +118,7 @@ const createUser = async (userData) => {
             userTypeId: CLIENT_ID,
         });
 
-        console.log("Usuario creado con éxito:", user.uid);
+       
         return user.uid; // Retorna el UID del usuario para cualquier procesamiento posterior necesario
     } catch (error) {
         console.error("Error al crear el usuario:", error);
@@ -212,6 +212,24 @@ async function deleteUser(userId) {
     // Eliminar los datos del usuario de Firestore
     await deleteDoc(doc(db, "users", userId));
 }
+
+
+export const getUserTypes = async () => {
+    try {
+        const userTypesRef = collection(db, "user_types");
+        const querySnapshot = await getDocs(userTypesRef);
+        const userTypes = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        console.log("User types fetched:", userTypes); // Muestra los datos obtenidos
+        return userTypes;
+    } catch (error) {
+        console.error("Error fetching user types:", error);
+        throw new Error("Failed to fetch user types: " + error.message);
+    }
+};
+
 
 export {
     getUsers,

@@ -87,19 +87,19 @@ export default function Navbar({ cartitem }) {
                             </Link>
                         </div>
                         {userProfile.userTypeId === '1' && <Link to="/admin/AdminInfo" className="perfil-link"><img
-                            src={userProfile.avatar || '/user-profile.png'}
+                            src={userProfile.avatar || 'src/presentation/assets/usuario.png'}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos" className="perfil-link"><img
-                            src={userProfile.avatar || '/user-profile.png'}
+                            src={userProfile.avatar || 'src/presentation/assets/usuario.png'}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '3' && <Link to="/perfil" className="perfil-link"><img
-                            src={userProfile.avatar || '/user-profile.png' }
+                            src={userProfile.avatar || 'src/presentation/assets/usuario.png' }
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}

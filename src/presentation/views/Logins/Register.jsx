@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer  } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 import { createUser } from "../../../infraestructure/api/user.js";
+import { event } from 'jquery';
 
 const CLIENT_USER_TYPE_ID = '3';
 
@@ -18,31 +17,10 @@ export default function Register() {
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
     const navigate = useNavigate();
 
-    const validateEmail = (email) => {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    };
-
     const handleFirstNameChange = (event) => setFirstName(event.target.value);
     const handleLastNameChange = (event) => setLastName(event.target.value);
-    const handleEmailChange = (event) => {
-        const newEmail = event.target.value;
-        if (!validateEmail(newEmail)) {
-            toast.error("Por favor ingresa un correo electrónico válido.");
-        } else {
-            setEmail(newEmail);
-            toast.dismiss();
-        }
-    };
-    const handlePasswordChange = (event) => {
-        const newPassword = event.target.value;
-        if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[a-z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
-            toast.error("La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y un símbolo.");
-        } else {
-            setPassword(newPassword);
-            toast.dismiss();
-        }
-    };
+    const handleEmailChange = (event) => setEmail(event.target.value);
+    const handlePasswordChange = (event) => setPassword(event.target.value);
     const handleConfirmPasswordChange = (event) => setConfirmPassword(event.target.value);
     const handleAddressChange = (event) => setAddress(event.target.value);
     const handleNumberChange = (event) => setNumber(event.target.value);
@@ -51,7 +29,6 @@ export default function Register() {
         event.preventDefault();
         if (password !== confirmPassword) {
             setIsPasswordMatch(false);
-            toast.error("Las contraseñas no coinciden.");
             return;
         }
 
@@ -59,25 +36,24 @@ export default function Register() {
             await createUser({
                 email,
                 password,
-                names: `${firstName} ${lastName}`,
+                names: `${firstName} ${lastName}`, // Concatenación del nombre y apellido
                 numero,
-                address, // Permitir dirección completa si es necesario
+                address: '', // Dejar en blanco
                 gender: '', // Dejar en blanco
                 birthday_date: '', // Dejar en blanco
                 ci: '', // Dejar en blanco
                 avatar: '', // Dejar en blanco
                 userTypeId: CLIENT_USER_TYPE_ID,
             });
-            navigate('/');
+            navigate('/'); 
         } catch (error) {
             console.error('Error al registrar usuario:', error.message);
-            toast.error("Error al registrar usuario: " + error.message);
+            // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
         }
     };
 
     return (
         <section className="register-container">
-             <ToastContainer position="buttom-right" autoClose={5000} />
             <div className="login-box">
                 <form onSubmit={handleSubmit}>
                     <h2 className='h2'>Registrarse</h2>
@@ -85,7 +61,7 @@ export default function Register() {
                         <input
                             className='input'
                             type="text"
-                            autoComplete="off"
+                            autoComplete="nope"
                             required
                             value={firstName}
                             onChange={handleFirstNameChange}
@@ -96,7 +72,7 @@ export default function Register() {
                         <input
                             className='input' 
                             type="text"
-                            autoComplete='off'
+                            autoComplete='nope'
                             required
                             value={lastName}
                             onChange={handleLastNameChange}
@@ -105,9 +81,9 @@ export default function Register() {
                     </div>
                     <div className={`input-box ${address ? 'active' : ''}`}>
                         <input
-                            className='input'
+                           className='input'
                             type="text"
-                            autoComplete='off'
+                            autoComplete='nope'
                             required
                             value={address}
                             onChange={handleAddressChange}
@@ -117,19 +93,19 @@ export default function Register() {
                     <div className={`input-box ${numero ? 'active' : ''}`}>
                         <input
                            className='input'
-                            type="text"
-                            autoComplete='off'
+                            type="number"
+                            autoComplete='nope'
                             required
                             value={numero}
                             onChange={handleNumberChange}
                         />
-                        <label>Número</label>
+                        <label>Numero</label>
                     </div>
                     <div className={`input-box ${email ? 'active' : ''}`}>
                         <input
                             className='input'   
                             type="email"
-                            autoComplete='off'
+                            autoComplete='nope'
                             required
                             value={email}
                             onChange={handleEmailChange}
@@ -140,7 +116,7 @@ export default function Register() {
                         <input
                             className='input'
                             type="password"
-                            autoComplete='off'
+                            autoComplete='nope'
                             required
                             value={password}
                             onChange={handlePasswordChange}
@@ -151,14 +127,14 @@ export default function Register() {
                         <input
                             className='input'
                             type="password"
-                            autoComplete='off'
+                            autoComplete='nope'
                             required
                             value={confirmPassword}
                             onChange={handleConfirmPasswordChange}
                         />
                         <label>Confirmar Contraseña</label>
                     </div>
-                    {!isPasswordMatch && <p style={{ color: 'red' }}>Las contraseñas no coinciden</p>}
+                    {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
                     <button type="submit" disabled={!isPasswordMatch}>Registrarse</button>
                     <div className="register-link">
                         <p>¿Ya tienes una cuenta? <Link to="/iniciarsesion">Iniciar sesión</Link></p>

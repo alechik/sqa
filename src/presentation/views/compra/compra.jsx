@@ -139,6 +139,7 @@ export default function Compra({ cartItems }) {
                     <input className='inputcompra' type="text" value={userData.names || ''} onChange={(e) => handleInputChange('names', e.target.value)} placeholder="Nombre completo" required />
                     <input className='inputcompra' type="text" value={userData.address || ''} onChange={(e) => handleInputChange('address', e.target.value)} placeholder="Dirección" required />
                     <input className='inputcompra' type="text" value={userData.ci || ''} onChange={(e) => handleInputChange('ci', e.target.value)} placeholder="Carnet de Identidad" required />
+                    <input className='inputcompra' type="text" value={userData.numero || ''} onChange={(e) => handleInputChange('numero', e.target.value)} placeholder="Numero" required />
                     <select className='selectcompra' value={userData.gender || ''} onChange={(e) => handleInputChange('gender', e.target.value)} required>
                         <option value="" disabled>Selecciona tu género</option>
                         <option value="Masculino">Masculino</option>

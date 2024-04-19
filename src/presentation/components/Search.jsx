@@ -3,6 +3,7 @@ import Fuse from 'fuse.js';
 import { db } from '../../infraestructure/firebase-connection';
 import { collection, getDocs } from 'firebase/firestore';
 import './navbar.css';
+import { Oval } from 'react-loader-spinner'; // Asegúrate de usar la importación correcta
 
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,32 +12,36 @@ export default function Search() {
     const [selectedResultIndex, setSelectedResultIndex] = useState(-1);
 
     useEffect(() => {
-        if (searchTerm !== '') {
-            setLoading(true);
-            const delayDebounce = setTimeout(async () => {
-                try {
-                    const productsSnapshot = await getDocs(collection(db, "products"));
-                    const categoriesSnapshot = await getDocs(collection(db, "product_categories"));
-                    
-                    const products = productsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                    const categories = categoriesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                    
-                    const fuseOptions = {
-                        includeScore: true,
-                        findAllMatches: true,
-                        keys: ["product_name", "name"]
-                    };
-                    const fuse = new Fuse([...products, ...categories], fuseOptions);
-                    const results = fuse.search(searchTerm.toLowerCase());
-                    
-                    setSearchResults(results.map(result => result.item));
-                } catch (error) {
-                    console.error("Error fetching search results: ", error);
-                }
-                setLoading(false);
-            }, 300);
-            return () => clearTimeout(delayDebounce);
+        if (searchTerm.trim() === '') {
+            setSearchResults([]);
+            setLoading(false);
+            return;
         }
+
+        setLoading(true);
+        const delayDebounce = setTimeout(async () => {
+            try {
+                const productsSnapshot = await getDocs(collection(db, "products"));
+                const categoriesSnapshot = await getDocs(collection(db, "product_categories"));
+
+                const products = productsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                const categories = categoriesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+                const fuseOptions = {
+                    includeScore: true,
+                    findAllMatches: true,
+                    keys: ["product_name", "name"]
+                };
+                const fuse = new Fuse([...products, ...categories], fuseOptions);
+                const results = fuse.search(searchTerm.toLowerCase());
+
+                setSearchResults(results.map(result => result.item));
+            } catch (error) {
+                console.error("Error fetching search results: ", error);
+            }
+            setLoading(false);
+        }, 300);
+        return () => clearTimeout(delayDebounce);
     }, [searchTerm]);
 
     const handleMouseEnter = (index) => {
@@ -48,8 +53,6 @@ export default function Search() {
     };
 
     const handleResultClick = (result) => {
-        // Lógica para manejar el clic en un resultado.
-        // Por ejemplo, podrías redirigir al usuario a la página del producto o categoría.
         console.log("Clicked result:", result);
     };
 
@@ -59,11 +62,19 @@ export default function Search() {
                 <input 
                     className="search__input" 
                     type="text" 
-                    placeholder="Search"
+                    placeholder="SEARCH"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                {loading && <div>Loading...</div>}
+                {loading && (
+                    <div className="loader-container">
+                    <Oval
+                        color="#633154"
+                        height={20}
+                        width={20}
+                    />
+                </div>
+                )}
                 {searchResults.length > 0 && (
                     <ul className="search__results">
                         {searchResults.map((result, index) => (

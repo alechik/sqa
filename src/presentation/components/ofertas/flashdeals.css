@@ -8,13 +8,19 @@
 .top {
     margin-top: 80px;
 }
-.img img {
+.nombreyfoto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    height: 240px;
+}
+.imgg {
     max-width: 100%;
-    max-height: 200px;
-    min-height: 200px;
-    object-fit: cover;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
     border-radius: 5px;
-    /* change it to cover for a better fit if images have varying aspect ratios */
 }
 .mtop {
     margin-top: 40px;
@@ -27,6 +33,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    
     background: #e94560;
     padding: 3px 10px;
     font-size: 12px;
@@ -66,6 +73,10 @@
     width: 35px;
     height: 35px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 .price button:hover {
     cursor: pointer;

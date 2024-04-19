@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import ProductPopup from "./ProductPopup";
-
+import './flashdeals.css'
 const NextArrow = (props) => {
     const { onClick } = props;
     return (
@@ -71,11 +71,12 @@ const FlashCard = ({ productItems, productos, addtoCart }) => {
                 {productos.map((producto) => (
                     <div className="box" key={producto.id}>
                         <div className="product mtop">
-                            <div className="img" id={productItems.id} onClick={() => openProductPopup(producto)}>
+                            <div className="nombreyfoto" id={productItems.id} onClick={() => openProductPopup(producto)}>
                                 <span className="discount">{producto.product_name}</span>
                                 <img
+                                    className="imgg"
                                     src={producto.pictures || 'src/presentation/assets/flash/flash-1.png'}
-                                    alt=''
+                                    alt='Imagenes de productos'
                                     style={{ maxWidth: '100%', height: 'auto', maxHeight: '200px', minHeight: '200px' }}
                                 />
                                 <div className="product-like">

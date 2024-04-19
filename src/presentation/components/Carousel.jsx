@@ -47,7 +47,7 @@ function Carousel() {
                 {
                     data.map((item, index) => (
                         <div className="cascade-slider_item" key={index}>
-                            <img src={item.imgUrl} alt={`tienda ${item.id}`} />
+                            <img className='imgs' src={item.imgUrl} alt={`tienda ${item.id}`} />
                         </div>
                     ))
                 }

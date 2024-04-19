@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import { db } from '../../infraestructure/firebase-connection';
 import { collection, getDocs } from 'firebase/firestore';
-import './navbar.css';
+import './Search.css'
 import { Oval } from 'react-loader-spinner'; // Asegúrate de usar la importación correcta
 
 export default function Search() {

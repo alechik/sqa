@@ -359,18 +359,6 @@
     background-color: #ffffff;
 }
 
-/*.search__results {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: white;
-    max-height: 300px;
-    overflow-y: auto;
-}
-*/
 .result-item {
     padding: 10px;
     cursor: pointer;
@@ -383,52 +371,3 @@
     background-color: #f2f2f2;
 }
 
-
-/* Estilos para la barra de búsqueda y resultados */
-.search__container {
-    position: relative;
-    /* Asegúrate de que la barra de búsqueda no esté tomando el 100% del ancho de la pantalla debido a su contenedor */
-    /* Ajusta los valores de anchura, márgenes y posicionamiento según sea necesario */
-    width: auto;
-    max-width: 600px; /* Ajusta al ancho máximo deseado */
-    margin: auto;
-}
-
-
-/* Asegura que los resultados de la búsqueda se desplieguen en una lista vertical debajo del input */
-.search__results {
-    position: absolute;
-    top: 100%; /* Posiciona la lista debajo del input */
-    left: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    z-index: 10; /* Coloca la lista sobre otros elementos */
-    max-height: 300px; /* Altura máxima antes de mostrar el scroll */
-    overflow-y: auto; /* Habilita scroll si la lista es más larga que la altura máxima */
-    width: 100%; /* Ajusta el ancho al de la barra de búsqueda, resta el padding si es necesario */
-    box-sizing: border-box; /* Asegúrate de que el padding no afecte el ancho total */
-    margin-top: 2px; /* Pequeño espacio entre el input y la lista de resultados */
-    overflow-x: hidden;
-}
-
-/* Estilos para cada ítem de resultado */
-.result-item {
-    padding: 10px 10px; /* Añade padding a cada resultado */
-    border-bottom: 1px solid #ddd; /* Línea separadora entre resultados */
-    cursor: pointer;
-    display: block; /* Cada resultado es un bloque y, por lo tanto, ocupará su propia línea */
-}
-
-.result-item:hover,
-.result-item.selected {
-    background-color: #f2f2f2; /* Color de fondo al pasar el ratón por encima */
-}
-
-/* Media query para pantallas pequeñas, si es necesario */
-@media (max-width: 768px) {
-    .search__container {
-        /* Ajustes para dispositivos móviles si es necesario */
-        width: calc(100% - 20px);
-    }
-}

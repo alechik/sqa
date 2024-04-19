@@ -56,7 +56,7 @@ export default function Register() {
         <section className="register-container">
             <div className="login-box">
                 <form onSubmit={handleSubmit}>
-                    <h2 className='h2'>Registrarse</h2>
+                    <h2 className='h2r'>Registrarse</h2>
                     <div className={`input-box ${firstName ? 'active' : ''}`}>
                         <input
                             className='input'

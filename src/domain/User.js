@@ -5,6 +5,7 @@ class User {
         this.birthday_date = birthday_date;
         this.ci = ci;
         this.email = email;
+        this.numero = numero;
         this.gender = gender;
         this.lastnames = lastnames;
         this.names = names;
@@ -19,6 +20,7 @@ class User {
             ci: this.ci,
             email: this.email,
             gender: this.gender,
+            numero: this.numero,
             lastnames: this.lastnames,
             names: this.names,
             user_type_id: this.user_type_id,

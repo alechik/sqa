@@ -133,6 +133,7 @@ export default function Login() {
                             <ion-icon name="mail"></ion-icon>
                         </span>
                         <input
+                            className='input'
                             type="email"
                             required
                             value={email}
@@ -145,6 +146,7 @@ export default function Login() {
                             <ion-icon name="lock-closed"></ion-icon>
                         </span>
                         <input
+                            className='input'
                             type="password"
                             required
                             value={password}

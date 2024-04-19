@@ -60,6 +60,7 @@ async function signInWithFacebook() {
                 email,
                 names: displayName, // Asumiendo que queremos el nombre completo
                 gender: "",
+                numero: "",
                 birthday_date: "",
                 address: "", // Dejar en blanco
                 ci: "", // Dejar en blanco
@@ -91,6 +92,7 @@ async function signInWithGoogle() {
                 email: user.email || "",
                 names: user.displayName || "",
                 gender: "", // Dejar en blanco
+                numero: "",
                 birthday_date: "", // Dejar en blanco
                 address: "", // Dejar en blanco
                 ci: "", // Dejar en blanco
@@ -141,6 +143,7 @@ async function getUsers() {
             data.ci,
             data.email,
             data.gender,
+            data.numero,
             data.lastnames,
             data.names,
             data.userTypeId,

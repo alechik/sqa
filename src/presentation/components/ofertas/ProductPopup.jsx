@@ -8,7 +8,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     useEffect(() => {
         const fetchCategoryName = async () => {
             try {
-                const category = await getProductCategoryById(product.category_id);
+                const category = await getProductCategoryById(product.CategoryID);
                 setCategoryName(category.name);
             } catch (error) {
                 console.error('Error fetching category name:', error);
@@ -16,7 +16,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
         };
 
         fetchCategoryName();
-    }, [product.category_id]);
+    }, [product.CategoryID]);
 
     const handleMouseMove = (e) => {
         const stars = e.target.parentNode.querySelectorAll('.fa-star');
@@ -37,7 +37,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     };
 
     return (
-        <div className="product-popup-overlay" onClick={onClose}>
+        <div className={`product-popup-overlay ${product ? 'active' : ''}`} onClick={onClose}>
             <div className="product-popup" onClick={(e) => e.stopPropagation()}>
                 <div className="product-details-container">
                     <div className="product-left">

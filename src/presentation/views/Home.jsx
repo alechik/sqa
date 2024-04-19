@@ -41,9 +41,9 @@ export default function Home({productItems, productos, addtoCart}) {
                 <span className='span'></span>
                 <span className='span'></span>
                 <div className="containerr">
-                    <h2>Lider en Bolivia</h2>
-                    <h3>N° 1</h3>
-                    <p>El mejor en E-commerce, reconocido y fiable.</p>
+                    <h2 className='h2'>Lider en Bolivia</h2>
+                    <h3 className='h3'>N° 1</h3>
+                    <p className='p'>El mejor en E-commerce, reconocido y fiable.</p>
                 </div>
             </div>
         </div>

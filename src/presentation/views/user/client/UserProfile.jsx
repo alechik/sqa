@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { auth, db } from '../../../../infraestructure/firebase--config';
 import { doc, getDoc } from "firebase/firestore";
+import { TailSpin } from 'react-loader-spinner'; // Importar el spinner
 import './user.css'; // Asegúrate de tener el archivo CSS en la ruta correcta
 
 class UserInfo extends Component {
@@ -58,8 +59,16 @@ class UserInfo extends Component {
     render() {
         const { isLoading, error } = this.state;
 
-        if (isLoading) return <div className="loading-container">Cargando...</div>;
-        if (error) return <div className="error-container">{error}</div>;
+        if (isLoading) {
+            return (
+                <div className="loading-container">
+                    <TailSpin color="#00BFFF" height={50} width={50} />
+                </div>
+            );
+        }
+        if (error) {
+            return <div className="error-container">{error}</div>;
+        }
 
         return (
             <div className="profile-container">

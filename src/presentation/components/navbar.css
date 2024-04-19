@@ -1,26 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700,900');
 
 
-postcss-color-function postcss-nested body {
-    margin: 0 auto;
-    font-family: 'Roboto', sans-serif;
-}
 
 .links {
     padding: 10px;
 }
-
 .nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background-color: #522b46;
+    background-color: rgba(252, 245, 235, 0.582);
+    backdrop-filter: blur(10px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    margin: 1 ;
-    max-width: 100%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 5000;
 }
+
 
 .nav img {
     margin-left: 20px;
@@ -29,7 +27,7 @@ postcss-color-function postcss-nested body {
 }
 
 .nombre-sitio {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 1.5rem;
     text-decoration: none;
     transition: transform 0.2s ease;
@@ -50,34 +48,34 @@ postcss-color-function postcss-nested body {
         font-size: 22px;
         font-weight: 900;
         text-align: center;
-        color: #ffffff;
+        color: #000000;
     }
 
     &__input {
         width: 100%;
         padding: 12px 80px;
-        color: white;
+        color: rgb(0, 0, 0);
         background-color: transparent;
         transition: transform 250ms ease-in-out;
         font-size: 14px;
         line-height: 18px;
 
-        color: #ffffff;
+        color: #000000;
         background-color: transparent;
         /*         background-image: url(http://mihaeltomic.com/codepen/input-search/ic_search_black_24px.svg); */
 
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z' fill='white'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z' fill='black'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-size: 18px 18px;
         background-position: 95% center;
         border-radius: 50px;
-        border: 1px solid #ffffff;
+        border: 1px solid #000000;
         transition: all 250ms ease-in-out;
         backface-visibility: hidden;
         transform-style: preserve-3d;
 
         &::placeholder {
-            color: white;
+            color: rgb(0, 0, 0);
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
@@ -87,7 +85,7 @@ postcss-color-function postcss-nested body {
             padding: 12px 50px;
             outline: 0;
             border: 1px solid transparent;
-            border-bottom: 1px solid #ffffff;
+            border-bottom: 1px solid #000000;
             border-radius: 0;
             background-position: 100% center;
         }
@@ -130,7 +128,7 @@ postcss-color-function postcss-nested body {
 }
 
 .navegacion a {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
     position: relative;
     margin-right: 20px;
@@ -144,16 +142,16 @@ postcss-color-function postcss-nested body {
     position: absolute;
     bottom: -0.5rem;
     /* Ubicación de la línea bajo el texto */
-    left: 50%;
+    left: 50.5%;
     top: 28px;
     /* Comienza en el centro */
     transform: translateX(-50%) scaleX(0);
     /* Empieza escalado en 0 para no verse */
-    width: 100%;
+    width: 78%;
     /* El ancho completo, pero escalado estará en 0 inicialmente */
     height: 2px;
-    background-color: white;
-    transition: transform 0.3s ease;
+    background-color: #633154;
+    transition: transform 0.7s ease;
     transform-origin: center;
     /* Punto de origen para la transformación */
 }
@@ -197,7 +195,7 @@ postcss-color-function postcss-nested body {
     justify-content: center;
     width: 50px;
     height: 50px;
-    background-color: #522b46;
+    background-color: #522b4600;
     padding: 0;
     top: -10px;
     margin-left: 10px;
@@ -223,12 +221,13 @@ postcss-color-function postcss-nested body {
     /* Cursor pointer para indicar que es clickable */
     margin-right: 20px;
     /* Margen a la derecha para separarlo del siguiente elemento */
-    background-color: #522b46;
+    /*background-color: #522b46;*/
+    background-color:rgba(255, 255, 255, 0) ;
 }
 
 .cart:hover,
 .logout-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #9b9b9b54;
 }
 
 .cart img {
@@ -252,7 +251,7 @@ postcss-color-function postcss-nested body {
     border-radius: 50%;
     text-align: center;
     background-color: #c82d5c;
-    color: white;
+    color: rgb(255, 255, 255);
     font-size: 0.6rem;
     line-height: 15px;
     display: flex;
@@ -295,7 +294,7 @@ postcss-color-function postcss-nested body {
         /* Centramos el input */
         border-radius: 50px;
         /* Mantenemos la estética del input */
-        border: 1px solid #ffffff;
+        border: 1px solid #000000;
         /* Mantenemos el estilo de borde */
     }
 
@@ -345,22 +344,17 @@ postcss-color-function postcss-nested body {
 }
 
 .select-custom {
-    /* Estilo base para el select */
     appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     background-color: transparent;
-    border: 1px solid #ffffff;
+    border: 1px solid #000000;
     border-radius: 5px;
-    color: #ffffff;
+    color: #000000;
     padding: 8px 16px;
     font-size: 16px;
     cursor: pointer;
-    outline: none;
 }
 
 .select-custom option {
-    /* Estilo para las opciones del select */
-    color: #000000; /* Color del texto de las opciones */
-    background-color: #ffffff; /* Color de fondo de las opciones */
+    color: #000000;
+    background-color: #ffffff;
 }

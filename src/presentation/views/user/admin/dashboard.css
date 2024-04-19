@@ -1,7 +1,7 @@
 .content {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(4, 24%);
+    grid-template-columns: repeat(2, 24%);
     grid-gap: 10px;
     padding: 10px;
 }
@@ -24,6 +24,7 @@
     aspect-ratio: 1;
     border-radius: 8px;
     background-color: #F2F2F2;
+    width: 99%;
 }
 
 .content .row:hover{
@@ -38,4 +39,7 @@
 
 .content .row.square{
     aspect-ratio: 1;
+    flex: 1;
+    grid-column: span 2;
+    width: 97%;
 }

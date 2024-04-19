@@ -16,8 +16,12 @@
 
 .analytics header .followers {
     color: #00484e;
+    margin: auto;
 }
 
 .analytics header .earnings {
     color: #810551
+}
+.leyenda{
+    margin: auto;
 }

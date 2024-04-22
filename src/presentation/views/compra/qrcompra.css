@@ -28,6 +28,12 @@
     border-radius: 8px;
     /* Bordes redondeados para la imagen */
 }
+.descarga{
+    width: 100px;
+    height: 100px;
+    margin: auto;
+
+}
 
 .payment-button {
     background-color: #4CAF50;

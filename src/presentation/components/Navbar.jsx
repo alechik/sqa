@@ -105,7 +105,7 @@ export default function Navbar({ cartitem }) {
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
                         <button onClick={logout} className  ="logout-button" title="Cerrar Sesión" alt="Cerrar Sesión" >
-                            <img src={iconUrls.logoutIcon}></img>
+                            <img src={iconUrls.logoutIcon} alt='logout'></img>
                         </button>
                     </li>
                 ) : (

@@ -3,9 +3,10 @@ import './footer.css';
 import { Link } from 'react-router-dom';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../infraestructure/firebase--config';
+import tuImagen from '../assets/iconoWI.png';
 
 function Footer() {
- 
+
     const [iconUrls, setIconUrls] = useState({});
 
     useEffect(() => {
@@ -50,7 +51,7 @@ function Footer() {
                     <Link to="/privacidad">Política de Privacidad</Link>
                 </div>
                 <div className="footer-brand">
-                    <img src={iconUrls.storeIcon} />
+                    <Link to="/" className="nombre-sitio"> <img src={tuImagen} alt="logo" /></Link>
                     <p>Tienda Los Chambis</p>
                 </div>
                 <div className="footer-copy">

@@ -50,11 +50,11 @@ function QRCompra() {
     <div className="payment-container">
       <h2>Realiza tu pago</h2>
       <div className="qr-image-container">
-        <img src={qrImagePath} alt="Código QR" className="qr-code-image" />
+        <img  src={qrImagePath} alt="Código QR" className="qr-code-image" />
       </div>
       <div className="qr-actions">
         <button onClick={() => downloadImage(qrImagePath)} className="download-button">
-          <img src={downloadIcon} alt="Descargar QR" />
+          <img className='descarga' src={downloadIcon} alt="Descargar QR" />
         </button>
       </div>
       <button className="payment-button" onClick={onConfirmPayment}>

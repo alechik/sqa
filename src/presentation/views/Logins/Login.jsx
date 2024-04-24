@@ -1,39 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
+import { TailSpin } from 'react-loader-spinner';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import {
+    getAuth,
+    signInWithRedirect,
+    getRedirectResult,
+    GoogleAuthProvider,
+    FacebookAuthProvider,
+    signInWithEmailAndPassword
+} from 'firebase/auth';
 import { db } from '../../../infraestructure/firebase--config';
 import { doc, getDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { signInWithGoogle, signInWithFacebook } from '../../../infraestructure/api/user';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [showError, setShowError] = useState(false);
     const navigate = useNavigate();
     const auth = getAuth();
+    const [loading, setLoading] = useState(false);
 
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
-
     const loginUser = async (event) => {
         event.preventDefault();
+        setLoading(true); 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const userDocRef = doc(db, "users", userCredential.user.uid);
-            const userDocSnap = await getDoc(userDocRef);
+            const user = userCredential.user;
+            if (!user) {
+                throw new Error('No user data available after login.');
+            }
 
+            // Verificar si existe documento para el usuario
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
             if (!userDocSnap.exists()) {
                 toast.error("No existe una cuenta asociada a este email.", {
                     position: "bottom-right",
-                    autoClose: 5000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -42,6 +52,7 @@ export default function Login() {
                 });
                 return;
             }
+
             const userType = userDocSnap.data().userTypeId;
             toast.success("Inicio de sesión exitoso!", {
                 position: "bottom-right",
@@ -52,31 +63,43 @@ export default function Login() {
                 draggable: true,
                 progress: undefined,
             });
-            window.location.href = `/?userType=${userType}`;
+            setLoading(false);
+            navigate(`/?userType=${userType}`);  // Navegar basado en el tipo de usuario
         } catch (error) {
+            setLoading(false); 
             handleError(error);
+        }
+        finally {
+            setLoading(false); // Stop loading regardless of the outcome
         }
     };
 
 
-    const signInWithGoogleHandler = async () => {
-        try {
-            await signInWithGoogle();
-            toast.success("Inicio de sesión con Google exitoso!");
-            window.location.href = '/';
-        } catch (error) {
-            handleError(error);
-        }
+    useEffect(() => {
+        setLoading(true);
+    getRedirectResult(auth)
+        .then((result) => {
+            if (result) {
+                setLoading(false); 
+                const user = result.user;
+                toast.success(`Bienvenido/a ${user.displayName || 'Usuario'}`);
+                navigate("/"); /// Redirige a la página principal tras un inicio de sesión exitoso
+            }
+        })
+        .catch((error) => {
+            toast.error("Error de autenticación: " + error.message);
+        })
+        .finally(() => setLoading(false));
+}, [navigate, auth]);   
+
+    const signInWithGoogleHandler = () => {
+        setLoading(true);
+        signInWithRedirect(auth, new GoogleAuthProvider());
     };
 
-    const signInWithFacebookHandler = async () => {
-        try {
-            await signInWithFacebook();
-            toast.success("Inicio de sesión con Facebook exitoso!");
-            window.location.href = '/';
-        } catch (error) {
-            handleError(error);
-        }
+    const signInWithFacebookHandler = () => {
+        setLoading(true);
+        signInWithRedirect(auth, new FacebookAuthProvider());
     };
 
     const handleError = (error) => {
@@ -110,7 +133,7 @@ export default function Login() {
         }
         toast.error(errorMessage, {
             position: "bottom-right",
-            autoClose: 5000,
+            autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -118,16 +141,12 @@ export default function Login() {
             progress: undefined,
         });
     };
-
-
-
     return (
         <section className="login-container">
             <ToastContainer />
             <div className="login-box">
                 <form onSubmit={loginUser}>
                     <h2 className='Inicio'>Iniciar sesión</h2>
-                    {showError && <div className="error-message">{error}</div>}
                     <div className={`input-box ${email ? 'active' : ''}`}>
                         <span className="icon">
                             <ion-icon name="mail"></ion-icon>
@@ -168,6 +187,9 @@ export default function Login() {
                     </div>
                 </form>
             </div>
+            {loading && <div className="spinner-container">
+                <TailSpin color="#00BFFF" height={50} width={50} />
+            </div>}
         </section>
     );
 }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { createUser } from "../../../infraestructure/api/user.js";
-import { event } from 'jquery';
 
 const CLIENT_USER_TYPE_ID = '3';
 
@@ -36,19 +35,28 @@ export default function Register() {
             await createUser({
                 email,
                 password,
-                names: `${firstName} ${lastName}`, // Concatenación del nombre y apellido
+                names: `${firstName} ${lastName}`,
                 numero,
-                address: '', // Dejar en blanco
-                gender: '', // Dejar en blanco
-                birthday_date: '', // Dejar en blanco
-                ci: '', // Dejar en blanco
-                avatar: '', // Dejar en blanco
+                address,
+                gender: '',
+                birthday_date: '',
+                ci: '',
+                avatar: '',
                 userTypeId: CLIENT_USER_TYPE_ID,
             });
-            navigate('/'); 
+            toast.success("Registro exitoso!");
+            navigate('/');  
         } catch (error) {
             console.error('Error al registrar usuario:', error.message);
-            // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
+            toast.error(`Error al registrar usuario: ${error.message}`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
 

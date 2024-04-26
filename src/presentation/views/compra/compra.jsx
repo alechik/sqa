@@ -54,7 +54,21 @@ export default function Compra({ cartItems }) {
         loadGoogleMapScript();
     }, [userData.address]);
 
-
+    useEffect(() => {
+        if (marker) {
+            marker.addListener('dragend', handleMarkerDragEnd);
+            return () => {
+                google.maps.event.clearListeners(marker, 'dragend');
+            };
+        }
+    }, [marker]);
+    
+    useEffect(() => {
+        if (map && marker && userData.address) {
+            updateMapLocation(userData.address);
+        }
+    }, [map, marker, userData.address]);  // Dependencias para reaccionar a cambios
+    
     const loadGoogleMapScript = () => {
         return new Promise((resolve) => {
             if (window.google) {
@@ -77,6 +91,11 @@ export default function Compra({ cartItems }) {
     
 
     const initMap = (address) => {
+        if (!window.google) {
+            
+            return;
+        }
+    
         const mapOptions = {
             zoom: 13,
             center: new window.google.maps.LatLng(-17.72213363647461, -63.174591064453125)
@@ -89,14 +108,14 @@ export default function Compra({ cartItems }) {
             title: "Drag me!"
         });
         setMarker(newMarker);
-        newMarker.addListener('dragend', handleMarkerDragEnd);
-
-        if (address) updateMapLocation(address);
+    
+        if (address) {
+            updateMapLocation(address);
+        }
     };
 
     const updateMapLocation = (address) => {
         if (!map || !marker) {
-            console.error("Map or marker is not initialized.");
             return;  // Salir de la función si `map` o `marker` no están inicializados.
         }
     
@@ -118,21 +137,26 @@ export default function Compra({ cartItems }) {
             return;
         }
     
-        const newPos = marker.getPosition();  // Obtener la nueva posición.
+        const newPos = marker.getPosition();
         geocodePosition(newPos);
     };
 
 
     const geocodePosition = (pos) => {
+        if (!map) {
+            console.error("Map is not initialized.");
+            return;
+        }
+    
         const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ location: pos }, (results, status) => {
+        geocoder.geocode({ location: pos }, async (results, status) => {
             if (status === 'OK' && results[0]) {
                 const updatedAddress = results[0].formatted_address;
                 setUserData(prevState => ({
                     ...prevState,
                     address: updatedAddress
                 }));
-                updateUserDataInFirestore(updatedAddress);
+                await updateUserDataInFirestore(updatedAddress);
                 toast.info(`Address updated: ${updatedAddress}`);
             } else {
                 toast.error('Failed to retrieve address.');
@@ -141,7 +165,10 @@ export default function Compra({ cartItems }) {
     };
     
     const updateUserDataInFirestore = async (address) => {
-        if (!user) return;  // Asegúrate de que el usuario esté autenticado
+        if (!user) {
+            console.error("User not authenticated.");
+            return;
+        }
         const userRef = doc(firestore, 'users', user.uid);
         try {
             await updateDoc(userRef, { address });
@@ -186,7 +213,20 @@ export default function Compra({ cartItems }) {
             return total;
         }
     }, 0);
-
+    
+    useEffect(() => {
+        return () => {
+            // Limpiar recursos relacionados con el mapa al desmontar el componente
+            setMap(null);
+            setMarker(null);
+            window.google = null; // Limpiar objeto global de Google Maps
+            const script = document.querySelector('script[src^="https://maps.googleapis.com"]');
+            if (script) {
+                script.remove(); // Eliminar el script del mapa de Google
+            }
+        };
+    }, []);
+    
     return (
         <div className="toast">
         <div className="compra-container">

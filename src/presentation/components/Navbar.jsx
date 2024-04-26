@@ -4,28 +4,25 @@ import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "./navbar.css";
-import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../../infraestructure/firebase--config';
-import { collection, getFirestore, getDocs } from 'firebase/firestore';
 import tuImagen from '../assets/iconoW.png';
+import shoppingCartIcon from '../assets/shopping-cart.png';
+import logoutIcon from '../assets/logout.png';
 
 export default function Navbar({ cartitem }) {
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate(); // Hook para navegar
     const auth = getAuth(); // Inicializa la autenticación de Firebase
-    const [iconUrls, setIconUrls] = useState({});
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const db = getFirestore();
-            const categoriesCollection = collection(db, 'product_categories');
-            const categoriesSnapshot = await getDocs(categoriesCollection);
-            const categoriesData = categoriesSnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            setCategories(categoriesData);
+            // Simula la obtención de categorías desde la base de datos
+            const mockCategories = [
+                { id: 1, name: 'Category 1' },
+                { id: 2, name: 'Category 2' },
+                { id: 3, name: 'Category 3' }
+            ];
+            setCategories(mockCategories);
         };
         fetchCategories();
     }, []);
@@ -44,24 +41,6 @@ export default function Navbar({ cartitem }) {
         return () => unsubscribe(); // Desuscribirse al desmontar el componente
     }, []);
 
-    useEffect(() => {
-        const fetchIconUrls = async () => {
-            try {
-                const storeIconUrl = await getDownloadURL(ref(storage, 'Iconos/shop.png'))
-                const shoppingCartIconUrl = await getDownloadURL(ref(storage, 'Iconos/shopping-cart.png'))
-                const logoutIconUrl = await getDownloadURL(ref(storage, 'Iconos/logout.png'))
-                setIconUrls({
-                    storeIcon: storeIconUrl,
-                    shoppingCartIcon: shoppingCartIconUrl,
-                    logoutIcon: logoutIconUrl
-                });
-            } catch (error) {
-                console.error('Error al obtener las URL de los iconos:', error);
-            }
-        };
-        fetchIconUrls();
-    })
-
     const logout = () => {
         auth.signOut(); // Cierra sesión en Firebase
         navigate('/iniciarsesion'); // Redirige al usuario a la página de inicio de sesión
@@ -70,19 +49,13 @@ export default function Navbar({ cartitem }) {
     return (
         <nav className="nav">
             <Link to="/" className="nombre-sitio"> <img src={tuImagen} alt="logo" /></Link>
-        {/*    <select name="category" id="category" className='select-custom'>
-                <option value="">Categorías</option>
-                {categories.map(category => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
-                ))}
-            </select>*/}    
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
                     <li>
                         <div className='cart'>
                             <Link to='/cart' className="cart-link">
-                                <img src={iconUrls.shoppingCartIcon} alt="Carrito" ></img>
+                                <img src={shoppingCartIcon} alt="Carrito" ></img>
                                 <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
                             </Link>
                         </div>
@@ -105,7 +78,7 @@ export default function Navbar({ cartitem }) {
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
                         <button onClick={logout} className  ="logout-button" title="Cerrar Sesión" alt="Cerrar Sesión" >
-                            <img src={iconUrls.logoutIcon} alt='logout'></img>
+                            <img src={logoutIcon} alt='logout'></img>
                         </button>
                     </li>
                 ) : (

@@ -23,24 +23,25 @@ export async function getAllOrders() {
   }
 }
 
-  export async function getOrderById(orderId) {
-    if (!orderId) {
-      throw new Error('No order ID provided');
-    }
-    try {
-      const orderDocRef = doc(db, 'orders', orderId);
-      const orderSnapshot = await getDoc(orderDocRef);
-      if (!orderSnapshot.exists()) {
-        throw new Error('Order not found');
-      }
-      const orderData = orderSnapshot.data(); // Esto te da los datos crudos del documento
-      // Ahora puedes loguear y verificar que los datos son correctos
-      return Order.fromFirestore(orderSnapshot); // Asumiendo que esta es una función que transforma los datos.
-    } catch (error) {
-      console.error("Error fetching order with ID", orderId, error);
-      throw new Error('Unable to fetch order.');
-    }
+ export async function getOrderById(orderId) {
+  if (!orderId) {
+    throw new Error('No order ID provided');
   }
+  try {
+    const orderDocRef = doc(db, 'orders', orderId);
+    const orderSnapshot = await getDoc(orderDocRef);
+    if (!orderSnapshot.exists()) {
+      throw new Error('Order not found');
+    }
+    const orderData = orderSnapshot.data(); // Esto te da los datos crudos del documento
+    // No necesitas transformar los datos, solo devuélvelos
+    return orderData;
+  } catch (error) {
+    console.error("Error fetching order with ID", orderId, error);
+    throw new Error('Unable to fetch order.');
+  }
+}
+
 
 
 
@@ -132,7 +133,7 @@ async function updateOrderStatus(nuevoEstado) {
 }
 
 // Llamar a la función para actualizar el estado del último pedido
-const nuevoEstado = 'confirmado'; // Define el nuevo estado del pedido
+const nuevoEstado = 'Etregado'; // Define el nuevo estado del pedido
 updateOrderStatus(nuevoEstado);
 
 export default{

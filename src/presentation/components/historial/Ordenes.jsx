@@ -57,7 +57,7 @@ function Ordenes() {
                             </TableCell>
                             <TableCell align="right">{orden.date}</TableCell>
                             <TableCell align="right">
-                                <span className={`order-dot ${orden.status === 'confirmado' ? 'greenDot' : orden.status === 'En Camino' ? 'yellowDot' : 'redDot'}`}></span>
+                                <span className={`order-dot ${orden.status === 'Entregado' ? 'greenDot' : orden.status === 'En Camino' ? 'yellowDot' : 'redDot'}`}></span>
                                 {orden.status}
                             </TableCell>
                             <TableCell align="right">

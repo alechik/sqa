@@ -16,13 +16,11 @@ function Footer() {
                 const facebookUrl = await getDownloadURL(ref(storage, 'Iconos/facebook.png'));
                 const instagramUrl = await getDownloadURL(ref(storage, 'Iconos/instagram.png'));
                 const twitterUrl = await getDownloadURL(ref(storage, 'Iconos/twitter.png'));
-                const storeIconUrl = await getDownloadURL(ref(storage, 'Iconos/shop.png'))
                 setIconUrls({
                     whatsapp: whatsappUrl,
                     facebook: facebookUrl,
                     instagram: instagramUrl,
                     twitter: twitterUrl,
-                    storeIcon: storeIconUrl
                 });
             } catch (error) {
                 console.error('Error al obtener las URL de los iconos:', error);

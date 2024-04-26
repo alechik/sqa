@@ -22,6 +22,7 @@ import Pagoqr from "./views/compra/qrcompra.jsx";
 import ConfirmacionPedido from './views/pedido/ConfirmacionPedido.jsx';
 import SeguimientoPedido from './views/pedido/SeguimientoPedido.jsx';
 import './App.css';
+import SearchesPage from './views/busquedas/SearchesPage.jsx';
 
 function App() {
     //stpe 1: fetch data from database
@@ -69,6 +70,7 @@ function App() {
                         <Route path="/cart" element={<Cart cartitem={cartitem} addtoCart={addtoCart} decreaseQty={decreaseQty}/> } />
                         <Route path="/iniciarsesion" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
+                        <Route path="/search" element={<SearchesPage />} />
                         {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartitem} /></PrivateRoute>} />

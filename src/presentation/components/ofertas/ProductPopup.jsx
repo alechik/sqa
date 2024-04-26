@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
 import {auth,db} from "../../../infraestructure/firebase--config.js";
-import { doc, getDoc } from "firebase/firestore";
+import {addDoc, collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
     const user = auth.currentUser
     const [categoryName, setCategoryName] = useState('');
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
+    const [selectedRating, setSelectedRating] = useState(null); // Nuevo estado para rastrear la estrella seleccionada previamente
     useEffect(() => {
         const fetchCategoryName = async () => {
             try {
@@ -21,6 +22,31 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
 
         fetchCategoryName();
     }, [product.CategoryID]);
+
+    useEffect(() => {
+        const checkUserRating = async () => {
+            try {
+                const querySnapshot = await getDocs(query(collection(db, 'products_ratings'),
+                    where('product_id', '==', product.id),
+                    where('user_id', '==', user.uid)));
+
+                if (!querySnapshot.empty) {
+                    const userRating = querySnapshot.docs[0].data().rating;
+                    console.log('User rating data:', userRating);
+                    setRating(userRating); // Almacena la calificación del usuario en el estado
+                    setSelectedRating(userRating);
+                } else {
+                    console.log('No user rating found');
+                }
+            } catch (error) {
+                console.error('Error fetching user rating:', error);
+            }
+        };
+
+        checkUserRating();
+    }, [product.id, user.uid])
+
+
 
     /*const handleMouseMove = (e) => {
         const stars = e.target.parentNode.querySelectorAll('.fa-star');
@@ -43,22 +69,33 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     const addRating = async (productId, rating) => {
         try {
             // Obtener una referencia a la colección products_rating
-            const productsRatingRef = doc(db,'products_rating');
+            const productsRatingRef = collection(db,'products_ratings');
 
             // Crear un nuevo documento con los datos proporcionados
-            await productsRatingRef.add({
+            await addDoc(productsRatingRef, {
                 date: new Date().toLocaleDateString(), // Obtener la fecha actual
-                product_id: productId,
+                // eslint-disable-next-line react/prop-types
+                product_id: product.id,
                 rating: rating,
                 user_id: user.uid
             });
 
             console.log('Datos de rating insertados exitosamente.');
+            setSelectedRating(rating);
         } catch (error) {
             console.error('Error al insertar datos de rating:', error);
         }
     };
 
+    const handleRatingChange = async (currentRating) => {
+        // Verificar si la estrella seleccionada previamente es la misma que la actual
+        if (selectedRating === currentRating) {
+            // Si es la misma estrella, no permitir que el usuario vote nuevamente la misma calificación
+            return;
+        }
+        setRating(currentRating);
+        await addRating(product.id, currentRating);
+    };
 
     return (
         <div className={`product-popup-overlay ${product ? 'active' : ''}`} onClick={onClose}>
@@ -71,27 +108,25 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                             style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px', marginBottom: '20px' }}
                         />
                         <div className="rate">
-                            <span className="stars yellow-border" onMouseMove={(e) => handleMouseMove(e)}>
-                                 {[...Array(5)].map((star,index) => {
-                                     const currentRating = index + 1
-                                     return (
-                                         // eslint-disable-next-line react/jsx-key
-                                         <label key={index}>
-                                             <input
-                                             key={star}
-                                             type='radio'
-                                             name='rating'
-                                             value={currentRating}
-                                             onChange={() => setRating(currentRating)}
-                                             />
-                                             <i className='fas fa-star' style={{color : currentRating <= (hover || rating) ? '#ffc107' : "#e4e5e9",}}
-                                                onMouseEnter={() => setHover(currentRating)}
-                                                onMouseLeave={() => setHover(null)}>
-
-                                             </i>
-                                         </label>
-                                     )
-                                 })}
+                            <span className="stars yellow-border">
+                                {[...Array(5)].map((_, index) => {
+                                    const starValue = index + 1;
+                                    return (
+                                        <label key={index}>
+                                            <input
+                                                type='radio'
+                                                name='rating'
+                                                value={starValue}
+                                                onChange={() => handleRatingChange(starValue)}
+                                                disabled={selectedRating === starValue}
+                                            />
+                                            <i className='fas fa-star' style={{ color: starValue <= (hover || rating) ? '#ffc107' : "#e4e5e9" }}
+                                               onMouseEnter={() => setHover(starValue)}
+                                               onMouseLeave={() => setHover(null)}>
+                                            </i>
+                                        </label>
+                                    );
+                                })}
                             </span>
                             <span className="score">{rating}</span>
                         </div>

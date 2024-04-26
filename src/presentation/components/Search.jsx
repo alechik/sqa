@@ -1,88 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import Fuse from 'fuse.js';
 import { db } from '../../infraestructure/firebase-connection';
 import { collection, getDocs } from 'firebase/firestore';
-import './Search.css'
-import { Oval } from 'react-loader-spinner'; // Asegúrate de usar la importación correcta
+import './Search.css';
+import ProductPopup from './ofertas/ProductPopup'; // Asegúrate de que la ruta del import es correcta.
+import { useNavigate } from 'react-router-dom';
 
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [selectedResultIndex, setSelectedResultIndex] = useState(-1);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const searchContainerRef = useRef(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
-        if (searchTerm.trim() === '') {
-            setSearchResults([]);
-            setLoading(false);
-            return;
-        }
-
-        setLoading(true);
-        const delayDebounce = setTimeout(async () => {
-            try {
-                const productsSnapshot = await getDocs(collection(db, "products"));
-                const categoriesSnapshot = await getDocs(collection(db, "product_categories"));
-
-                const products = productsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                const categories = categoriesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-
-                const fuseOptions = {
-                    includeScore: true,
-                    findAllMatches: true,
-                    keys: ["product_name", "name"]
-                };
-                const fuse = new Fuse([...products, ...categories], fuseOptions);
-                const results = fuse.search(searchTerm.toLowerCase());
-
-                setSearchResults(results.map(result => result.item));
-            } catch (error) {
-                console.error("Error fetching search results: ", error);
+        // Listener para clicks fuera del componente
+        const handleClickOutside = (event) => {
+            if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+                setSearchResults([]);
             }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            if (searchTerm.trim() === '') {
+                setSearchResults([]);
+                return;
+            }
+
+            setLoading(true);
+            const productsSnapshot = await getDocs(collection(db, "products"));
+            //const categoriesSnapshot = await getDocs(collection(db, "product_categories"));
+
+            const products = productsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            //const categories = categoriesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+            const fuseOptions = {
+                includeScore: true,
+                findAllMatches: true,
+                keys: ["product_name", "name"]
+            };
+
+            const fuse = new Fuse(products, fuseOptions);
+            const results = fuse.search(searchTerm.toLowerCase());
+            sessionStorage.setItem("searchedProducts",JSON.stringify(results))
+            setSearchResults(results.map(result => result.item));
             setLoading(false);
+        };
+
+        const delayDebounce = setTimeout(() => {
+            fetchSearchResults();
         }, 300);
+
         return () => clearTimeout(delayDebounce);
     }, [searchTerm]);
 
-    const handleMouseEnter = (index) => {
-        setSelectedResultIndex(index);
+    const handleResultClick = async (result) => {
+        setSelectedProduct(result);
+        setSearchResults([]);
     };
 
-    const handleMouseLeave = () => {
-        setSelectedResultIndex(-1);
+    const handleClosePopup = () => {
+        setSelectedProduct(null);
     };
 
-    const handleResultClick = (result) => {
-        console.log("Clicked result:", result);
-    };
+    const handlePage=(event)=>{
+        if (event.key === 'Enter' && searchTerm.trim() !== '') {
+            navigate(`/search`);
+        }
+    }
 
     return (
-        <section className="search">
+        <section className="search" ref={searchContainerRef}>
             <div className="search__container">
                 <input 
+                    onKeyDown={handlePage}
                     className="search__input" 
                     type="text" 
-                    placeholder="SEARCH"
+                    placeholder="Search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                {loading && (
-                    <div className="loader-container">
-                    <Oval
-                        color="#633154"
-                        height={20}
-                        width={20}
-                    />
-                </div>
-                )}
+                {loading && <div className="loader-container">Loading...</div>}
                 {searchResults.length > 0 && (
                     <ul className="search__results">
-                        {searchResults.map((result, index) => (
+                        {searchResults.map((result) => (
                             <li 
                                 key={result.id} 
-                                className={`result-item ${index === selectedResultIndex ? 'selected' : ''}`}
-                                onMouseEnter={() => handleMouseEnter(index)}
-                                onMouseLeave={handleMouseLeave}
+                                className="result-item"
                                 onClick={() => handleResultClick(result)}
                             >
                                 {result.product_name || result.name}
@@ -91,6 +104,14 @@ export default function Search() {
                     </ul>
                 )}
             </div>
+            {selectedProduct && ReactDOM.createPortal(
+                <ProductPopup
+                    product={selectedProduct}
+                    onClose={handleClosePopup}
+                    // addtoCart={addtoCart} // Implementa esta función según sea necesario
+                />,
+                document.body
+            )}
         </section>
     );
 }

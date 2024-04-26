@@ -7,6 +7,7 @@ import "./navbar.css";
 import tuImagen from '../assets/iconoW.png';
 import shoppingCartIcon from '../assets/shopping-cart.png';
 import logoutIcon from '../assets/logout.png';
+import defaultAvatar from '../assets/usuario.png'; 
 
 export default function Navbar({ cartitem }) {
     const [userProfile, setUserProfile] = useState(null);
@@ -46,9 +47,15 @@ export default function Navbar({ cartitem }) {
         navigate('/iniciarsesion'); // Redirige al usuario a la página de inicio de sesión
     };
 
+    const handleLogoClick = () => {
+        // Navega a la página principal y luego recarga la página
+        navigate('/');
+        window.location.reload();
+    };
+
     return (
         <nav className="nav">
-            <Link to="/" className="nombre-sitio"> <img src={tuImagen} alt="logo" /></Link>
+            <Link to="/" className="nombre-sitio" onClick={handleLogoClick}><img src={tuImagen} alt="logo" /></Link>
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
@@ -60,25 +67,25 @@ export default function Navbar({ cartitem }) {
                             </Link>
                         </div>
                         {userProfile.userTypeId === '1' && <Link to="/admin/AdminInfo" className="perfil-link"><img
-                            src={userProfile.avatar || 'src/presentation/assets/usuario.png'}
+                            src={userProfile.avatar || defaultAvatar}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos" className="perfil-link"><img
-                            src={userProfile.avatar || 'src/presentation/assets/usuario.png'}
+                            src={userProfile.avatar || defaultAvatar}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '3' && <Link to="/perfil" className="perfil-link"><img
-                            src={userProfile.avatar || 'src/presentation/assets/usuario.png' }
+                            src={userProfile.avatar || defaultAvatar}
                             alt="Perfil"
                             className="navbar-avatar"
                             style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
-                        <button onClick={logout} className  ="logout-button" title="Cerrar Sesión" alt="Cerrar Sesión" >
-                            <img src={logoutIcon} alt='logout'></img>
+                        <button onClick={logout} className="logout-button" title="Cerrar Sesión">
+                            <img src={logoutIcon} alt="Cerrar Sesión" />
                         </button>
                     </li>
                 ) : (

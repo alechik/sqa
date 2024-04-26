@@ -87,11 +87,14 @@ const FlashCard = ({ productItems, productos, addtoCart }) => {
                             <div className="product-details">
                                 <h3 style={{ fontSize: '16px', minHeight: '52px', maxHeight: '52px' }}>{producto.description}</h3>
                                 <div className="rate">
-                                    <i className="far fa-star"></i>
-                                    <i className="far fa-star"></i>
-                                    <i className="far fa-star"></i>
-                                    <i className="far fa-star"></i>
-                                    <i className="far fa-star"></i>
+                                    {[...Array(5)].map(star => {
+                                        return (
+                                            // eslint-disable-next-line react/jsx-key
+                                            <label>
+                                            <i className='fas fa-star'></i>
+                                            </label>
+                                        )
+                                    })}
                                 </div>
                                 <div className="price">
                                     <h4>{producto.unitary_price}.00</h4>

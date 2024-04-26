@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
+import {auth,db} from "../../../infraestructure/firebase--config.js";
+import { doc, getDoc } from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
+    const user = auth.currentUser
     const [categoryName, setCategoryName] = useState('');
-
+    const [rating, setRating] = useState(null);
+    const [hover, setHover] = useState(null);
     useEffect(() => {
         const fetchCategoryName = async () => {
             try {
@@ -18,7 +22,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
         fetchCategoryName();
     }, [product.CategoryID]);
 
-    const handleMouseMove = (e) => {
+    /*const handleMouseMove = (e) => {
         const stars = e.target.parentNode.querySelectorAll('.fa-star');
         const mouseX = e.clientX - stars[0].getBoundingClientRect().left;
         const starWidth = stars[0].getBoundingClientRect().width;
@@ -34,7 +38,27 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                 stars[i].classList.remove('fas');
             }
         }
+    };*/
+
+    const addRating = async (productId, rating) => {
+        try {
+            // Obtener una referencia a la colección products_rating
+            const productsRatingRef = doc(db,'products_rating');
+
+            // Crear un nuevo documento con los datos proporcionados
+            await productsRatingRef.add({
+                date: new Date().toLocaleDateString(), // Obtener la fecha actual
+                product_id: productId,
+                rating: rating,
+                user_id: user.uid
+            });
+
+            console.log('Datos de rating insertados exitosamente.');
+        } catch (error) {
+            console.error('Error al insertar datos de rating:', error);
+        }
     };
+
 
     return (
         <div className={`product-popup-overlay ${product ? 'active' : ''}`} onClick={onClose}>
@@ -48,13 +72,28 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         />
                         <div className="rate">
                             <span className="stars yellow-border" onMouseMove={(e) => handleMouseMove(e)}>
-                                <i className="far fa-star"></i>
-                                <i className="far fa-star"></i>
-                                <i className="far fa-star"></i>
-                                <i className="far fa-star"></i>
-                                <i className="far fa-star"></i>
+                                 {[...Array(5)].map((star,index) => {
+                                     const currentRating = index + 1
+                                     return (
+                                         // eslint-disable-next-line react/jsx-key
+                                         <label key={index}>
+                                             <input
+                                             key={star}
+                                             type='radio'
+                                             name='rating'
+                                             value={currentRating}
+                                             onChange={() => setRating(currentRating)}
+                                             />
+                                             <i className='fas fa-star' style={{color : currentRating <= (hover || rating) ? '#ffc107' : "#e4e5e9",}}
+                                                onMouseEnter={() => setHover(currentRating)}
+                                                onMouseLeave={() => setHover(null)}>
+
+                                             </i>
+                                         </label>
+                                     )
+                                 })}
                             </span>
-                            <span className="score">(0)</span>
+                            <span className="score">{rating}</span>
                         </div>
                     </div>
                     <div className="product-right">

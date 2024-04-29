@@ -1,4 +1,3 @@
-import React from 'react';
 import PagoQR from './PagoQR'; // Importa el componente PagoQR
 
 function FormularioPago() {

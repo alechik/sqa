@@ -62,7 +62,7 @@ export async function deleteDeliveryDetail(deliveryDetailId) {
 }
 
 export async function getDeliveryDetailByDelivery(deliveryId) {
-    const delivery = await getDeliveryById(deliveryId);
+    const delivery = await deliveryId(deliveryId);
     const detailRef = delivery.delivery_detail_id; // Suponiendo que delivery_detail_id es una referencia directa.
     const detailDoc = await getDoc(detailRef);
     

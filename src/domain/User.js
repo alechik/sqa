@@ -1,5 +1,5 @@
 class User {
-    constructor(id, address, birthday_date, ci, email, gender, lastnames, names, user_type_id, picture) {
+    constructor(id, address, birthday_date, ci, email, gender, lastnames, names, user_type_id, picture, numero) {
         this.id = id;
         this.address = address;
         this.birthday_date = birthday_date;

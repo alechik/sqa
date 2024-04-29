@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
-import {auth,db} from "../../../infraestructure/firebase--config.js";
+import { createProductRating } from '../../../infraestructure/api/product_rating';
+import { auth, db } from "../../../infraestructure/firebase--config.js";
 import { doc, getDoc } from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
@@ -9,6 +10,24 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     const [categoryName, setCategoryName] = useState('');
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
+
+    // Función para guardar la puntuación de rating en Firebase
+    const handleRatingSubmit = async (rating) => {
+        const productRatingData = {
+            product_id: product.id, // Asegúrate de que 'id' está correctamente asignado en el objeto del producto
+            rating: rating,
+            date: new Date().toISOString(),
+            user_id: user.uid
+        };
+
+        try {
+            const ratingId = await createProductRating(productRatingData);
+            console.log('Rating saved with ID:', ratingId);
+        } catch (error) {
+            console.error('Error saving rating:', error);
+        }
+    };
+
     useEffect(() => {
         const fetchCategoryName = async () => {
             try {
@@ -43,7 +62,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     const addRating = async (productId, rating) => {
         try {
             // Obtener una referencia a la colección products_rating
-            const productsRatingRef = doc(db,'products_rating');
+            const productsRatingRef = doc(db, 'products_rating');
 
             // Crear un nuevo documento con los datos proporcionados
             await productsRatingRef.add({
@@ -72,26 +91,27 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         />
                         <div className="rate">
                             <span className="stars yellow-border" onMouseMove={(e) => handleMouseMove(e)}>
-                                 {[...Array(5)].map((star,index) => {
-                                     const currentRating = index + 1
-                                     return (
-                                         // eslint-disable-next-line react/jsx-key
-                                         <label key={index}>
-                                             <input
-                                             key={star}
-                                             type='radio'
-                                             name='rating'
-                                             value={currentRating}
-                                             onChange={() => setRating(currentRating)}
-                                             />
-                                             <i className='fas fa-star' style={{color : currentRating <= (hover || rating) ? '#ffc107' : "#e4e5e9",}}
+                                {[...Array(5)].map((star, index) => {
+                                    const currentRating = index + 1
+                                    return (
+                                        // eslint-disable-next-line react/jsx-key
+                                        <label key={index}>
+                                            <input
+                                                key={star}
+                                                type='radio'
+                                                name='rating'
+                                                value={currentRating}
+                                                onClick={() => handleRatingSubmit(currentRating)}
+                                                onChange={() => setRating(currentRating)}
+                                            />
+                                            <i className='fas fa-star' style={{ color: currentRating <= (hover || rating) ? '#ffc107' : "#e4e5e9", }}
                                                 onMouseEnter={() => setHover(currentRating)}
                                                 onMouseLeave={() => setHover(null)}>
 
-                                             </i>
-                                         </label>
-                                     )
-                                 })}
+                                            </i>
+                                        </label>
+                                    )
+                                })}
                             </span>
                             <span className="score">{rating}</span>
                         </div>

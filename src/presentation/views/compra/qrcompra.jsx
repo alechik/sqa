@@ -1,65 +1,84 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { createOrder } from '../../../infraestructure/api/orders';
+import { httpsCallable } from 'firebase/functions';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { functions } from '../../../infraestructure/firebase--config';
 import downloadIcon from '../../assets/descargas.png';
-import qrImagePath from '../../assets/qr.jpg';
-import "./qrcompra.css"
+import "./qrcompra.css";
 
 function QRCompra() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, cartItems } = location.state || {};
+  const [qrUrl, setQrUrl] = useState('');
+  const auth = getAuth();
 
   useEffect(() => {
-    if (!user || !cartItems) {
+    if (!user || !cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
       toast.error('Información del usuario o del carrito no disponible.');
-      navigate('/iniciarsesion'); // Redirige al usuario si la información necesaria no está disponible
+      navigate('/iniciarsesion');
+      return;
     }
-  }, [user, cartItems, navigate]);
-  
-   const onConfirmPayment = async () => {
-    try {
-      if (!user || !cartItems) {
-        throw new Error('User or cart items data is missing.');
+
+    // Validación de los items del carrito
+    const validCartItems = cartItems.filter(item => item.qty > 0 && !isNaN(item.qty) && item.unitary_price > 0 && !isNaN(item.unitary_price));
+
+    if (validCartItems.length !== cartItems.length) {
+      toast.error("Datos del carrito inválidos.");
+      return;
+    }
+
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        currentUser.getIdToken(true).then((token) => {
+          const generateQR = httpsCallable(functions, 'generateQRCode', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+
+          console.log("Datos que se enviarán:", { userId: currentUser.uid, cartItems: validCartItems });
+
+          generateQR({ userId: currentUser.uid, cartItems: validCartItems })
+            .then((result) => {
+              if (result.data && result.data.qrCodeImage) {
+                setQrUrl(result.data.qrCodeImage);
+              } else {
+                throw new Error("QR code image missing in response");
+              }
+            })
+            .catch((error) => {
+              console.error("Error al generar el código QR:", error);
+              toast.error("Error al generar el código QR.");
+            });
+        });
+      } else {
+        toast.error("Usuario no autenticado. Inicie sesión.");
+        navigate('/iniciarsesion');
       }
-      const orderId = await createOrder({ items: cartItems, total: calculateTotal(cartItems) }, user);
-      toast.success('Pedido creado con éxito. ID del pedido: ' + orderId);
-      navigate(`/pedidoconfirmado/${orderId}`);
-    } catch (error) {
-      console.error("Error during payment process:", error);
-      toast.error('Error al procesar el pago: ' + error.message);
-    }
-  };
-
-  const calculateTotal = (cartItems) => {
-    return cartItems.reduce((total, item) => total + item.qty * item.unitary_price, 0);
-  };
-
-  const downloadImage = (path) => {
-    const link = document.createElement('a');
-    link.href = path;
-    link.download = 'CodigoQR.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    });
+  }, [user, cartItems, navigate, auth]);
 
   return (
     <div className="payment-container">
       <h2>Realiza tu pago</h2>
       <div className="qr-image-container">
-        <img  src={qrImagePath} alt="Código QR" className="qr-code-image" />
+        {qrUrl ? <img src={qrUrl} alt="Código QR" className="qr-code-image" /> : <p>Cargando QR...</p>}
       </div>
       <div className="qr-actions">
-        <button onClick={() => downloadImage(qrImagePath)} className="download-button">
-          <img className='descarga' src={downloadIcon} alt="Descargar QR" />
-        </button>
+        {qrUrl && (
+          <button onClick={() => {
+            const link = document.createElement('a');
+            link.href = qrUrl;
+            link.download = 'CodigoQR.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }} className="download-button">
+            <img src={downloadIcon} alt="Descargar QR" className='descarga' />
+          </button>
+        )}
       </div>
-      <button className="payment-button" onClick={onConfirmPayment}>
-        He realizado el pago
-      </button>
       <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
     </div>
   );

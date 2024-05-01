@@ -84,7 +84,6 @@ function App() {
                     </main>
                     <Footer/>
                 </Router>     
-                <ToastContainer position="bottom-right" autoClose={5000} />
             </AuthProvider>
         );
     }

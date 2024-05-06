@@ -18,7 +18,7 @@ export default function Cart({ cartitem, addtoCart, decreaseQty }) {
 
     return (
         <>
-            <ToastContainer position="bottom-right" autoClose={5000} />
+            <ToastContainer position="bottom-right" autoClose={5000} newestOnTop/>
             <section className="cart-items">
                 <div className="contenedor d_flex">
                     <div className="cart-details">

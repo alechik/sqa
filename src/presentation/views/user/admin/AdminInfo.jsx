@@ -51,7 +51,7 @@ export default function AdminInfo() {
             <div className="user-cont">
                 <div className="user-image-cont">
                     <div className={`user-image-div ${isHovered ? 'hovered' : ''}`}>
-                        <img src={avatar || '/src/presentation/assets/user-profile.png'} alt='perfil' className='user-img' />
+                        <img src={avatar || '/src/presentation/assets/usuario.png'} alt='perfil' className='user-img' />
                     </div>
                     <div className="below-info">
                         <span className='user-info-name'>{names || 'Nombre no disponible'}</span>

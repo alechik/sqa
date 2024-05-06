@@ -14,6 +14,8 @@ export default function Compra({ cartItems }) {
     const navigate = useNavigate();
     const user = auth.currentUser;
     const mapRef = useRef(null);
+    const [map, setMap] = useState(null);
+    const [marker, setMarker] = useState(null);
 
     useEffect(() => {
         if (!user) {
@@ -28,19 +30,45 @@ export default function Compra({ cartItems }) {
                 const data = docSnap.data();
                 setUserData(data);
                 checkDataCompletion(data);
+                if (data.address) updateMapLocation(data.address);
             } else {
                 toast.error('Datos de usuario no encontrados.');
                 navigate('/iniciarsesion');
             }
         });
 
-        loadGoogleMapScript().then(() => window.initMap());
-    }, [user, firestore, navigate]); // Dependencies optimized
+        loadGoogleMapScript().then(() => {
+            window.initMap = () => initMap(userData.address);
+        });
+        
+    }, [user, firestore, navigate]);
 
     useEffect(() => {
-        window.initMap = initMap; // Defining initMap globally
-    }, []);
+        if (map && userData.address) {
+            updateMapLocation(userData.address);
+        }
+    }, [userData.address]);
 
+    useEffect(() => {
+        window.initMap = () => initMap(userData.address); // Define initMap global function before script loads
+        loadGoogleMapScript();
+    }, [userData.address]);
+
+    useEffect(() => {
+        if (marker) {
+            marker.addListener('dragend', handleMarkerDragEnd);
+            return () => {
+                google.maps.event.clearListeners(marker, 'dragend');
+            };
+        }
+    }, [marker]);
+    
+    useEffect(() => {
+        if (map && marker && userData.address) {
+            updateMapLocation(userData.address);
+        }
+    }, [map, marker, userData.address]);  // Dependencias para reaccionar a cambios
+    
     const loadGoogleMapScript = () => {
         return new Promise((resolve) => {
             if (window.google) {
@@ -60,39 +88,95 @@ export default function Compra({ cartItems }) {
             }
         });
     };
+    
 
-    const initMap = () => {
-        const initialLocation = { lat: -17.72213363647461, lng: -63.174591064453125 };
-        const map = new window.google.maps.Map(mapRef.current, {
+    const initMap = (address) => {
+        if (!window.google) {
+            
+            return;
+        }
+    
+        const mapOptions = {
             zoom: 13,
-            center: initialLocation,
-        });
-        const marker = new window.google.maps.Marker({
-            position: initialLocation,
-            map: map,
+            center: new window.google.maps.LatLng(-17.72213363647461, -63.174591064453125)
+        };
+        const newMap = new window.google.maps.Map(mapRef.current, mapOptions);
+        setMap(newMap);
+        const newMarker = new window.google.maps.Marker({
+            map: newMap,
             draggable: true,
             title: "Drag me!"
         });
-
-        marker.addListener('dragend', () => {
-            const newPos = marker.getPosition();
-            geocodePosition(newPos);
-        });
+        setMarker(newMarker);
+    
+        if (address) {
+            updateMapLocation(address);
+        }
     };
 
-    const geocodePosition = (pos) => {
+    const updateMapLocation = (address) => {
+        if (!map || !marker) {
+            return;  // Salir de la función si `map` o `marker` no están inicializados.
+        }
+    
         const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ location: pos }, (results, status) => {
+        geocoder.geocode({ address }, (results, status) => {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                marker.setPosition(results[0].geometry.location);
+            } else {
+                console.error("Failed to geocode address.");
+            }
+        });
+    };
+    
+
+    const handleMarkerDragEnd = () => {
+        if (!marker) {
+            console.error("Marker is not initialized.");
+            return;
+        }
+    
+        const newPos = marker.getPosition();
+        geocodePosition(newPos);
+    };
+
+
+    const geocodePosition = (pos) => {
+        if (!map) {
+            console.error("Map is not initialized.");
+            return;
+        }
+    
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ location: pos }, async (results, status) => {
             if (status === 'OK' && results[0]) {
+                const updatedAddress = results[0].formatted_address;
                 setUserData(prevState => ({
                     ...prevState,
-                    address: results[0].formatted_address
+                    address: updatedAddress
                 }));
-                toast.info(`Address updated: ${results[0].formatted_address}`);
+                await updateUserDataInFirestore(updatedAddress);
+                toast.info(`Address updated: ${updatedAddress}`);
             } else {
                 toast.error('Failed to retrieve address.');
             }
         });
+    };
+    
+    const updateUserDataInFirestore = async (address) => {
+        if (!user) {
+            console.error("User not authenticated.");
+            return;
+        }
+        const userRef = doc(firestore, 'users', user.uid);
+        try {
+            await updateDoc(userRef, { address });
+            toast.success('Address saved to your profile!');
+        } catch (error) {
+            toast.error('Failed to save address.');
+            console.error("Error updating user address in Firestore: ", error);
+        }
     };
 
     const checkDataCompletion = (data) => {
@@ -129,48 +213,62 @@ export default function Compra({ cartItems }) {
             return total;
         }
     }, 0);
-
+    
+    useEffect(() => {
+        return () => {
+            // Limpiar recursos relacionados con el mapa al desmontar el componente
+            setMap(null);
+            setMarker(null);
+            window.google = null; // Limpiar objeto global de Google Maps
+            const script = document.querySelector('script[src^="https://maps.googleapis.com"]');
+            if (script) {
+                script.remove(); // Eliminar el script del mapa de Google
+            }
+        };
+    }, []);
+    
     return (
         <div className="toast">
-            <div className="compra-container">
-                <div className="user-info-form">
-                    <h2>Detalles del Cliente</h2>
-                    <p>Por favor, completa tu información para continuar con la compra:</p>
-                    <input className='inputcompra' type="text" value={userData.names || ''} onChange={(e) => handleInputChange('names', e.target.value)} placeholder="Nombre completo" required />
-                    <input className='inputcompra' type="text" value={userData.address || ''} onChange={(e) => handleInputChange('address', e.target.value)} placeholder="Dirección" required />
-                    <input className='inputcompra' type="text" value={userData.ci || ''} onChange={(e) => handleInputChange('ci', e.target.value)} placeholder="Carnet de Identidad" required />
-                    <input className='inputcompra' type="text" value={userData.numero || ''} onChange={(e) => handleInputChange('numero', e.target.value)} placeholder="Numero" required />
-                    <select className='selectcompra' value={userData.gender || ''} onChange={(e) => handleInputChange('gender', e.target.value)} required>
-                        <option value="" disabled>Selecciona tu género</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                    </select>
-                    <input className='inputcompra' type="date" value={userData.birthday_date || ''} onChange={(e) => handleInputChange('birthday_date', e.target.value)} placeholder="Fecha de cumpleaños" required />
-                    <input className='inputcompra' type="email" value={userData.email || ''} onChange={(e) => handleInputChange('email', e.target.value)} placeholder="Email" required />
-                    <button onClick={handleSaveData}>Guardar Datos</button>
-                </div>
-                <div className="divider"></div>
-                <div className="order-summary">
-                    <h2>Resumen del Pedido</h2>
-                    {cartItems.map(item => (
-                        <div key={item.id} className="cart-item">
-                            <img src={item.imageUrl} alt={item.productid} className="product-image" />
-                            <div>
-                                <h4>{item.product_name}</h4>
-                                <p>Cantidad: {item.qty}</p>
-                                <p>Precio: ${item.unitary_price.toFixed(2)}</p>
-                                <p>Subtotal: ${(item.qty * item.unitary_price).toFixed(2)}</p>
-                            </div>
-                        </div>
-                    ))}
-                    <h3>Total a pagar: ${totalPrice.toFixed(2)}</h3>
-                    <button onClick={handlePaymentProceed} className={isDataComplete ? "button-enabled" : "button-disabled"} disabled={!isDataComplete}>
-                        Proceder al Pago
-                    </button>
-                </div>
-                <div className="map-container" ref={mapRef} style={{ height: '400px', width: '100%' }}></div>
+        <div className="compra-container">
+            <div className="user-info-form">
+                <h2>Detalles del Cliente</h2>
+                <p>Por favor, completa tu información para continuar con la compra:</p>
+                <input className='inputcompra' type="text" value={userData.names || ''} onChange={(e) => handleInputChange('names', e.target.value)} placeholder="Nombre completo" required />
+                <input className='inputcompra' type="text" value={userData.address || ''} onChange={(e) => handleInputChange('address', e.target.value)} placeholder="Dirección" required />
+                <input className='inputcompra' type="text" value={userData.ci || ''} onChange={(e) => handleInputChange('ci', e.target.value)} placeholder="Carnet de Identidad" required />
+                <input className='inputcompra' type="text" value={userData.numero || ''} onChange={(e) => handleInputChange('numero', e.target.value)} placeholder="Numero" required />
+                <select className='selectcompra' value={userData.gender || ''} onChange={(e) => handleInputChange('gender', e.target.value)} required>
+                    <option value="" disabled>Selecciona tu género</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
+                <input className='inputcompra' type="date" value={userData.birthday_date || ''} onChange={(e) => handleInputChange('birthday_date', e.target.value)} placeholder="Fecha de cumpleaños" required />
+                <input className='inputcompra' type="email" value={userData.email || ''} onChange={(e) => handleInputChange('email', e.target.value)} placeholder="Email" required />
+                <button onClick={handleSaveData}>Guardar Datos</button>
             </div>
-            <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover={false} theme="colored" transition="Bounce" />
+            <div className="divider"></div>
+            <div className="order-summary">
+                <h2>Resumen del Pedido</h2>
+                {cartItems.map(item => (
+                    <div key={item.id} className="cart-item">
+                        <img src={item.imageUrl} alt={item.productid} className="product-image" />
+                        <div>
+                            <h4>{item.product_name}</h4>
+                            <p>Cantidad: {item.qty}</p>
+                            <p>Precio: ${item.unitary_price.toFixed(2)}</p>
+                            <p>Subtotal: ${(item.qty * item.unitary_price).toFixed(2)}</p>
+                        </div>
+                    </div>
+                ))}
+                <h3>Total a pagar: ${totalPrice.toFixed(2)}</h3>
+                <button onClick={handlePaymentProceed} className={isDataComplete ? "button-enabled" : "button-disabled"} disabled={!isDataComplete}>
+                    Proceder al Pago
+                </button>
+            </div>
+            <div className="map-container" ref={mapRef} style={{ height: '400px', width: '90%', borderRadius: "10px", marginLeft: '20px' }}>
+            </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={true} theme="colored" transition="Bounce" />
+    </div>
     );
 }

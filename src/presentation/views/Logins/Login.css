@@ -104,6 +104,14 @@ button[type='submit']:hover {
     text-decoration: none;
 }
 
+.spinner-container {
+    position: fixed;
+    /* or absolute */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .register-link a:hover {
     text-decoration: underline;
 }

@@ -1,33 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
-import { createProductRating } from '../../../infraestructure/api/product_rating';
 import { auth, db } from "../../../infraestructure/firebase--config.js";
-import { doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
     const user = auth.currentUser
     const [categoryName, setCategoryName] = useState('');
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
-
-    // Función para guardar la puntuación de rating en Firebase
-    const handleRatingSubmit = async (rating) => {
-        const productRatingData = {
-            product_id: product.id, // Asegúrate de que 'id' está correctamente asignado en el objeto del producto
-            rating: rating,
-            date: new Date().toISOString(),
-            user_id: user.uid
-        };
-
-        try {
-            const ratingId = await createProductRating(productRatingData);
-            console.log('Rating saved with ID:', ratingId);
-        } catch (error) {
-            console.error('Error saving rating:', error);
-        }
-    };
-
+    const [selectedRating, setSelectedRating] = useState(null); // Nuevo estado para rastrear la estrella seleccionada previamente
     useEffect(() => {
         const fetchCategoryName = async () => {
             try {
@@ -40,6 +22,31 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
 
         fetchCategoryName();
     }, [product.CategoryID]);
+
+    useEffect(() => {
+        const checkUserRating = async () => {
+            try {
+                const querySnapshot = await getDocs(query(collection(db, 'products_ratings'),
+                    where('product_id', '==', product.id),
+                    where('user_id', '==', user.uid)));
+
+                if (!querySnapshot.empty) {
+                    const userRating = querySnapshot.docs[0].data().rating;
+                    console.log('User rating data:', userRating);
+                    setRating(userRating); // Almacena la calificación del usuario en el estado
+                    setSelectedRating(userRating);
+                } else {
+                    console.log('No user rating found');
+                }
+            } catch (error) {
+                console.error('Error fetching user rating:', error);
+            }
+        };
+
+        checkUserRating();
+    }, [product.id, user.uid])
+
+
 
     /*const handleMouseMove = (e) => {
         const stars = e.target.parentNode.querySelectorAll('.fa-star');
@@ -62,22 +69,33 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     const addRating = async (productId, rating) => {
         try {
             // Obtener una referencia a la colección products_rating
-            const productsRatingRef = doc(db, 'products_rating');
+            const productsRatingRef = collection(db, 'products_ratings');
 
             // Crear un nuevo documento con los datos proporcionados
-            await productsRatingRef.add({
+            await addDoc(productsRatingRef, {
                 date: new Date().toLocaleDateString(), // Obtener la fecha actual
-                product_id: productId,
+                // eslint-disable-next-line react/prop-types
+                product_id: product.id,
                 rating: rating,
                 user_id: user.uid
             });
 
             console.log('Datos de rating insertados exitosamente.');
+            setSelectedRating(rating);
         } catch (error) {
             console.error('Error al insertar datos de rating:', error);
         }
     };
 
+    const handleRatingChange = async (currentRating) => {
+        // Verificar si la estrella seleccionada previamente es la misma que la actual
+        if (selectedRating === currentRating) {
+            // Si es la misma estrella, no permitir que el usuario vote nuevamente la misma calificación
+            return;
+        }
+        setRating(currentRating);
+        await addRating(product.id, currentRating);
+    };
 
     return (
         <div className={`product-popup-overlay ${product ? 'active' : ''}`} onClick={onClose}>
@@ -90,27 +108,24 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                             style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px', marginBottom: '20px' }}
                         />
                         <div className="rate">
-                            <span className="stars yellow-border" onMouseMove={(e) => handleMouseMove(e)}>
-                                {[...Array(5)].map((star, index) => {
-                                    const currentRating = index + 1
+                            <span className="stars yellow-border">
+                                {[...Array(5)].map((_, index) => {
+                                    const starValue = index + 1;
                                     return (
-                                        // eslint-disable-next-line react/jsx-key
                                         <label key={index}>
                                             <input
-                                                key={star}
                                                 type='radio'
                                                 name='rating'
-                                                value={currentRating}
-                                                onClick={() => handleRatingSubmit(currentRating)}
-                                                onChange={() => setRating(currentRating)}
+                                                value={starValue}
+                                                onChange={() => handleRatingChange(starValue)}
+                                                disabled={selectedRating === starValue}
                                             />
-                                            <i className='fas fa-star' style={{ color: currentRating <= (hover || rating) ? '#ffc107' : "#e4e5e9", }}
-                                                onMouseEnter={() => setHover(currentRating)}
+                                            <i className='fas fa-star' style={{ color: starValue <= (hover || rating) ? '#ffc107' : "#e4e5e9" }}
+                                                onMouseEnter={() => setHover(starValue)}
                                                 onMouseLeave={() => setHover(null)}>
-
                                             </i>
                                         </label>
-                                    )
+                                    );
                                 })}
                             </span>
                             <span className="score">{rating}</span>
@@ -128,6 +143,13 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                             <button className="add-to-cart" onClick={() => addToCart(product)}>Añadir al carrito</button>
                             <a href={`https://wa.me/600032422?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
                                 <i className="fab fa-whatsapp"></i> Preguntar
+                            </a>
+                            {/* Botón para compartir en Facebook */}
+                            <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">
+                                <i className="fab fa-facebook-f"></i> Facebook
+                            </a>
+                            <a href={`https://twitter.com/intent/tweet?text=Descubre este producto ${product.product_name}&url=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-twitter">
+                                <i className="fab fa-twitter"></i> Twitter
                             </a>
                         </div>
                     </div>

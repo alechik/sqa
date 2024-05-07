@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import $ from 'jquery'; // Importamos jQuery
-import qs from 'qs'; // Importamos qs para manejar el formato urlencoded
+import $ from 'jquery';
+import qs from 'qs';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getNextPaymentNumber, recordPaymentDetails } from '../../../infraestructure/api/pagos';
+import { createOrder } from '../../../infraestructure/api/orders';
 import downloadIcon from '../../assets/descargas.png';
-import "./qrcompra.css"
+import "./qrcompra.css";
 
 function QRCompra() {
   const navigate = useNavigate();
@@ -14,34 +16,35 @@ function QRCompra() {
   const [qrImage, setQRImage] = useState('');
 
   useEffect(() => {
-    if (!user || !cartItems) {
+    if (!user || !cartItems || cartItems.length === 0) {
       toast.error('Información del usuario o del carrito no disponible.');
       navigate('/iniciarsesion');
+    } else {
+      generateQRCode();
     }
   }, [user, cartItems, navigate]);
 
-  const generateQRCode = () => {
+  const generateQRCode = async () => {
+    const paymentNumber = await getNextPaymentNumber();
     const postData = {
       tcCommerceID: "d029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c",
       tnMoneda: "1",
-      tnTelefono: "777777",
-      tcCorreo: "correo@example.com",
-      tcNombreUsuario: "UsuarioEjemplo",
-      tnCiNit: "123465",
-      tcNroPago: "Grupo1-10",
-      tnMontoClienteEmpresa: 0.1,
+      tnTelefono: user.numero || "777777",
+      tcCorreo: user.email,
+      tcNombreUsuario: user.names || user.displayName,
+      tnCiNit: user.ci || "123465",
+      tcNroPago: paymentNumber,
+      tnMontoClienteEmpresa: 0.01,
       tcUrlCallBack: "",
       tcUrlReturn: "",
-      taPedidoDetalle: [
-        {
-          Serial: 1,
-          Producto: "Producto Ejemplo",
-          Cantidad: 1,
-          Precio: 0.1,
-          Descuento: 0,
-          Total: 0.1
-        }
-      ]
+      taPedidoDetalle: cartItems.map((item, index) => ({
+        Serial: index + 1,
+        Producto: item.product_name,
+        Cantidad: item.qty,
+        Precio: 0.01,
+        Descuento: 0,
+        Total: 0.01
+      }))
     };
 
     const headers = {
@@ -57,21 +60,62 @@ function QRCompra() {
       headers: headers,
       data: qs.stringify(postData),
       success: (data) => {
-        // Asegúrate de acceder correctamente a la propiedad de la imagen QR
-        const qrBase64 = JSON.parse(data.values.split(';')[1]).qrImage;
-        setQRImage(`data:image/png;base64,${qrBase64}`);
-        toast.success('Código QR generado con éxito');
+        if (data && data.values) {
+          try {
+            const parts = data.values.split(';');
+            if (parts.length > 1) {
+              const qrBase64 = JSON.parse(parts[1]).qrImage;
+              if (qrBase64) {
+                setQRImage(`data:image/png;base64,${qrBase64}`);
+                toast.success('Código QR generado con éxito');
+              } else {
+                toast.error('QR base64 no encontrado en la respuesta.');
+              }
+            } else {
+              toast.error('Formato de respuesta inesperado.');
+            }
+          } catch (error) {
+            console.error('Error al procesar la respuesta del servidor:', error);
+            toast.error('Error al procesar la respuesta del servidor.');
+          }
+        } else {
+          console.error('La respuesta del servidor no contiene "values" o es incorrecta:', data);
+          toast.error('Error en la respuesta del servidor: ' + (data.messageSistema || 'No se pudo procesar su solicitud.'));
+        }
       },
       error: (xhr, status, error) => {
-        console.error('Error generating QR code:', error);
+        console.error('Error al generar el código QR:', error);
         toast.error('Error al generar el código QR: ' + error);
       }
     });
   };
 
-  useEffect(() => {
-    generateQRCode();
-  }, []);
+  const onConfirmPayment = async () => {
+    try {
+      if (!user || !cartItems) {
+        throw new Error('User or cart items data is missing.');
+      }
+      const orderId = await createOrder({ items: cartItems, total: calculateTotal(cartItems) }, user);
+      toast.success('Pedido creado con éxito. ID del pedido: ' + orderId);
+      navigate(`/pedidoconfirmado/${orderId}`);
+    } catch (error) {
+      console.error("Error during payment process:", error);
+      toast.error('Error al procesar el pago: ' + error.message);
+    }
+  };
+
+  const calculateTotal = (cartItems) => {
+    return cartItems.reduce((total, item) => total + item.qty * item.unitary_price, 0);
+  };
+
+  const downloadImage = () => {
+    const link = document.createElement('a');
+    link.href = qrImage;
+    link.download = 'CodigoQR.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="payment-container">
@@ -80,10 +124,14 @@ function QRCompra() {
         {qrImage ? <img src={qrImage} alt="Código QR" className="qr-code-image" /> : <p>Generando QR...</p>}
       </div>
       <div className="qr-actions">
-        <button onClick={() => downloadImage(qrImage)} className="download-button">
-          <img className='descarga' src={downloadIcon} alt="Descargar QR" />
+        <button onClick={downloadImage} className="download-button">
+          <img className='descarga'
+            src={downloadIcon} alt="Descargar QR" />
         </button>
       </div>
+      <button className="payment-button" onClick={onConfirmPayment}>
+        He realizado el pago
+      </button>
       <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
     </div>
   );

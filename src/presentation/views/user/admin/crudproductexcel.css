@@ -1,0 +1,30 @@
+/* crud-product-excel.css */
+.crud-product-excel {
+    margin: 20px;
+}
+
+.crud-product-excel input[type="file"] {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.crud-product-excel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.crud-product-excel li {
+    margin-bottom: 10px;
+}
+
+.crud-product-excel button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.crud-product-excel button:hover {
+    background-color: #45a049;
+}

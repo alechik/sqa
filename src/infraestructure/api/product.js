@@ -1,10 +1,9 @@
 import { db } from "../firebase-connection.js";
 import { Product } from "../../domain/Product.js";
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-
+import * as XLSX from 'xlsx';
 
 export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
@@ -117,11 +116,43 @@ export async function getCategories() {
     return categories;
 }
 
+export const readExcelFile = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = e.target.result;
+            const workbook = XLSX.read(data, { type: 'binary' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const products = XLSX.utils.sheet_to_json(sheet);
+            resolve(products);
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsBinaryString(file);
+    });
+};
+
+export const calculatePMP = (unitaryPrice, stock, costoLote) => {
+    return costoLote - (unitaryPrice * stock);
+};
+
+export const addProductsBatch = async (products) => {
+    const batch = writeBatch(db);
+    products.forEach(product => {
+        const newDocRef = doc(collection(db, "products"));
+        batch.set(newDocRef, product);
+    });
+    await batch.commit();
+    return `Added ${products.length} products successfully.`;
+};
 
 export default {
     getProducts,
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    readExcelFile,
+    calculatePMP,
+    addProductsBatch
 };

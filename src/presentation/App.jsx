@@ -23,6 +23,7 @@ import ConfirmacionPedido from './views/pedido/ConfirmacionPedido.jsx';
 import SeguimientoPedido from './views/pedido/SeguimientoPedido.jsx';
 import './App.css';
 import SearchesPage from './views/busquedas/SearchesPage.jsx';
+import CrudProductExcel from './views/user/admin/CrudProductsExcel.jsx';
 
 function App() {
     //stpe 1: fetch data from database
@@ -80,6 +81,8 @@ function App() {
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
+                        <Route path="/admin/crud-products-excel" element={<CrudProductExcel/>} />
+
                     </Routes>
                     </main>
                     <Footer/>

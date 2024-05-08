@@ -133,7 +133,7 @@ export const readExcelFile = (file) => {
 };
 
 export const calculatePMP = (unitaryPrice, stock, costoLote) => {
-    return costoLote - (unitaryPrice * stock);
+    return (unitaryPrice * stock) - costoLote ;
 };
 
 export const addProductsBatch = async (products) => {

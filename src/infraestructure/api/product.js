@@ -182,6 +182,6 @@ export default {
     deleteProduct,
     readExcelFile,
     calculatePMP,
-    
+    updateProductStock,
     addProductsBatch
 };

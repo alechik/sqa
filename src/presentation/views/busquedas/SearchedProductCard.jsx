@@ -21,8 +21,14 @@ const SearchedProductCard = ({ product, onAddToCart }) => {
                 <p className="product-price"><strong>Precio:</strong> ${product.unitary_price}.00</p>
                 <div className="product-actions">
                     <button className="add-to-cart" onClick={() => onAddToCart(product)}>Añadir al carrito</button>
-                    <a href={`https://wa.me/?text=Estoy interesado en el producto ${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
-                        <i className="fab fa-whatsapp"></i> Preguntar
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">
+                        <i className="fab fa-facebook-f"></i> Facebook
+                    </a>
+                    <a href={`https://twitter.com/intent/tweet?text=Descubre este producto ${product.product_name}&url=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-twitter">
+                        <i className="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href={`https://wa.me/?text=Estoy interesado en el producto ${product.product_name}`} target="_blank" rel="noopener noreferrer" className="social-button ask-on-whatsapp">
+                        <i className="fab fa-whatsapp"></i> WhatsApp
                     </a>
                 </div>
             </div>

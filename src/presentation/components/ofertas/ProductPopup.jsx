@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
-import {auth,db} from "../../../infraestructure/firebase--config.js";
-import {addDoc, collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
+import { auth, db } from "../../../infraestructure/firebase--config.js";
+import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
     const user = auth.currentUser
@@ -69,7 +69,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     const addRating = async (productId, rating) => {
         try {
             // Obtener una referencia a la colección products_rating
-            const productsRatingRef = collection(db,'products_ratings');
+            const productsRatingRef = collection(db, 'products_ratings');
 
             // Crear un nuevo documento con los datos proporcionados
             await addDoc(productsRatingRef, {
@@ -121,8 +121,8 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                                                 disabled={selectedRating === starValue}
                                             />
                                             <i className='fas fa-star' style={{ color: starValue <= (hover || rating) ? '#ffc107' : "#e4e5e9" }}
-                                               onMouseEnter={() => setHover(starValue)}
-                                               onMouseLeave={() => setHover(null)}>
+                                                onMouseEnter={() => setHover(starValue)}
+                                                onMouseLeave={() => setHover(null)}>
                                             </i>
                                         </label>
                                     );
@@ -143,6 +143,13 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                             <button className="add-to-cart" onClick={() => addToCart(product)}>Añadir al carrito</button>
                             <a href={`https://wa.me/600032422?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
                                 <i className="fab fa-whatsapp"></i> Preguntar
+                            </a>
+                            {/* Botón para compartir en Facebook */}
+                            <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">
+                                <i className="fab fa-facebook-f"></i> Facebook
+                            </a>
+                            <a href={`https://twitter.com/intent/tweet?text=Descubre este producto ${product.product_name}&url=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-twitter">
+                                <i className="fab fa-twitter"></i> Twitter
                             </a>
                         </div>
                     </div>

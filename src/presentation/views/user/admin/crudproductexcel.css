@@ -1,0 +1,40 @@
+.crud-product-excel ul {
+    list-style: none;
+    padding: 0;
+    width: 80%; /* Ajusta al ancho que desees */
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+.crud-product-excel li {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    text-align: left;
+    display: block; /* Asegura que cada elemento ocupe una línea completa */
+}
+
+.crud-product-excel li:last-child {
+    border-bottom: none;
+}
+
+.crud-product-excel button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 200px; /* Ajusta al tamaño deseado */
+    border-radius: 4px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.crud-product-excel button:hover {
+    background-color: #45a049;
+}
+
+.crud-product-excel h3 {
+    margin-top: 20px;
+}

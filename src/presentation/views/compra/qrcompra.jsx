@@ -14,6 +14,7 @@ function QRCompra() {
   const location = useLocation();
   const { user, cartItems } = location.state || {};
   const [qrImage, setQRImage] = useState('');
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     if (!user || !cartItems || cartItems.length === 0) {
@@ -35,7 +36,7 @@ function QRCompra() {
       tnCiNit: user.ci || "123465",
       tcNroPago: paymentNumber,
       tnMontoClienteEmpresa: 0.01,
-      tcUrlCallBack: "",
+      tcUrlCallBack: "https://us-central1-tienda-fa7e8.cloudfunctions.net/paymentCallback",
       tcUrlReturn: "",
       taPedidoDetalle: cartItems.map((item, index) => ({
         Serial: index + 1,
@@ -59,7 +60,7 @@ function QRCompra() {
       method: 'POST',
       headers: headers,
       data: qs.stringify(postData),
-      success: (data) => {
+      success: async (data) => {
         if (data && data.values) {
           try {
             const parts = data.values.split(';');
@@ -68,6 +69,9 @@ function QRCompra() {
               if (qrBase64) {
                 setQRImage(`data:image/png;base64,${qrBase64}`);
                 toast.success('Código QR generado con éxito');
+                // Crear el pedido después de generar el código QR
+                const orderId = await createOrder({ items: cartItems, total: calculateTotal(cartItems) }, user);
+                setOrderId(orderId); // Almacena el orderId en la variable de estado
               } else {
                 toast.error('QR base64 no encontrado en la respuesta.');
               }
@@ -92,14 +96,14 @@ function QRCompra() {
 
   const onConfirmPayment = async () => {
     try {
-      if (!user || !cartItems) {
-        throw new Error('User or cart items data is missing.');
+      if (!user || !cartItems || !orderId) {
+        throw new Error('Datos de usuario, carrito u orderId no disponibles.');
       }
-      const orderId = await createOrder({ items: cartItems, total: calculateTotal(cartItems) }, user);
+      // Usa el orderId almacenado en la variable de estado
       toast.success('Pedido creado con éxito. ID del pedido: ' + orderId);
       navigate(`/pedidoconfirmado/${orderId}`);
     } catch (error) {
-      console.error("Error during payment process:", error);
+      console.error("Error durante el proceso de pago:", error);
       toast.error('Error al procesar el pago: ' + error.message);
     }
   };

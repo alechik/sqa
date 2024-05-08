@@ -7,12 +7,17 @@ class Product {
         this.CategoryID = CategoryID;
         this.product_name = product_name;
         this.stock = stock;
+        this.gramaje = gramaje;
         this.unitary_price = unitary_price;
-        this.gramaje = gramaje,
         this.state = state || (stock >= 1 ? "disponible" : "No disponible");
     }
 
+    updateStateBasedOnStock() {
+        this.state = this.stock >= 1 ? "disponible" : "No disponible";
+    }
+
     toFirestore() {
+        this.updateStateBasedOnStock(); // Ensure state is updated based on current stock
         return {
             description: this.description,
             pictures: this.pictures,
@@ -26,5 +31,4 @@ class Product {
         };
     }
 }
-
 export { Product };

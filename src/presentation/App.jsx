@@ -1,91 +1,109 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Home from "./views/Home.jsx";
 import Login from "./views/Logins/Login.jsx";
-import PrivateRoute from './components/PrivateRoute.jsx';
-import Datos from './assets/datos.js'
-import {getProducts} from '../infraestructure/api/product.js'
-import {useEffect, useState} from "react";
 import Register from "./views/Logins/Register.jsx";
-import AddProductForm from "./views/Products/addProductform.jsx";
+import PrivateRoute from './components/PrivateRoute.jsx';
 import Profile from "./views/user/client/Profile.jsx";
 import AdminProfile from "./views/user/admin/AdminProfile.jsx";
-import { AuthProvider, useAuth } from './components/context/AuthContext.jsx';
-import EditProductForm from './views/Products/editProductform.jsx';
-import Footer from './components/Footer.jsx';
-import Cart from "./views/carrito/Cart.jsx";
+import AddProductForm from '../presentation/views/Products/addProductform.jsx';
+import EditProductForm from '../presentation/views/Products/editProductform.jsx';
 import Compra from "./views/compra/compra.jsx";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Pagoqr from "./views/compra/qrcompra.jsx";
 import ConfirmacionPedido from './views/pedido/ConfirmacionPedido.jsx';
-import SeguimientoPedido from './views/pedido/SeguimientoPedido.jsx';
-import './App.css';
+import SeguimientoPedido from "../presentation/views/pedido/SeguimientoPedido.jsx"
+import Cart from "./views/carrito/Cart.jsx";
 import SearchesPage from './views/busquedas/SearchesPage.jsx';
+import { AuthProvider } from './components/context/AuthContext.jsx';
+import Footer from './components/Footer.jsx';
+import { getProducts } from '../infraestructure/api/product.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 
 function App() {
-    //stpe 1: fetch data from database
-    const { productItems } = Datos;
     const [productos, setProductos] = useState([]);
-    const [cartitem, setCardItem] = useState([])
+    const [cartItems, setCartItems] = useState([]);
+
     useEffect(() => {
-        // Llamada a la función getProducts() para obtener los productos
         getProducts()
-            .then((productos) => {
-                // Agrega un console.log() para verificar los productos obtenidos
-                setProductos(productos);
-            })
-            .catch((error) => {
-                console.error('Error fetching products:', error);
-            });
-    }, []); // El segundo argumento [] significa que esta función se ejecutará solo una vez después del montaje del componente
-    const addtoCart = (producto) => {
-        const productoout = cartitem.find((item) => item.id === producto.id);
-        if (productoout) {
-            setCardItem(cartitem.map((item) =>
-                item.id === producto.id ? { ...productoout, qty: productoout.qty + 1 } : item
-            ));
-            toast.success(`Cantidad actualizada: ${producto.product_name} ahora tiene ${productoout.qty + 1} unidades.`);
+            .then(setProductos)
+            .catch(error => console.error('Error fetching products:', error));
+    }, []);
+
+    const addtoCart = (product) => {
+        const index = cartItems.findIndex(item => item.id === product.id);
+
+        if (index !== -1) {
+            const existingItem = cartItems[index];
+
+            // Comprobar si el stock permite aumentar la cantidad
+            if (existingItem.qty < product.stock) {
+                const newItems = [...cartItems];
+                newItems[index] = { ...existingItem, qty: existingItem.qty + 1 };
+                setCartItems(newItems);
+                toast.success(`Cantidad actualizada: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
+            } else {
+                // Informar al usuario que no se pueden añadir más unidades
+                toast.error(`No se puede añadir más de ${product.stock} unidades de ${product.product_name}.`);
+            }
         } else {
-            setCardItem([...cartitem, { ...producto, qty: 1 }]);
-            toast.success(`${producto.product_name} añadido al carrito.`);
+            // Si el producto no está en el carrito, añadirlo
+            if (product.stock > 0) {
+                setCartItems([...cartItems, { ...product, qty: 1 }]);
+                toast.success(`${product.product_name} añadido al carrito.`);
+            } else {
+                // Informar que el producto no tiene stock
+                toast.error(`${product.product_name} no tiene unidades disponibles.`);
+            }
         }
     };
-    const decreaseQty = (producto) => {
-        const productoout = cartitem.find((item) => item.id === producto.id)
-        if(productoout.qty === 1){
-            setCardItem(cartitem.filter((item) => item.id !== producto.id))
-        }else{
-            setCardItem(cartitem.map((item) => (item.id === producto.id?{...productoout, qty: productoout.qty-1} : item )))
+
+
+    const decreaseQty = (product) => {
+        const index = cartItems.findIndex(item => item.id === product.id);
+        if (index !== -1 && cartItems[index].qty > 1) {
+            const newItems = [...cartItems];
+            newItems[index] = { ...newItems[index], qty: newItems[index].qty - 1 };
+            setCartItems(newItems);
+            toast.info(`Cantidad disminuida: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
+        } else {
+            removeCartItem(product);
         }
-    }
-        return (
-            <AuthProvider>
-                <Router>
-                    <Navbar cartitem={cartitem}/>
-                    <main >
+    };
+
+    const removeCartItem = (product) => {
+        const newItems = cartItems.filter(item => item.id !== product.id);
+        setCartItems(newItems);
+        toast.error(`${product.product_name} eliminado del carrito.`);
+    };
+
+    return (
+        <AuthProvider>
+            <Router>
+                <Navbar cartItems={cartItems} />
+                <main>
                     <Routes>
-                        <Route path="/" element={<Home productItems={productItems} productos={productos} addtoCart={addtoCart}  />} />
-                        <Route path="/cart" element={<Cart cartitem={cartitem} addtoCart={addtoCart} decreaseQty={decreaseQty}/> } />
+                        <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
+                        <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty}/>} />
                         <Route path="/iniciarsesion" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
                         <Route path="/search" element={<SearchesPage />} />
-                        {/* Las siguientes rutas están protegidas y solo accesibles cuando el usuario ha iniciado sesión */}
-                        <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartitem} /></PrivateRoute>} />
-                        <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartitem} /></PrivateRoute>} />
+                        <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
+                        <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
                         <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                         <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                        <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
+                        <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} /></PrivateRoute>} />
                     </Routes>
-                    </main>
-                    <Footer/>
-                </Router>     
-            </AuthProvider>
-        );
-    }
+                    <Footer />
+                </main>
+            </Router>
+        </AuthProvider>
+    );
+}
 
-    export default App;
+export default App;

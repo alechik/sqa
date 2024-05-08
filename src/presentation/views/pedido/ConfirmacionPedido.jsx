@@ -31,12 +31,11 @@ export default function ConfirmarPedido() {
   const confirmOrder = async () => {
     try {
       await updateOrder(orderId, { status: 'En Camino' });
-      toast.success('Pedido en camino!')
+      toast.success('Pedido confirmado y en camino');
       navigate(`/seguimientopedido/${orderId}`);
     } catch (error) {
       console.error('Error al confirmar el pedido:', error);
       toast.error('Error al confirmar el pedido.');
-      setError('Error al confirmar el pedido: ' + error.message);
     }
   };
 

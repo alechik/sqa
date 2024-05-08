@@ -9,15 +9,15 @@ import shoppingCartIcon from '../assets/shopping-cart.png';
 import logoutIcon from '../assets/logout.png';
 import defaultAvatar from '../assets/usuario.png'; 
 
-export default function Navbar({ cartitem }) {
+export default function Navbar({ cartItems = [] }) {
+    const totalItems = cartItems.length;  // Asegura que siempre tienes un arreglo, incluso si es vacío
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
-    const navigate = useNavigate(); // Hook para navegar
-    const auth = getAuth(); // Inicializa la autenticación de Firebase
+    const navigate = useNavigate();
+    const auth = getAuth();
 
     useEffect(() => {
         const fetchCategories = async () => {
-            // Simula la obtención de categorías desde la base de datos
             const mockCategories = [
                 { id: 1, name: 'Category 1' },
                 { id: 2, name: 'Category 2' },
@@ -31,31 +31,29 @@ export default function Navbar({ cartitem }) {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // El usuario ha iniciado sesión, obtén su perfil
-                const profile = await getUserProfile(user.uid); // Asume que getUserProfile puede tomar un UID y retornar datos de perfil
+                const profile = await getUserProfile(user.uid);
                 setUserProfile(profile);
             } else {
-                // El usuario ha cerrado sesión
                 setUserProfile(null);
             }
         });
-        return () => unsubscribe(); // Desuscribirse al desmontar el componente
-    }, []);
+        return () => unsubscribe();
+    }, [auth]);
 
     const logout = () => {
-        auth.signOut(); // Cierra sesión en Firebase
-        navigate('/iniciarsesion'); // Redirige al usuario a la página de inicio de sesión
+        signOut(auth);
+        navigate('/iniciarsesion');
     };
 
     const handleLogoClick = () => {
-        // Navega a la página principal y luego recarga la página
         navigate('/');
         window.location.reload();
     };
 
     return (
         <nav className="nav">
-            <Link to="/" className="nombre-sitio" onClick={handleLogoClick}><img src={tuImagen} alt="logo" /></Link>
+            <Link to="/" className="nombre-sitio" onClick={handleLogoClick}>
+                <img src={tuImagen} alt="logo" /></Link>
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
@@ -63,7 +61,7 @@ export default function Navbar({ cartitem }) {
                         <div className='cart'>
                             <Link to='/cart' className="cart-link">
                                 <img src={shoppingCartIcon} alt="Carrito" ></img>
-                                <span>{cartitem.length === 0 ? "" : cartitem.length}</span>
+                                <span>{totalItems}</span>
                             </Link>
                         </div>
                         {userProfile.userTypeId === '1' && <Link to="/admin/AdminInfo" className="perfil-link"><img

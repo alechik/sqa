@@ -23,7 +23,7 @@ export async function getAllOrders() {
   }
 }
 
- export async function getOrderById(orderId) {
+export async function getOrderById(orderId) {
   if (!orderId) {
     throw new Error('No order ID provided');
   }
@@ -47,8 +47,7 @@ export async function getAllOrders() {
 
 export async function createOrder(cart, user) {
   if (!user || !user.email || !cart || !cart.items || cart.items.length === 0) {
-    console.error("Invalid user or cart data", { user, cart });
-    throw new Error("Invalid data: User email or cart items are missing.");
+    throw new Error("Datos inválidos: Falta el correo del usuario o los artículos del carrito.");
   }
 
   const orderData = {
@@ -59,18 +58,56 @@ export async function createOrder(cart, user) {
       unitPrice: item.unitary_price
     })),
     deliveryAddress: user.address || 'N/A',
-    status: 'Pending',
-    totalPrice: cart.total,
-    paymentMethod: 'QR',
+    status: 'Pendiente',
+    totalPrice: cart.items.reduce((total, item) => total + (item.unitary_price * item.qty), 0),
+    paymentMethod: 'QR'
   };
 
+  const ordersCollectionRef = collection(db, 'orders');
   try {
-    const ordersCollectionRef = collection(db, 'orders');
     const orderDocRef = await addDoc(ordersCollectionRef, orderData);
+
+    // Disminuir el stock después de crear la orden
+    for (const item of cart.items) {
+      await decreaseStock(item.id, item.qty);
+    }
+
     return orderDocRef.id;
   } catch (error) {
-    console.error("Failed to create order:", error);
-    throw new Error('Unable to create order.');
+    console.error("Error al crear la orden:", error);
+    throw new Error('No se pudo crear la orden.');
+  }
+}
+
+async function decreaseStock(productId, quantity) {
+  const productRef = doc(db, 'products', productId);
+  const productSnap = await getDoc(productRef);
+  if (!productSnap.exists()) {
+    throw new Error(`No se encontró el producto con ID ${productId}`);
+  }
+  const productData = productSnap.data();
+  if (productData.stock < quantity) {
+    throw new Error('No hay suficiente stock para el producto: ' + productData.product_name);
+  }
+  await updateDoc(productRef, {
+    stock: productData.stock - quantity
+  });
+}
+
+async function decreaseProductStock(productId, quantity) {
+  const productDocRef = doc(db, 'products', productId);
+  const productDoc = await getDoc(productDocRef);
+  if (!productDoc.exists()) {
+    throw new Error('Product not found');
+  }
+
+  const productData = productDoc.data();
+  const updatedStock = productData.stock - quantity;
+
+  if (updatedStock >= 0) {
+    await updateDoc(productDocRef, { stock: updatedStock });
+  } else {
+    throw new Error('Not enough stock available');
   }
 }
 
@@ -143,5 +180,7 @@ export default{
   getAllOrders,
   getOrderById,
   createOrder,
-  updateOrderStatus
+  updateOrderStatus,
+  decreaseProductStock,
+  decreaseStock
 }

@@ -85,6 +85,38 @@ export async function createProduct(productData, file) {
     return productRef.id;
 }
 
+export async function updateProductStock(productId, quantityPurchased) {
+    const productDocRef = doc(db, "products", productId);
+    const productDoc = await getDoc(productDocRef);
+
+    if (!productDoc.exists()) {
+        throw new Error("Product not found");
+    }
+
+    const productData = productDoc.data();
+    const updatedStock = productData.stock - quantityPurchased;
+
+    const product = new Product(
+        productDoc.id,
+        productData.description,
+        productData.pictures,
+        productData.banner_pictures,
+        productData.CategoryID,
+        productData.product_name,
+        updatedStock,
+        productData.gramaje,
+        productData.unitary_price,
+        productData.state
+    );
+
+    await updateDoc(productDocRef, product.toFirestore());
+}
+
+export async function deleteProduct(productId) {
+    const productDocRef = doc(db, "products", productId);
+    await deleteDoc(productDocRef);
+}
+
 
 
 export async function updateProduct(productId, updatedData) {
@@ -99,10 +131,6 @@ export async function updateProduct(productId, updatedData) {
     await updateDoc(productDocRef, productDataForFirestore);
 }
 
-export async function deleteProduct(productId) {
-    const productDocRef = doc(db, "products", productId);
-    await deleteDoc(productDocRef);
-}
 
 export async function getCategories() {
     const categoriesCollectionRef = collection(db, "product_categories");
@@ -123,5 +151,6 @@ export default {
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    updateProductStock
 };

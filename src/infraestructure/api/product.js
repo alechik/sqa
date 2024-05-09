@@ -75,7 +75,7 @@ export async function createProduct(productData, file) {
         gramaje: productData.gramaje,
         state: productState // Usamos el valor determinado basado en el stock
     };
-    
+
     if (!productDataForFirestore.CategoryID) {
         throw new Error("CategoryID is undefined or not set.");
     }
@@ -133,17 +133,21 @@ export const readExcelFile = (file) => {
 };
 
 export const calculatePMP = (unitaryPrice, stock, costoLote) => {
-    return (unitaryPrice * stock) - costoLote ;
+    return (unitaryPrice * stock) - costoLote;
 };
 
 export const addProductsBatch = async (products) => {
     const batch = writeBatch(db);
+    const ids = [];
+
     products.forEach(product => {
         const newDocRef = doc(collection(db, "products"));
         batch.set(newDocRef, product);
+        ids.push(newDocRef.id); // Guarda el ID generado
     });
-    await batch.commit();
-    return `Added ${products.length} products successfully.`;
+
+    await batch.commit(); // Ejecuta todas las operaciones del batch
+    return ids; // Devuelve los IDs de los nuevos productos
 };
 
 export default {

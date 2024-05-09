@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { readExcelFile, calculatePMP, addProductsBatch } from '../../../../infraestructure/api/product';
+import { addProfitPerLot } from '../../../../infraestructure/api/profit_per_lot'; // Importa la función
 
 const CrudProductExcel = () => {
     const [file, setFile] = useState(null);
@@ -11,7 +12,6 @@ const CrudProductExcel = () => {
         setLoading(true);
         const file = event.target.files[0];
         const productsFromExcel = await readExcelFile(file);
-        // Calculate PMP for each product
         const processedProducts = productsFromExcel.map(product => ({
             ...product,
             gananciaLote: calculatePMP(product.unitary_price, product.stock, product.costo_lote)
@@ -23,10 +23,23 @@ const CrudProductExcel = () => {
 
     const handleProcess = async () => {
         setLoading(true);
-        await addProductsBatch(products);
+        const ids = await addProductsBatch(products); // Obtiene los IDs de los productos añadidos
+
+        const profits = products.map((product, index) => ({
+            cost: product.costo_lote,
+            id_product: ids[index], // Utiliza el ID correspondiente
+            profit: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
+            total_sell: product.unitary_price * product.stock
+        }));
+
+        // Añadir cada ganancia por lote a Firestore
+        for (const profit of profits) {
+            await addProfitPerLot(profit);
+        }
+
         setLoading(false);
         setProcessed(true);
-        alert('Productos procesados y añadidos correctamente.');
+        alert('Productos y ganancias por lote procesados y añadidos correctamente.');
     };
 
     return (

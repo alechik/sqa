@@ -17,9 +17,9 @@
 }
 
 .qr-code-image {
-    width: 80%;
+    width: 100%;
     /* Hace que la imagen del QR sea responsive */
-    max-width: 300px;
+    max-width: 400px;
     /* Limita el tamaño máximo de la imagen */
     margin: 20px 0;
     /* Espacio antes y después de la imagen */
@@ -29,10 +29,9 @@
     /* Bordes redondeados para la imagen */
 }
 .descarga{
-    width: 100px;
-    height: 100px;
-    margin: auto;
-
+    width: 70px;
+    height: 70px;
+    
 }
 
 .payment-button {

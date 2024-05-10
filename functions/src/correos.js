@@ -7,12 +7,15 @@ const os = require("os");
 
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: "ecommercesantillo@gmail.com",
-    pass: "ecommmercesantillo@",
+    user: functions.config().gmail.user,
+    pass: functions.config().gmail.pass,
   },
 });
+
 
 exports.sendOrderConfirmation = functions.firestore.document("orders/{orderId}").onUpdate(async (change, context) => {
   const orderData = change.after.data();

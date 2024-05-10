@@ -1,13 +1,53 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { auth, db } from '../../../../infraestructure/firebase--config';
-import { doc, getDoc } from "firebase/firestore";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
 import './admininfo.css'
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 export default function AdminInfo() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [isHovered, setIsHovered] = useState(false); 
+    const [selectedFile, setSelectedFile] = useState('');
+    const [isHovered, setIsHovered] = useState(false);
+    const [file, setFile] = useState(null);
+
+    const handleImageSelect = event => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file.name);
+            setFile(file);
+        }
+    };
+
+    async function updateUserProfile(imageUrl) {
+        const userRef = doc(db, 'users', auth.currentUser.uid);
+
+        try {
+            await updateDoc(userRef, {
+                avatar: imageUrl
+            });
+            alert('Profile updated successfully!');
+        } catch (error) {
+            console.error('Failed to update profile:', error);
+        }
+    }
+
+    async function handleUpload() {
+        if (!file) return;
+
+        const storage = getStorage();
+        const storageRef = ref(storage, 'profileImages/' + auth.currentUser.uid);
+
+        try {
+            await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            updateUserProfile(downloadURL);
+        } catch (error) {
+            console.error('Upload failed:', error);
+        }
+    }
+
 
     const fetchUserData = useCallback(async () => {
         setLoading(true);
@@ -74,6 +114,12 @@ export default function AdminInfo() {
                             <h4>Fecha de Nacimiento:</h4>
                             <span>{birthday_date || ''}</span>
                         </div>
+                        <div className="file-upload">
+                            <button className="upload-btn" onClick={() => document.getElementById('file-input').click()}>Selec. Imagen</button>
+                            <input id="file-input" type="file" accept="image/*" onChange={handleImageSelect} style={{ display: 'none' }} />
+                            {selectedFile && <span>Archivo Seleccionado: {selectedFile}</span>}
+                        </div>
+                        <button onClick={handleUpload} className='upload-btn'>Subir Imagen</button>
                     </div>
                     {/* Repeat for other details */}
                 </div>

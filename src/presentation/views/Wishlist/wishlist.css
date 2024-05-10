@@ -1,0 +1,206 @@
+/*.product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.product-info h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 5px;
+}
+.product-price p {
+    font-size: 18px;
+    color: #c82d5c;
+    font-weight: bold;
+}
+.product-info p {
+    font-size: 16px;
+    color: #666;
+}
+*/
+
+/*product-details {
+    margin-left: 20px;
+}
+
+.product-details h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+.product-details p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+*/
+
+.price {
+    color: #c82d5c;
+    font-size: 18px;
+    font-weight: bold;
+}
+.product:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.cart-items {
+    height: auto;
+    padding: 50px 0;
+}
+.cart-items .cart-details {
+    width: 70%;
+}
+.cart-list {
+    background: white;
+    margin-top: 30px;
+}
+.cart-items .img {
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+
+}
+.cart-items .cart-details img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.cart-items .cart-details h3{
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 20px;
+}
+.cart-items .cart-details h4{
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: 50px;
+    color: grey;
+}
+
+.removeCart{
+    background: none;
+    font-size: 25px;
+    text-align: right;
+    margin-right: 10px;
+}
+.cart-items .cart-details  span{
+    color: #c82d5c;
+    margin-left: 20px;
+    font-weight: 500;
+}
+.cart-items .cart-total{
+    width: 30%;
+    margin-top: 30px;
+    margin-left: 30px;
+    min-height: 130px;
+    height: 130px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+.cart-total .d_flex h3{
+    font-size: 19px;
+    padding: 20px;
+        /* ajusta según necesites */
+        box-sizing: border-box;
+        /* asegúrate de que el padding no afecte el ancho total */
+        text-align: center;
+}
+.cartControl{
+    margin-top: 50px ;
+}
+.cartControl button{
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.cart-items .contenedor {
+    margin-bottom: 50px; /* Agregar margen inferior para separar del footer */
+}
+
+.incCart{
+    background: none;
+}
+.desCart{
+    background: #f6f9fc;
+}
+.cart-total h4{
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.cart-total h3{
+    font-size: 20px;
+    font-weight: 500;
+    color: #c82d5c;
+    margin: 0;
+}
+#detalle{
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgb(3 0 71 / 9%);
+    padding-bottom: 10px;
+    color: #c82d5c;
+
+}
+.no-items{
+    color: #c82d5c;
+    font-size: 18px;
+    margin-top: 30px;
+    height: 130px;
+}
+#precio-total{
+    flex: 1;
+    text-align: right;
+}
+
+
+
+.botoncompra {
+    text-align: center;
+    /* Centrar el botón si es solo uno en la línea */
+    padding: 20px 0;
+    /* Agregar algo de espacio arriba y abajo del botón */
+}
+
+.botoncompra button {
+    width: auto;
+    /* Permitir que el botón se ajuste al contenido */
+    padding: 10px 20px;
+    /* Aumenta el padding para dar más espacio al texto */
+    background-color: #c82d5c;
+    /* Color distintivo para el botón */
+    color: white;
+    /* Texto blanco para contraste */
+    border: none;
+    /* Remover el borde por defecto */
+    border-radius: 5px;
+    /* Bordes redondeados ligeramente */
+    font-size: 18px;
+    /* Tamaño de fuente para mejorar la legibilidad */
+    cursor: pointer;
+    /* Cambiar el cursor para indicar que es clickeable */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra sutil para profundidad */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    /* Transición suave para hover y active */
+}
+
+.botoncompra button:hover,
+.botoncompra button:active {
+    background-color: #a6204a;
+    /* Color más oscuro al pasar el ratón o hacer clic */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Sombra más pronunciada para efecto de elevación */
+}

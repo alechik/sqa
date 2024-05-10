@@ -75,7 +75,7 @@ export async function createProduct(productData, file) {
         gramaje: productData.gramaje,
         state: productState // Usamos el valor determinado basado en el stock
     };
-    
+
     if (!productDataForFirestore.CategoryID) {
         throw new Error("CategoryID is undefined or not set.");
     }
@@ -161,18 +161,72 @@ export const readExcelFile = (file) => {
 };
 
 export const calculatePMP = (unitaryPrice, stock, costoLote) => {
-    return (unitaryPrice * stock) - costoLote ;
+    return (unitaryPrice * stock) - costoLote;
 };
 
 export const addProductsBatch = async (products) => {
     const batch = writeBatch(db);
-    products.forEach(product => {
+    const ids = [];
+    const uploadPromises = [];
+
+    for (const product of products) {
         const newDocRef = doc(collection(db, "products"));
-        batch.set(newDocRef, product);
-    });
-    await batch.commit();
-    return `Added ${products.length} products successfully.`;
+        ids.push(newDocRef.id); // Guarda el ID generado
+
+        if (product.pictureUrl) { // Suponiendo que `pictureUrl` es la URL de la imagen en el Excel
+            const uploadPromise = fetch(product.pictureUrl)
+                .then(res => res.blob())
+                .then(blob => {
+                    const fileRef = ref(storage, `products/${newDocRef.id}`);
+                    return uploadBytes(fileRef, blob);
+                })
+                .then(snapshot => getDownloadURL(snapshot.ref))
+                .then(url => {
+                    const productData = {
+                        ...product,
+                        pictures: url, // Guarda la URL de Firebase
+                        banner_pictures: url
+                    };
+                    batch.set(newDocRef, productData);
+                })
+                .catch(error => {
+                    console.error("Failed to upload image, saving product without image:", error);
+                    const productData = {
+                        ...product,
+                        pictures: null, // No image URL available
+                        banner_pictures: null
+                    };
+                    batch.set(newDocRef, productData);
+                });
+            uploadPromises.push(uploadPromise);
+        } else {
+            // No hay URL de imagen, guardar el producto sin imágenes
+            const productData = {
+                ...product,
+                pictures: null,
+                banner_pictures: null
+            };
+            batch.set(newDocRef, productData);
+        }
+    }
+
+    await Promise.all(uploadPromises);
+    await batch.commit(); // Ejecuta todas las operaciones del batch
+    return ids; // Devuelve los IDs de los nuevos productos
 };
+
+
+export async function getProductNameById(productId) {
+    const productDocRef = doc(db, "products", productId);
+    const productDoc = await getDoc(productDocRef);
+
+    if (!productDoc.exists()) {
+        throw new Error("Product not found");
+    }
+
+    const productData = productDoc.data();
+    return productData.product_name;  // Devuelve solo el nombre del producto
+}
 
 export default {
     getProducts,
@@ -183,5 +237,6 @@ export default {
     readExcelFile,
     calculatePMP,
     updateProductStock,
-    addProductsBatch
+    addProductsBatch,
+    getProductNameById,
 };

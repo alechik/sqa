@@ -7,12 +7,12 @@ import Register from "./views/Logins/Register.jsx";
 import PrivateRoute from './components/PrivateRoute.jsx';
 import Profile from "./views/user/client/Profile.jsx";
 import AdminProfile from "./views/user/admin/AdminProfile.jsx";
-import AddProductForm from '../presentation/views/Products/addProductform.jsx';
-import EditProductForm from '../presentation/views/Products/editProductform.jsx';
-import Compra from "./views/compra/compra.jsx";
-import Pagoqr from "./views/compra/qrcompra.jsx";
+import AddProductForm from "./views/Products/AddProductForm.jsx";
+import EditProductForm from "./views/Products/EditProductForm.jsx";
+import Compra from "./views/compra/Compra.jsx";
+import Pagoqr from "./views/compra/Pagoqr.jsx";
 import ConfirmacionPedido from './views/pedido/ConfirmacionPedido.jsx';
-import SeguimientoPedido from "../presentation/views/pedido/SeguimientoPedido.jsx"
+import SeguimientoPedido from "./views/pedido/SeguimientoPedido.jsx"
 import Cart from "./views/carrito/Cart.jsx";
 import SearchesPage from './views/busquedas/SearchesPage.jsx';
 import { AuthProvider } from './components/context/AuthContext.jsx';
@@ -37,35 +37,29 @@ function App() {
 
         if (index !== -1) {
             const existingItem = cartItems[index];
-
-            // Comprobar si el stock permite aumentar la cantidad
             if (existingItem.qty < product.stock) {
                 const newItems = [...cartItems];
                 newItems[index] = { ...existingItem, qty: existingItem.qty + 1 };
                 setCartItems(newItems);
                 toast.success(`Cantidad actualizada: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
             } else {
-                // Informar al usuario que no se pueden añadir más unidades
                 toast.error(`No se puede añadir más de ${product.stock} unidades de ${product.product_name}.`);
             }
         } else {
-            // Si el producto no está en el carrito, añadirlo
             if (product.stock > 0) {
                 setCartItems([...cartItems, { ...product, qty: 1 }]);
                 toast.success(`${product.product_name} añadido al carrito.`);
             } else {
-                // Informar que el producto no tiene stock
                 toast.error(`${product.product_name} no tiene unidades disponibles.`);
             }
         }
     };
 
-
     const decreaseQty = (product) => {
         const index = cartItems.findIndex(item => item.id === product.id);
         if (index !== -1 && cartItems[index].qty > 1) {
             const newItems = [...cartItems];
-            newItems[index] = { ...newItems[index], qty: newItems[index].qty - 1 };
+            newItems[index].qty -= 1;
             setCartItems(newItems);
             toast.info(`Cantidad disminuida: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
         } else {
@@ -82,11 +76,11 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <Navbar cartItems={cartItems} />
+                <Navbar cartItems={cartItems} addtoCart={addtoCart} />
                 <main>
                     <Routes>
                         <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
-                        <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty}/>} />
+                        <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
                         <Route path="/iniciarsesion" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
                         <Route path="/search" element={<SearchesPage />} />
@@ -102,6 +96,7 @@ function App() {
                     <Footer />
                 </main>
             </Router>
+            <ToastContainer />
         </AuthProvider>
     );
 }

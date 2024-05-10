@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
-import { getAuth, onAuthStateChanged,signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import "./navbar.css";
 import tuImagen from '../assets/iconoW.png';
 import shoppingCartIcon from '../assets/shopping-cart.png';
 import logoutIcon from '../assets/logout.png';
-import defaultAvatar from '../assets/usuario.png'; 
+import defaultAvatar from '../assets/usuario.png';
+import bagIcon from '../assets/bag.png'; // Asegúrate de tener esta imagen en tus assets si la quieres usar
 
 export default function Navbar({ cartItems = [] }) {
-    const totalItems = cartItems.length;  // Asegura que siempre tienes un arreglo, incluso si es vacío
+    const totalItems = cartItems.reduce((total, item) => total + item.qty, 0); // Calcula el total de items en el carrito, sumando cantidades
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ export default function Navbar({ cartItems = [] }) {
     }, [auth]);
 
     const logout = () => {
-        signOut(auth);
+        signOut(auth); // Usa signOut de firebase/auth para cerrar sesión
         navigate('/iniciarsesion');
     };
 
@@ -52,15 +53,19 @@ export default function Navbar({ cartItems = [] }) {
 
     return (
         <nav className="nav">
-            <Link to="/" className="nombre-sitio" onClick={handleLogoClick}>
-                <img src={tuImagen} alt="logo" /></Link>
+            <Link to="/" className="nombre-sitio" onClick={handleLogoClick}><img src={tuImagen} alt="logo" /></Link>
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
                     <li>
+                        <div className='wishlist'>
+                            <Link to='/wishlist' className='wishlist-link'>
+                                <img src={bagIcon} alt='Wishlist' />
+                            </Link>
+                        </div>
                         <div className='cart'>
                             <Link to='/cart' className="cart-link">
-                                <img src={shoppingCartIcon} alt="Carrito" ></img>
+                                <img src={shoppingCartIcon} alt="Carrito" />
                                 <span>{totalItems}</span>
                             </Link>
                         </div>
@@ -68,19 +73,16 @@ export default function Navbar({ cartItems = [] }) {
                             src={userProfile.avatar || defaultAvatar}
                             alt="Perfil"
                             className="navbar-avatar"
-                            style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos" className="perfil-link"><img
                             src={userProfile.avatar || defaultAvatar}
                             alt="Perfil"
                             className="navbar-avatar"
-                            style={{ borderRadius: '20%', width: '50px', height: '50px' }}
                         /></Link>}
                         {userProfile.userTypeId === '3' && <Link to="/perfil" className="perfil-link"><img
                             src={userProfile.avatar || defaultAvatar}
                             alt="Perfil"
                             className="navbar-avatar"
-                            style={{ borderRadius: "20%", width: "50px", height: "50px", objectfit: "cover" }}
                         /></Link>}
                         <button onClick={logout} className="logout-button" title="Cerrar Sesión">
                             <img src={logoutIcon} alt="Cerrar Sesión" />
@@ -88,7 +90,7 @@ export default function Navbar({ cartItems = [] }) {
                     </li>
                 ) : (
                     <li className='links'>
-                        <Link to="/iniciarsesion">Iniciar sesión</Link>     
+                        <Link to="/iniciarsesion">Iniciar sesión</Link>
                     </li>
                 )}
             </ul>

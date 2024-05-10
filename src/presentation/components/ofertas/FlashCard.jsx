@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Slider from "react-slick";
 import ProductPopup from "./ProductPopup";
 import './flashdeals.css'
+import {fetchRatingsForProduct} from "../../../infraestructure/api/product_rating.js";
+
 const NextArrow = (props) => {
     const { onClick } = props;
     return (
@@ -26,7 +28,25 @@ const PrevArrow = (props) => {
 
 const FlashCard = ({ productItems, productos, addtoCart }) => {
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [productsWithRatings, setProductsWithRatings] = useState([]);
 
+    useEffect(() => {
+        console.log("Updated productsWithRatings:", productsWithRatings);
+    }, [productsWithRatings]);
+
+    useEffect(() => {
+        const loadRatings = async () => {
+            const tempProductsWithRatings = await Promise.all(productos.map(async producto => {
+                const averageRating = await fetchRatingsForProduct(producto.id);
+                console.log(`Rating for product ${producto.id}:`, averageRating);  // Muestra la calificación promedio para cada producto
+                return { ...producto, averageRating };  // Añade el promedio de calificaciones al objeto del producto
+            }));
+            console.log("All products with ratings:", tempProductsWithRatings);  // Muestra todos los productos con sus calificaciones
+            setProductsWithRatings(tempProductsWithRatings);
+        };
+
+        loadRatings();
+    }, [productos]);
     var settings = {
         dots: false,
         infinite: true,
@@ -68,7 +88,7 @@ const FlashCard = ({ productItems, productos, addtoCart }) => {
     return (
         <>
             <Slider {...settings}>
-                {productos.map((producto) => (
+                {productsWithRatings.map((producto) => (
                     <div className="box" key={producto.id}>
                         <div className="product mtop">
                             <div className="nombreyfoto" onClick={() => openProductPopup(producto)}>
@@ -87,11 +107,10 @@ const FlashCard = ({ productItems, productos, addtoCart }) => {
                             <div className="product-details">
                                 <h3 style={{ fontSize: '16px', minHeight: '52px', maxHeight: '52px' }}>{producto.description}</h3>
                                 <div className="rate">
-                                {[...Array(5)].map((_, index) => (
-                                        <label key={index}>
-                                            <i className='fas fa-star'></i>
-                                        </label>
+                                    {[...Array(5)].map((_, index) => (
+                                        <i key={index} className={`fas fa-star ${index < producto.averageRating ? 'text-gold' : 'text-muted'}`} />
                                     ))}
+                                    <span className="rating-number">{producto.averageRating}</span>
                                 </div>
                                 <div className="price">
                                     <h4>{producto.unitary_price}.00</h4>

@@ -55,9 +55,19 @@ export async function updateUserType(userTypeId, updatedData) {
     await updateDoc(doc(db, 'user_types', userTypeId), userTypeDataForFirestore);
 }
 
-async function deleteUserType(userTypeId) {
+export async function deleteUserType(userTypeId) {
     const userTypeDocRef = doc(db, 'user_types', userTypeId);
     await deleteDoc(userTypeDocRef);
+}
+
+export async function getUserTypeNameById(userTypeId) {
+    try {
+        const userType = await getUserTypeById(userTypeId);
+        return userType.name;
+    } catch (error) {
+        console.error('Error getting user type name:', error);
+        throw error;
+    }
 }
 
 export default {
@@ -65,5 +75,6 @@ export default {
     getUserTypeById,
     createUserType,
     updateUserType,
-    deleteUserType
+    deleteUserType,
+    getUserTypeNameById
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
 import {auth,db} from "../../../infraestructure/firebase--config.js";
-import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where} from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
     const user = auth.currentUser
@@ -78,24 +78,35 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
 
     const addRating = async (productId, rating) => {
         try {
-            // Obtener una referencia a la colección products_rating
-            const productsRatingRef = collection(db,'products_ratings');
+            // Obtener una referencia a la colección de calificaciones
+            const ratingsRef = collection(db, 'products_ratings');
+            // Intentar encontrar un documento de calificación existente
+            const ratingsQuery = query(ratingsRef, where('product_id', '==', productId), where('user_id', '==', user.uid));
+            const querySnapshot = await getDocs(ratingsQuery);
 
-            // Crear un nuevo documento con los datos proporcionados
-            await addDoc(productsRatingRef, {
-                date: new Date().toLocaleDateString(), // Obtener la fecha actual
-                // eslint-disable-next-line react/prop-types
-                product_id: product.id,
-                rating: rating,
-                user_id: user.uid
-            });
-
-            console.log('Datos de rating insertados exitosamente.');
-            setSelectedRating(rating);
+            if (!querySnapshot.empty) {
+                // Documento encontrado, actualizar la calificación
+                const ratingDoc = querySnapshot.docs[0];
+                await updateDoc(ratingDoc.ref, {
+                    rating: rating,
+                    date: new Date().toLocaleDateString()
+                });
+            } else {
+                // No se encontró el documento, crear uno nuevo
+                await addDoc(ratingsRef, {
+                    product_id: productId,
+                    user_id: user.uid,
+                    rating: rating,
+                    date: new Date().toLocaleDateString()
+                });
+            }
+            console.log('Calificación actualizada con éxito.');
+            setSelectedRating(rating); // Actualiza el estado local
         } catch (error) {
-            console.error('Error al insertar datos de rating:', error);
+            console.error('Error al actualizar la calificación:', error);
         }
     };
+
 
     const handleWishlistButtonClick = async () => {
         try {

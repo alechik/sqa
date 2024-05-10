@@ -24,6 +24,7 @@ import SeguimientoPedido from './views/pedido/SeguimientoPedido.jsx';
 import './App.css';
 import SearchesPage from './views/busquedas/SearchesPage.jsx';
 import CrudProductExcel from './views/user/admin/CrudProductsExcel.jsx';
+import Wishlist from "./views/Wishlist/Wishlist.jsx";
 
 function App() {
     //stpe 1: fetch data from database
@@ -64,7 +65,7 @@ function App() {
         return (
             <AuthProvider>
                 <Router>
-                    <Navbar cartitem={cartitem}/>
+                    <Navbar cartitem={cartitem} addtoCart={addtoCart}/>
                     <main >
                     <Routes>
                         <Route path="/" element={<Home productItems={productItems} productos={productos} addtoCart={addtoCart}  />} />
@@ -82,12 +83,12 @@ function App() {
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />
                         <Route path="/admin/crud-products-excel" element={<CrudProductExcel/>} />
-
+                        <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart}/> }/>
                     </Routes>
                     </main>
                     <Footer/>
                 </Router>     
-                <ToastContainer position="bottom-right" autoClose={5000} />
+
             </AuthProvider>
         );
     }

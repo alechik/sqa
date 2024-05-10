@@ -7,9 +7,10 @@ import "./navbar.css";
 import tuImagen from '../assets/iconoW.png';
 import shoppingCartIcon from '../assets/shopping-cart.png';
 import logoutIcon from '../assets/logout.png';
-import defaultAvatar from '../assets/usuario.png'; 
+import defaultAvatar from '../assets/usuario.png';
+import bagIcon from '../assets/bag.png'
 
-export default function Navbar({ cartitem }) {
+export default function Navbar({ cartitem , addtoCart }) {
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate(); // Hook para navegar
@@ -60,6 +61,11 @@ export default function Navbar({ cartitem }) {
             <ul className="navegacion">
                 {userProfile ? (
                     <li>
+                        <div className="wishlist">
+                            <Link to='/wishlist' className='wishlist-link'>
+                                <img src={bagIcon} alt='listadeseos'/>
+                            </Link>
+                        </div>
                         <div className='cart'>
                             <Link to='/cart' className="cart-link">
                                 <img src={shoppingCartIcon} alt="Carrito" ></img>

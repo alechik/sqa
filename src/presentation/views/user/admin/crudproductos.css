@@ -7,7 +7,9 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif; /* Asegura una tipografía consistente */
 }
-
+.w-6{
+    width: 20px;
+}
 .crud-product-excel input[type="file"] {
     width: 100%;
     padding: 8px;

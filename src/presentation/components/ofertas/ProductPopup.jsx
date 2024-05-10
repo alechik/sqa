@@ -3,12 +3,15 @@ import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
 import { auth, db } from "../../../infraestructure/firebase--config.js";
 import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {auth,db} from "../../../infraestructure/firebase--config.js";
+import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {
     const user = auth.currentUser
     const [categoryName, setCategoryName] = useState('');
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
+    const [isInWishlist, setIsInWishlist] = useState(false);
     const [selectedRating, setSelectedRating] = useState(null); // Nuevo estado para rastrear la estrella seleccionada previamente
     useEffect(() => {
         const fetchCategoryName = async () => {
@@ -43,11 +46,20 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
             }
         };
 
+        checkIfInWishlist();
         checkUserRating();
     }, [product.id, user.uid])
 
 
-
+    const checkIfInWishlist = async () => {
+        try {
+            const wishlistRef = collection(db, 'wishlist');
+            const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', product.id), where('user_id', '==', user.uid)));
+            setIsInWishlist(!querySnapshot.empty); // Actualiza el estado isInWishlist en función de si el documento existe en la colección de wishlist
+        } catch (error) {
+            console.error('Error checking wishlist:', error);
+        }
+    };
     /*const handleMouseMove = (e) => {
         const stars = e.target.parentNode.querySelectorAll('.fa-star');
         const mouseX = e.clientX - stars[0].getBoundingClientRect().left;
@@ -84,6 +96,29 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
             setSelectedRating(rating);
         } catch (error) {
             console.error('Error al insertar datos de rating:', error);
+        }
+    };
+
+    const handleWishlistButtonClick = async () => {
+        try {
+            const wishlistRef = collection(db, 'wishlist');
+            if (isInWishlist) {
+                // Si el producto está en la lista de deseos, eliminarlo
+                const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', product.id), where('user_id', '==', user.uid)));
+                querySnapshot.forEach(async (doc) => {
+                    await deleteDoc(doc.ref);
+                });
+            } else {
+                // Si el producto no está en la lista de deseos, agregarlo
+                await addDoc(wishlistRef, {
+                    product_id: product.id,
+                    user_id: user.uid
+                });
+            }
+            // Actualizar el estado isInWishlist después de agregar o eliminar el producto
+            setIsInWishlist(!isInWishlist);
+        } catch (error) {
+            console.error('Error adding/removing product to/from wishlist:', error);
         }
     };
 
@@ -140,7 +175,9 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
                         <p><strong>Precio:</strong> ${product.unitary_price}.00</p>
                         <div className="buttons-container">
-                            <button className="add-to-cart" onClick={() => addToCart(product)}>Añadir al carrito</button>
+                            <button className="add-to-cart" onClick={handleWishlistButtonClick}>
+                                {isInWishlist ? 'Eliminar de la lista de deseos' : 'Agregar a la lista de deseos'}
+                            </button>
                             <a href={`https://wa.me/600032422?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
                                 <i className="fab fa-whatsapp"></i> Preguntar
                             </a>

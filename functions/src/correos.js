@@ -21,48 +21,49 @@ exports.sendOrderConfirmation = functions.firestore.document("orders/{orderId}")
 
   if (orderData.status !== "En Camino") return null;
 
-  // Crear PDF
-  const pdfPath = path.join(os.tmpdir(), `${orderId}.pdf`);
-  const pdfDoc = new PDFDocument({ margin: 50 });
-  pdfDoc.pipe(fs.createWriteStream(pdfPath));
-
-  // Agregando logo y configurando el título
-  pdfDoc.image('../img/iconoW.png', 50, 20, { width: 100 })
-    .moveDown(0.5)
-    .fontSize(25)
+  // Título
+  pdfDoc
+    .fontSize(22)
     .font("Helvetica-Bold")
-    .text("Factura de Pedido", 150, 50, { align: "center" })
-    .fontSize(12)
-    .moveDown(2);
+    .text("Factura de Pedido", { align: "center" })
+    .moveDown(1);
 
   // Información del pedido
-  pdfDoc.font("Helvetica")
-    .text(`Pedido ID: ${orderId}`, { continued: true, align: "left" })
+  pdfDoc
+    .fontSize(12)
+    .font("Helvetica")
+    .text(`Pedido ID: ${orderId}`, { align: "left" })
     .text(`Fecha: ${new Date().toLocaleDateString()}`, { align: "right" })
-    .moveDown(1)
+    .moveDown(0.5);
+
+  pdfDoc
     .text(`Total: $${orderData.totalPrice.toFixed(2)}`, { align: "left" })
     .moveDown(1);
 
-  // Encabezado de los productos
-  pdfDoc.fillColor("black").fontSize(14)
-    .text("Producto", { continued: true, bold: true })
-    .text("Cantidad", { continued: true, bold: true, align: "right" })
-    .text("Precio Unitario", { continued: true, bold: true, align: "right" })
-    .text("Total", { align: "right", bold: true })
+  // Encabezados de los productos
+  pdfDoc
+    .fontSize(12)
+    .font("Helvetica-Bold")
+    .text("Producto", { continued: true })
+    .text("Cantidad", { continued: true, align: "center" })
+    .text("Precio Unitario", { continued: true, align: "center" })
+    .text("Total", { align: "right" })
     .moveDown(0.5);
 
   // Listado de productos
   orderData.products.forEach(product => {
-    pdfDoc.fontSize(12).font("Helvetica")
+    pdfDoc
+      .fontSize(10)
+      .font("Helvetica")
       .text(product.name, { continued: true })
-      .text(product.quantity, { continued: true, align: "right" })
-      .text(`$${product.unitPrice.toFixed(2)}`, { continued: true, align: "right" })
+      .text(product.quantity.toString(), { continued: true, align: "center" })
+      .text(`$${product.unitPrice.toFixed(2)}`, { continued: true, align: "center" })
       .text(`$${(product.unitPrice * product.quantity).toFixed(2)}`, { align: "right" })
       .moveDown(0.5);
   });
 
   pdfDoc.end();
-  await new Promise((resolve) => pdfDoc.on("end", resolve));
+  await new Promise((resolve) => writeStream.on("finish", resolve));
 
   // Diseño HTML del correo
   const mailHtml = `
@@ -88,7 +89,7 @@ exports.sendOrderConfirmation = functions.firestore.document("orders/{orderId}")
       </div>
       <div class="footer">
         <p>Gracias por su compra,</p>
-        <p><strong>Su Empresa de Confianza</strong></p>
+        <p><strong>Su E-commerce de Confianza</strong></p>
       </div>
     </div>
   </body>

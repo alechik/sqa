@@ -6,6 +6,7 @@ class Order {
     this.deliveryAddress = deliveryAddress;
     this.status = status;
     this.totalPrice = totalPrice;
+    this.createdAt = this.createdAt
     this.paymentMethod = paymentMethod;
   }
 
@@ -17,6 +18,7 @@ class Order {
       data.products,
       data.deliveryAddress,
       data.status,
+      data.createdAt,
       data.totalPrice,
       data.paymentMethod
     );

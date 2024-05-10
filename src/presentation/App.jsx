@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx";
-import Home from "./views/Home.jsx";
-import Login from "./views/Logins/Login.jsx";
-import Register from "./views/Logins/Register.jsx";
-import PrivateRoute from './components/PrivateRoute.jsx';
-import Profile from "./views/user/client/Profile.jsx";
-import AdminProfile from "./views/user/admin/AdminProfile.jsx";
-import AddProductForm from "./views/Products/addProductform.jsx";
-import EditProductForm from "./views/Products/editProductform.jsx";
-import Compra from "./views/compra/Compra.jsx";
-import Pagoqr from "./views/compra/Pagoqr.jsx";
-import ConfirmacionPedido from './views/pedido/ConfirmacionPedido.jsx';
-import SeguimientoPedido from "./views/pedido/SeguimientoPedido.jsx"
-import Cart from "./views/carrito/Cart.jsx";
-import SearchesPage from './views/busquedas/SearchesPage.jsx';
-import { AuthProvider } from './components/context/AuthContext.jsx';
-import Footer from './components/Footer.jsx';
-import { getProducts } from '../infraestructure/api/product.js';
+import Navbar from "./components/Navbar";
+import Home from "./views/Home";
+import Login from "./views/Logins/Login";
+import Register from "./views/Logins/Register";
+import PrivateRoute from './components/PrivateRoute';
+import Profile from "./views/user/client/Profile";
+import AdminProfile from "./views/user/admin/AdminProfile";
+import AddProductForm from '../presentation/views/Products/addProductform';
+import EditProductForm from '../presentation/views/Products/editProductform';
+import Compra from "./views/compra/compra";
+import Pagoqr from "./views/compra/qrcompra";
+import ConfirmacionPedido from './views/pedido/ConfirmacionPedido';
+import SeguimientoPedido from "../presentation/views/pedido/SeguimientoPedido";
+import Cart from "./views/carrito/Cart";
+import SearchesPage from './views/busquedas/SearchesPage';
+import { AuthProvider } from './components/context/AuthContext';
+import Footer from './components/Footer';
+import { getProducts } from '../infraestructure/api/product';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import CrudProductExcel from './views/user/admin/CrudProductsExcel';
+import Wishlist from "./views/Wishlist/Wishlist";
+import OrderDetails from './components/historial/OrderDetails';
+import CrudCategoria from "./views/user/admin/CrudCategoria";
 
 function App() {
     const [productos, setProductos] = useState([]);
@@ -28,18 +32,19 @@ function App() {
 
     useEffect(() => {
         getProducts()
-            .then(setProductos)
-            .catch(error => console.error('Error fetching products:', error));
+            .then(products => setProductos(products))
+            .catch(error => {
+                console.error('Error fetching products:', error);
+                toast.error("Error al cargar productos.");
+            });
     }, []);
 
     const addtoCart = (product) => {
         const index = cartItems.findIndex(item => item.id === product.id);
-
         if (index !== -1) {
-            const existingItem = cartItems[index];
-            if (existingItem.qty < product.stock) {
+            if (cartItems[index].qty < product.stock) {
                 const newItems = [...cartItems];
-                newItems[index] = { ...existingItem, qty: existingItem.qty + 1 };
+                newItems[index] = { ...newItems[index], qty: newItems[index].qty + 1 };
                 setCartItems(newItems);
                 toast.success(`Cantidad actualizada: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
             } else {
@@ -76,7 +81,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <Navbar cartItems={cartItems} addtoCart={addtoCart} />
+                <Navbar cartItems={cartItems} />
                 <main>
                     <Routes>
                         <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
@@ -89,14 +94,17 @@ function App() {
                         <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                         <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
+                        <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} /></PrivateRoute>} />
+                        <Route path="/admin/crud-products-excel" element={<CrudProductExcel />} />
+                        <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />
+                        <Route path="/orders/:orderId" element={<OrderDetails />} />
                     </Routes>
-                    <Footer />
                 </main>
+                <Footer />
             </Router>
-            <ToastContainer />
         </AuthProvider>
     );
 }

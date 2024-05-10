@@ -1,7 +1,7 @@
 import { db, auth } from "../firebase--config.js";
 import { User } from "../../domain/User.js";
-import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
-import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { doc, setDoc, getDoc, deleteDoc, collection, getDocs, updateDoc } from "firebase/firestore";
+import { updateEmail, updatePassword, deleteUser as signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 // Constantes para los IDs de tipos de usuario
 export const ADMIN_ID = "1";
 export const WORKER_ID = "2";
@@ -78,7 +78,7 @@ export async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
-       
+
         const user = result.user;
 
         // Verifica si el usuario ya existe en Firestore
@@ -200,6 +200,7 @@ export async function updateUser(userId, updatedData) {
 }
 
 
+
 // Eliminar un usuario de Firebase Authentication y Firestore
 export async function deleteUser(userId) {
     const userRef = doc(db, "users", userId);
@@ -223,8 +224,25 @@ export const getUserTypes = async () => {
     }
 };
 
+export async function updateEmailAndPassword(userId, newEmail, newPassword) {
+    const user = auth.currentUser;
 
-export default{
+    if (!user || user.uid !== userId) {
+        throw new Error('No autorizado para actualizar este usuario');
+    }
+
+    try {
+        await updateEmail(user, newEmail);
+        await updatePassword(user, newPassword);
+        return { message: 'Correo electrónico y contraseña actualizados correctamente.' };
+    } catch (error) {
+        console.error("Error al actualizar:", error);
+        throw new Error(`Error al actualizar los datos: ${error.message}`);
+    }
+}
+
+
+export default {
     getUsers,
     createUser,
     getUserById,
@@ -232,6 +250,7 @@ export default{
     deleteUser,
     signInWithGoogle,
     signInWithFacebook,
+    updateEmailAndPassword,
     ADMIN_ID,
     WORKER_ID,
     CLIENT_ID

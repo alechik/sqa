@@ -9,7 +9,8 @@ import {
   query,
   where,
   getDocs,
-  getDoc
+  getDoc,
+  serverTimestamp
 } from 'firebase/firestore';
 
 export async function getAllOrders() {
@@ -45,8 +46,10 @@ export async function getOrderById(orderId) {
 
 
 
+// Asegurando que todos los campos necesarios están disponibles
 export async function createOrder(cart, user) {
-  if (!user || !user.email || !cart || !cart.items || cart.items.length === 0) {
+  if (!user?.email || !cart?.items?.length) {
+    console.error("Datos inválidos: Falta el correo del usuario o los artículos del carrito.");
     throw new Error("Datos inválidos: Falta el correo del usuario o los artículos del carrito.");
   }
 
@@ -57,8 +60,9 @@ export async function createOrder(cart, user) {
       quantity: item.qty,
       unitPrice: item.unitary_price
     })),
-    deliveryAddress: user.address || 'N/A',
+    deliveryAddress: user.address || 'No especificada',
     status: 'Pendiente',
+    createdAt: serverTimestamp(),
     totalPrice: cart.items.reduce((total, item) => total + (item.unitary_price * item.qty), 0),
     paymentMethod: 'QR'
   };
@@ -66,18 +70,15 @@ export async function createOrder(cart, user) {
   const ordersCollectionRef = collection(db, 'orders');
   try {
     const orderDocRef = await addDoc(ordersCollectionRef, orderData);
-
-    // Disminuir el stock después de crear la orden
-    for (const item of cart.items) {
-      await decreaseStock(item.id, item.qty);
-    }
-
+    console.log("Pedido creado con éxito, ID del pedido:", orderDocRef.id);
     return orderDocRef.id;
   } catch (error) {
     console.error("Error al crear la orden:", error);
     throw new Error('No se pudo crear la orden.');
   }
 }
+
+
 
 async function decreaseStock(productId, quantity) {
   const productRef = doc(db, 'products', productId);

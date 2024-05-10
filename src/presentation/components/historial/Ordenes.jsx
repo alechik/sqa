@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, orderBy, limit, onSnapshot, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../infraestructure/firebase--config';
+import { useNavigate } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,20 +11,25 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import "./ordenes.css";
+import { format } from 'date-fns'; // Asegúrate de tener importado format
 
 function Ordenes() {
     const { currentUser } = useAuth();
     const [ordenes, setOrdenes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (currentUser?.email) {
             const ordersCol = collection(db, "orders");
-            const q = query(ordersCol, where("userEmail", "==", currentUser.email));
+            // Ordenar por 'createdAt' en orden descendente y limitar los resultados
+            const q = query(ordersCol, where("userEmail", "==", currentUser.email), orderBy("createdAt", "desc"), limit(10));
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                const newOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-                    .sort((a, b) => b.createdAt - a.createdAt) // Ordena por fecha de creación
-                    .slice(0, 5); // Limita a las últimas 5 órdenes
+                const newOrders = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    date: doc.data().createdAt ? format(doc.data().createdAt.toDate(), "PPpp") : "Sin fecha"
+                }));
                 setOrdenes(newOrders);
                 setLoading(false);
             }, error => {
@@ -51,7 +57,7 @@ function Ordenes() {
                 </TableHead>
                 <TableBody>
                     {ordenes.map((orden) => (
-                        <TableRow key={orden.id}>
+                        <TableRow key={orden.id} onClick={() => navigate(`/orders/${orden.id}`)} style={{ cursor: 'pointer' }}>
                             <TableCell component="th" scope="row">
                                 {orden.id}
                             </TableCell>

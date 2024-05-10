@@ -165,7 +165,8 @@
 }
 
 .cart,
-.logout-button {
+.logout-button,
+.wishlist {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -174,14 +175,6 @@
     margin: 0 50px 0 0.5rem;
 }
 
-.wishlist{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 0.3rem;
-
-}
 
 .cart img,
 .c_flex {
@@ -233,8 +226,30 @@
 }
 
 .cart:hover,
-.logout-button:hover, .wishlist-link:hover {
+.logout-button:hover, .wishlist:hover {
     background-color: #9b9b9b54;
+}
+
+.wishlist{
+    display: inline-flex;
+    justify-content: center;
+    position: relative;
+    /* Importante para la posición absoluta del span del contador */
+    width: 50px;
+    /* Ancho fijo para el contenedor del ícono */
+    height: 50px;
+    /* Alto fijo para el contenedor del ícono */
+    border-radius: 50%;
+    /* Bordes redondeados para el efecto circular */
+    transition: background-color 0.3s;
+    /* Transición suave del fondo */
+    cursor: pointer;
+    top: -8px;
+    /* Cursor pointer para indicar que es clickable */
+    /* Margen a la derecha para separarlo del siguiente elemento */
+    /*background-color: #522b46;*/
+    background-color: rgba(255, 255, 255, 0);
+    align-items: center;
 }
 
 .cart img {

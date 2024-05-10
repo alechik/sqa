@@ -150,6 +150,18 @@ export const addProductsBatch = async (products) => {
     return ids; // Devuelve los IDs de los nuevos productos
 };
 
+export async function getProductNameById(productId) {
+    const productDocRef = doc(db, "products", productId);
+    const productDoc = await getDoc(productDocRef);
+
+    if (!productDoc.exists()) {
+        throw new Error("Product not found");
+    }
+
+    const productData = productDoc.data();
+    return productData.product_name;  // Devuelve solo el nombre del producto
+}
+
 export default {
     getProducts,
     getProductById,
@@ -158,5 +170,6 @@ export default {
     deleteProduct,
     readExcelFile,
     calculatePMP,
-    addProductsBatch
+    addProductsBatch,
+    getProductNameById
 };

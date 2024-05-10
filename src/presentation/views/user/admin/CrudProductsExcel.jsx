@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
-import { readExcelFile, calculatePMP, addProductsBatch } from '../../../../infraestructure/api/product';
-import { addProfitPerLot } from '../../../../infraestructure/api/profit_per_lot'; // Importa la función
+import React, { useState, useEffect } from 'react';
+import { readExcelFile, calculatePMP, addProductsBatch, getProductNameById } from '../../../../infraestructure/api/product';
+import { addProfitPerLot, getAllProfitPerLot } from '../../../../infraestructure/api/profit_per_lot';
+import "./crudproductos.css";
 
 const CrudProductExcel = () => {
     const [file, setFile] = useState(null);
     const [products, setProducts] = useState([]);
+    const [profits, setProfits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [processed, setProcessed] = useState(false);
+
+    useEffect(() => {
+        const fetchProfits = async () => {
+            const fetchedProfits = await getAllProfitPerLot();
+            const profitsWithNames = await Promise.all(fetchedProfits.map(async (profit) => {
+                const productName = await getProductNameById(profit.id_product);
+                return {
+                    ...profit,
+                    productName,
+                    id: profit.id || 'temp-' + Math.random().toString(36).substr(2, 9)
+                };
+            }));
+            setProfits(profitsWithNames);
+        };
+
+        fetchProfits();
+    }, [processed]);
 
     const handleFileChange = async (event) => {
         setLoading(true);
@@ -23,23 +42,22 @@ const CrudProductExcel = () => {
 
     const handleProcess = async () => {
         setLoading(true);
-        const ids = await addProductsBatch(products); // Obtiene los IDs de los productos añadidos
-
-        const profits = products.map((product, index) => ({
+        const ids = await addProductsBatch(products);
+        const profitsData = products.map((product, index) => ({
             cost: product.costo_lote,
-            id_product: ids[index], // Utiliza el ID correspondiente
-            profit: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
-            total_sell: product.unitary_price * product.stock
+            id_product: ids[index],
+            profit: product.gananciaLote,
+            total_sell: product.unitary_price * product.stock,
+            time: new Date()  // Asegura que la fecha actual se envía
         }));
 
-        // Añadir cada ganancia por lote a Firestore
-        for (const profit of profits) {
+        for (const profit of profitsData) {
             await addProfitPerLot(profit);
         }
 
-        setLoading(false);
         setProcessed(true);
         alert('Productos y ganancias por lote procesados y añadidos correctamente.');
+        setLoading(false);
     };
 
     return (
@@ -59,6 +77,33 @@ const CrudProductExcel = () => {
                     {!processed && <button onClick={handleProcess}>Procesar</button>}
                 </div>
             )}
+            <div>
+                <h3>Registro de Ganancias por Lote</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lote de:</th>
+                            <th>ID Producto</th>
+                            <th>Costo del Lote</th>
+                            <th>Venta Total</th>
+                            <th>Ganancia</th>
+                            <th>Fecha/Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {profits.map((profit) => (
+                            <tr key={profit.id}>
+                                <td>{profit.productName}</td>
+                                <td>{profit.id_product}</td>
+                                <td>{profit.cost}</td>
+                                <td>{profit.total_sell}</td>
+                                <td>{profit.profit}</td>
+                                <td>{profit.time.toLocaleString()}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

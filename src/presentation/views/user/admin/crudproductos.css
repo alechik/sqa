@@ -1,127 +1,85 @@
-.crud-productos {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: auto;
-    transform: translateX(-35px);
-    margin-bottom: 50px;
-}
-
-.crud-productos table tbody tr:hover td {
-    background-color: #f2f2f2;
-    transition: background-color 0.3s ease;
-}
-
-.crud-options {
-    height: 4em;
-    padding: 10px 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.crud-options svg {
-    height: 20px;
-    margin: auto;
-}
-
-.crud-options button {
-    background-color: #c82d5c;
-    color: #f8f9fa;
-    border: none;
-    transition: 0.4s;
-    height: 2em;
-    border-radius: 14px;
-    width: 10em;
-    font-size: 20px;
-}
-
-.crud-productos table {
-    width: 100%;
-    height: 100%;
-
-
-    overflow: hidden;
-    margin: auto;
-}
-
-
-
-
-
-.crud-productos table tbody {
-    height: 200px;
-    overflow: scroll;
-}
-
-.crud-productos tr td button {
-    padding: 5px;
-    margin: 10px 10px;
-    font-size: 3px;
-    background-color: #FFF;
-    border: 1px solid #202020;
-    width: 30px;
+.crud-product-excel {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
     border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif; /* Asegura una tipografía consistente */
+}
+
+.crud-product-excel input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.crud-product-excel h3 {
+    color: #333;
     text-align: center;
-    transition: 0.3s;
+    margin-bottom: 20px;
 }
 
-.crud-productos tr td button:hover {
-    background-color: #202020;
-    border: 1px solid #FFF;
-    color: #FFF
+.crud-product-excel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-.crud-productos tr td button svg {
-    height: 20px;
-}
-
-#borrar {
-    background-color: #c82d5c;
-    color: #f8f9fa;
-    border: none;
-    transition: 0.4s;
-}
-
-#acciones {
+.crud-product-excel li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-around;
-
 }
 
-#borrar:hover {
-    background-color: #f8f9fa;
-    color: #c82d5c;
+.crud-product-excel li:last-child {
+    border-bottom: none;
 }
 
-.scrollable-content {
-    width: 1000px;
-    display: block;
-    max-height: 320px;
-    height: 300px;
-    overflow-y: auto;
-
+.crud-product-excel button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease-in-out;
 }
 
-.crud-productos table {
+.crud-product-excel button:hover {
+    background-color: #45a049;
+}
+
+.crud-product-excel table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
-.crud-productos th,
-.crud-productos td {
-    padding: 8px;
+.crud-product-excel th,
+.crud-product-excel td {
     text-align: left;
-
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
 }
 
-.crud-productos th {
-    background-color: #f2f2f2;
+.crud-product-excel th {
+    background-color: #f0f0f0;
 }
 
-/*
-.product_description{
-    width: 100px;
-}*/
+.crud-product-excel td {
+    background-color: #ffffff;
+}
+
+/* Estilos adicionales para separación visual y alineación */
+.crud-product-excel > div:not(:last-child) {
+    margin-bottom: 40px;
+}

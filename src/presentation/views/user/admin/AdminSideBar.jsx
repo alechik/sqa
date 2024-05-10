@@ -10,6 +10,7 @@ import AddProductForm from "../../Products/addProductform.jsx";
 import EditProductForm from '../../Products/editProductform.jsx';
 import userForm from "./UserForm.jsx";
 import UserForm from "./UserForm.jsx";
+import CrudCategoria from "./CrudCategoria.jsx";
 
 // eslint-disable-next-line react/prop-types
 export default function AdminSideBar({productos}) {
@@ -29,6 +30,7 @@ export default function AdminSideBar({productos}) {
                         {activepage === 'edit-product' && <EditProductForm/>}
                         {activepage === 'AdminInfo' && <AdminInfo/>}
                         {activepage === 'add-empleado' && <UserForm/>  }
+                        {activepage === 'addcategory' && <CrudCategoria/>  }
                     </div>
                 </div>
             </div>

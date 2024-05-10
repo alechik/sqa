@@ -25,6 +25,7 @@ import './App.css';
 import SearchesPage from './views/busquedas/SearchesPage.jsx';
 import CrudProductExcel from './views/user/admin/CrudProductsExcel.jsx';
 import Wishlist from "./views/Wishlist/Wishlist.jsx";
+import CrudCategoria from "./views/user/admin/CrudCategoria.jsx";
 
 function App() {
     //stpe 1: fetch data from database
@@ -79,6 +80,7 @@ function App() {
                         <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                         <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
+                        <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
                         <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                         <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos}/></PrivateRoute>} />

@@ -37,7 +37,7 @@ const handleAuthError = (error) => {
 };
 
 
-async function signInWithFacebook() {
+export async function signInWithFacebook() {
     const provider = new FacebookAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
@@ -74,7 +74,7 @@ async function signInWithFacebook() {
     }
 }
 
-async function signInWithGoogle() {
+export async function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);

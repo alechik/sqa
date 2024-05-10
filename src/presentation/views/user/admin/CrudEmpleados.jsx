@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getUsers, deleteUser, ADMIN_ID, WORKER_ID } from "../../../../infraestructure/api/user.js";
+import { getUsers, deleteUser } from "../../../../infraestructure/api/user.js";
 import { useNavigate } from 'react-router-dom';
 import './crudUsuarios.css'; // Importa el archivo CSS
+import { getUserTypeNameById } from "../../../../infraestructure/api/user_type.js";
 
 export default function CrudUsuarios() {
     const [users, setUsers] = useState([]);
@@ -11,8 +12,27 @@ export default function CrudUsuarios() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const userList = await getUsers();
-                setUsers(userList);
+                let userList = await getUsers();
+                const usersWithTypeName = userList.map(user => {
+                    // Asigna el nombre del tipo de usuario basado en user.user_type_id
+                    let typeName = "";
+                    switch (user.user_type_id) {
+                        case "1":
+                            typeName = "Administrador";
+                            break;
+                        case "2":
+                            typeName = "Trabajador";
+                            break;
+                        case "3":
+                            typeName = "Cliente";
+                            break;
+                        default:
+                            typeName = "Desconocido";
+                            break;
+                    }
+                    return { ...user, typeName }; // Añade el nombre del tipo al objeto del usuario
+                });
+                setUsers(usersWithTypeName);
             } catch (error) {
                 console.error('Error al obtener la lista de usuarios:', error);
                 alert('Error al obtener la lista de usuarios. Por favor, revisa la consola para más detalles.');
@@ -25,7 +45,6 @@ export default function CrudUsuarios() {
     const handleDeleteUser = async (userId) => {
         try {
             await deleteUser(userId);
-            // Actualizar la lista de usuarios eliminando el usuario con el ID dado
             setUsers(users.filter(user => user.id !== userId));
         } catch (error) {
             console.error('Error al eliminar el usuario:', error);
@@ -33,37 +52,15 @@ export default function CrudUsuarios() {
         }
     };
 
-    const handleCreateUser = (userType) => {
-        // Navega a la página de creación de usuario con el tipo de usuario seleccionado
-        navigate(`/admin/add-user/${userType}`);
-    };
-
-    // Función para obtener el tipo de usuario basado en el userTypeId
-    const getUserType = (userTypeId) => {
-        switch (userTypeId) {
-            case 1:
-                return "Administrador";
-            case 2:
-                return "Empleado";
-            case 3:
-                return "Cliente";
-            default:
-                return "Desconocido";
-        }
-    };
-
     return (
         <div className='crud-usuarios'>
             <div className="crud-options">
                 <Link to='/admin/add-empleado'>
-                <button >
-                    Crear Usuario (Administrador/Trabajador)
-                </button>
+                    <button>Crear Usuario (Administrador/Trabajador)</button>
                 </Link>
             </div>
             <div className="table-container">
                 <table>
-                    {/* Encabezados de la tabla */}
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -74,19 +71,16 @@ export default function CrudUsuarios() {
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    {/* Cuerpo de la tabla */}
                     <tbody>
-                        {users.map((user) => (
+                        {users.map(user => (
                             <tr key={user.id}>
                                 <td>{user.names}</td>
                                 <td>{user.email}</td>
                                 <td>{user.ci}</td>
                                 <td>{user.gender}</td>
-                                <td>{user.userTypeId}</td>
+                                <td>{user.typeName}</td>
                                 <td>
-                                    <button onClick={() => handleDeleteUser(user.id)}>
-                                        Eliminar
-                                    </button>
+                                    <button onClick={() => handleDeleteUser(user.id)}>Eliminar</button>
                                 </td>
                             </tr>
                         ))}

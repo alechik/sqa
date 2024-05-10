@@ -3,9 +3,9 @@ import { User } from "../../domain/User.js";
 import { doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
 import { createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser as deleteFirebaseUser, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 // Constantes para los IDs de tipos de usuario
-const ADMIN_ID = "1";
-const WORKER_ID = "2";
-const CLIENT_ID = "3";
+export const ADMIN_ID = "1";
+export const WORKER_ID = "2";
+export const CLIENT_ID = "3";
 
 const handleAuthError = (error) => {
     console.error("Error de inicio de sesión:", error.code);
@@ -106,47 +106,43 @@ async function signInWithGoogle() {
     }
 }
 
-const createUser = async (userData) => {
-    const { email, password, ...profileData } = userData; // Excluye la contraseña de los datos del perfil
-    try {
-        // Crea un usuario con correo electrónico y contraseña en Firebase Authentication
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+export async function createUser(userData) {
+    const newUser = new User(
+        null, // Firebase genera automáticamente el ID
+        userData.address,
+        userData.birthday_date,
+        userData.ci,
+        userData.email,
+        userData.numero,
+        userData.gender,
+        userData.lastnames,
+        userData.names,
+        userData.user_type_id,
+        userData.picture
+    );
 
-        // Crea/actualiza el perfil del usuario en Firestore sin incluir la contraseña
-        await setDoc(doc(db, "users", user.uid), {
-            ...profileData,
-            email: email,
-            userTypeId: CLIENT_ID,
-        });
+    const userRef = doc(collection(db, "users"));
+    await setDoc(userRef, newUser.toFirestore());
+    return userRef.id; // Retorna el ID del nuevo usuario
+}
 
-       
-        return user.uid; // Retorna el UID del usuario para cualquier procesamiento posterior necesario
-    } catch (error) {
-        console.error("Error al crear el usuario:", error);
-        throw error; // Esto permite que el llamador maneje el error, por ejemplo, mostrando un mensaje al usuario
-    }
-};
-
-
-
-async function getUsers() {
+export async function getUsers() {
     const usersCollectionRef = collection(db, "users");
     const querySnapshot = await getDocs(usersCollectionRef);
     const users = [];
-    querySnapshot.forEach((docSnap) => {
+    querySnapshot.forEach(docSnap => {
         const data = docSnap.data();
         const user = new User(
-            docSnap.id, // Se asume que este es el UID proporcionado por Firebase Authentication
+            docSnap.id,
             data.address,
             data.birthday_date,
             data.ci,
             data.email,
-            data.gender,
             data.numero,
+            data.gender,
             data.lastnames,
             data.names,
-            data.userTypeId,
+            data.user_type_id,
             data.picture
         );
         users.push(user);
@@ -173,7 +169,7 @@ export const getUserProfile = async () => {
     return userDocSnap.data(); // Devuelve todos los datos del perfil del usuario
 };
 
-async function getUserById(userId) {
+export async function getUserById(userId) {
     const userDocRef = doc(db, "users", userId);
     const docSnap = await getDoc(userDocRef);
 
@@ -185,35 +181,29 @@ async function getUserById(userId) {
 }
 
 // Actualizar los datos de un usuario en Firestore y Firebase Authentication si es necesario
-async function updateUser(userId, updatedData) {
-    // Actualizar email en Firebase Authentication si se proporciona
-    if (updatedData.email) {
-        const user = await auth.currentUser;
-        await updateEmail(user, updatedData.email);
-    }
-    // Actualizar contraseña en Firebase Authentication si se proporciona
-    if (updatedData.password) {
-        const user = await auth.currentUser;
-        await updatePassword(user, updatedData.password);
-    }
-
-    // Excluye contraseña de los datos actualizados para Firestore
-    const { ...updatedDataForFirestore } = updatedData;
-
-    // Actualizar los datos del usuario en Firestore, incluyendo el email
-    await setDoc(doc(db, "users", userId), updatedDataForFirestore, { merge: true });
+export async function updateUser(userId, updatedData) {
+    const userRef = doc(db, "users", userId);
+    const newUser = new User(
+        userId,
+        updatedData.address,
+        updatedData.birthday_date,
+        updatedData.ci,
+        updatedData.email,
+        updatedData.numero,
+        updatedData.gender,
+        updatedData.lastnames,
+        updatedData.names,
+        updatedData.user_type_id,
+        updatedData.picture
+    );
+    await updateDoc(userRef, newUser.toFirestore());
 }
 
-// Eliminar un usuario de Firebase Authentication y Firestore
-async function deleteUser(userId) {
-    // Eliminar el usuario de Firebase Authentication
-    const user = await auth.currentUser;
-    if (user.uid === userId) {
-        await deleteFirebaseUser(user);
-    }
 
-    // Eliminar los datos del usuario de Firestore
-    await deleteDoc(doc(db, "users", userId));
+// Eliminar un usuario de Firebase Authentication y Firestore
+export async function deleteUser(userId) {
+    const userRef = doc(db, "users", userId);
+    await deleteDoc(userRef);
 }
 
 
@@ -234,7 +224,7 @@ export const getUserTypes = async () => {
 };
 
 
-export {
+export default{
     getUsers,
     createUser,
     getUserById,

@@ -95,10 +95,10 @@ const CrudProductExcel = () => {
                             <tr key={profit.id}>
                                 <td>{profit.productName}</td>
                                 <td>{profit.id_product}</td>
-                                <td>{profit.cost}</td>
-                                <td>{profit.total_sell}</td>
-                                <td>{profit.profit}</td>
-                                <td>{profit.time.toLocaleString()}</td>
+                                <td>{profit.cost || 'N/A'}</td>
+                                <td>{profit.total_sell || 'N/A'}</td>
+                                <td>{profit.profit || 'N/A'}</td>
+                                <td>{profit.time ? profit.time.toLocaleString() : 'N/A'}</td>
                             </tr>
                         ))}
                     </tbody>

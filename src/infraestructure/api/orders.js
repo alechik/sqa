@@ -43,19 +43,26 @@ export async function getOrderById(orderId) {
   }
 }
 
+// Variable de bloqueo para controlar la creación de orden
+let isCreatingOrder = false;
 
+export async function createOrder(user, cartItems) {
+  if (isCreatingOrder) {
+    console.error("Una orden ya está en proceso de creación.");
+    throw new Error("Operación en proceso: Ya se está creando una orden.");
+  }
 
-
-// Asegurando que todos los campos necesarios están disponibles
-export async function createOrder(cart, user) {
-  if (!user?.email || !cart?.items?.length) {
+  if (!user?.email || cartItems.length === 0) {
     console.error("Datos inválidos: Falta el correo del usuario o los artículos del carrito.");
     throw new Error("Datos inválidos: Falta el correo del usuario o los artículos del carrito.");
   }
 
+  // Establecer el bloqueo
+  isCreatingOrder = true;
+
   const orderData = {
     userEmail: user.email,
-    products: cart.items.map(item => ({
+    products: cartItems.map(item => ({
       productId: item.id,
       quantity: item.qty,
       unitPrice: item.unitary_price
@@ -63,7 +70,7 @@ export async function createOrder(cart, user) {
     deliveryAddress: user.address || 'No especificada',
     status: 'Pendiente',
     createdAt: serverTimestamp(),
-    totalPrice: cart.items.reduce((total, item) => total + (item.unitary_price * item.qty), 0),
+    totalPrice: cartItems.reduce((total, item) => total + (item.unitary_price * item.qty), 0),
     paymentMethod: 'QR'
   };
 
@@ -71,12 +78,18 @@ export async function createOrder(cart, user) {
   try {
     const orderDocRef = await addDoc(ordersCollectionRef, orderData);
     console.log("Pedido creado con éxito, ID del pedido:", orderDocRef.id);
+
+    // Liberar el bloqueo después de crear la orden
+    isCreatingOrder = false;
     return orderDocRef.id;
   } catch (error) {
     console.error("Error al crear la orden:", error);
+    // Asegurarse de liberar el bloqueo si falla la creación de la orden
+    isCreatingOrder = false;
     throw new Error('No se pudo crear la orden.');
   }
 }
+
 
 
 

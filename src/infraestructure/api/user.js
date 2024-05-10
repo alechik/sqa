@@ -56,16 +56,16 @@ export async function signInWithFacebook() {
         if (!userDocSnap.exists()) {
             // Si el usuario no existe, crea el registro en Firestore
             await setDoc(userDocRef, {
-                avatar: photoURL,
-                email,
-                names: displayName, // Asumiendo que queremos el nombre completo
-                gender: "",
+                avatar: user.photoURL || "",
+                email: user.email || "",
+                names: user.displayName || "",
+                gender: "", // Dejar en blanco
                 numero: "",
-                birthday_date: "",
+                birthday_date: "", // Dejar en blanco
                 address: "", // Dejar en blanco
                 ci: "", // Dejar en blanco
                 userTypeId: CLIENT_ID, // Cliente por defecto
-            });
+            }, { merge: true });
         }
 
         return user;
@@ -97,7 +97,7 @@ export async function signInWithGoogle() {
                 address: "", // Dejar en blanco
                 ci: "", // Dejar en blanco
                 userTypeId: CLIENT_ID, // Cliente por defecto
-            });
+            }, { merge: true });
         }
 
         return user;

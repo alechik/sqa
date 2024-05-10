@@ -15,7 +15,7 @@ exports.paymentCallback = functions.https.onRequest(async (req, res) => {
     }
 
     // Importar la clase Order usando importación dinámica
-    const {Order} = require("../src/infraestructure/api/orders");
+    const Order = require("../src/infraestructure/api/orders");
 
     // Obtener la información del pago del cuerpo de la solicitud
     const paymentInfo = req.body;
@@ -27,7 +27,7 @@ exports.paymentCallback = functions.https.onRequest(async (req, res) => {
     // Verificar si orderId está definido
     if (!orderId) {
       return res.status(400).send({error: "orderId no especificado"});
-    }   
+    }
 
     // Actualizar el estado del pedido en la base de datos
     await admin.firestore().collection("orders").doc(orderId).update({
@@ -48,7 +48,7 @@ exports.paymentCallback = functions.https.onRequest(async (req, res) => {
         orderData.userEmail,
         orderData.products,
         orderData.deliveryAddress,
-        orderData.paymentStatus, // Usar el nuevo nombre del campo
+        orderData.paymentStatus,
         orderData.totalPrice,
         orderData.paymentMethod,
     );

@@ -20,7 +20,7 @@ const PrevArrow = ({ onClick }) => (
 );
 
 const FlashCard = ({ productos, addtoCart }) => {
-    const [selectedProduct] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     const settings = {
         dots: false,

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
 import { auth, db } from "../../../infraestructure/firebase--config.js";
-import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
-import {auth,db} from "../../../infraestructure/firebase--config.js";
 import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 
 const ProductPopup = ({ product, onClose, addToCart }) => {

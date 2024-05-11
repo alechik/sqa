@@ -1,6 +1,17 @@
 import { db } from "../firebase-connection.js";
 import { Product } from "../../domain/Product.js";
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    doc,
+    getDoc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    writeBatch,
+    query,
+    where
+} from "firebase/firestore";
 import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as XLSX from 'xlsx';
@@ -48,6 +59,9 @@ export async function getProductById(productId) {
         productDoc.state
     );
 }
+
+
+
 
 export async function uploadImage(file) {
     if (!file) {
@@ -228,6 +242,32 @@ export async function getProductNameById(productId) {
     return productData.product_name;  // Devuelve solo el nombre del producto
 }
 
+export async function getProductByName(productName) {
+    const productsCollectionRef = collection(db, "products");
+    const q = query(productsCollectionRef, where("product_name", "==", productName));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.empty ? null : { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+}
+
+export async function addProductStock(productId, quantity) {
+    const productRef = doc(db, 'products', productId);
+    const productSnap = await getDoc(productRef);
+
+    if (productSnap.exists()) {
+        const currentStock = Number(productSnap.data().stock); // Convertir a número
+        const addQuantity = Number(quantity); // Asegurarse de que la cantidad también es un número
+        const newStock = currentStock + addQuantity;
+
+        await updateDoc(productRef, {
+            stock: newStock
+        });
+        console.log(`Stock updated for product ${productId}: ${newStock}`);
+    } else {
+        console.error('Product not found');
+        throw new Error('Product not found');
+    }
+}
+
 export default {
     getProducts,
     getProductById,
@@ -239,4 +279,6 @@ export default {
     updateProductStock,
     addProductsBatch,
     getProductNameById,
+    getProductByName,
+    addProductStock
 };

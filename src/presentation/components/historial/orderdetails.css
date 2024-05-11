@@ -1,0 +1,39 @@
+.order-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+.order-detail {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.detail-label {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #333;
+}
+
+h1 {
+    color: #5e35b1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+}

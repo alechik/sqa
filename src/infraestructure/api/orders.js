@@ -187,6 +187,51 @@ async function updateOrderStatus(nuevoEstado) {
 const nuevoEstado = 'Etregado'; // Define el nuevo estado del pedido
 updateOrderStatus(nuevoEstado);
 
+export async function updateOrderAfterReturn(orderId, productId, quantity, returnDate) {
+  const orderRef = doc(db, 'orders', orderId);
+  const orderSnap = await getDoc(orderRef);
+
+  if (orderSnap.exists()) {
+    let allReturned = true;
+    const products = orderSnap.data().products;
+    const updatedProducts = products.map(product => {
+      if (product.productId === productId) {
+        const remainingQuantity = product.quantity - quantity;
+        const returnedQuantity = (product.returnedQuantity || 0) + quantity;
+        return {
+          ...product,
+          quantity: remainingQuantity,
+          returnedQuantity: returnedQuantity,
+          returnDate: returnDate || new Date() // Asegúrate de que returnDate siempre tenga un valor
+        };
+      } else {
+        if (!product.returnedQuantity || product.returnedQuantity < product.quantity) {
+          allReturned = false;
+        }
+        return product;
+      }
+    });
+
+    const updateData = { products: updatedProducts };
+
+    if (allReturned) {
+      updateData.status = 'Devuelto';
+    }
+
+    if (updatedProducts.every(product => product.quantity !== undefined && product.returnedQuantity !== undefined)) {
+      await updateDoc(orderRef, updateData);
+      console.log(`Order ${orderId} updated with returns.`);
+    } else {
+      console.error('Some product updates have undefined values');
+    }
+  } else {
+    console.error('Order not found');
+    throw new Error('Order not found');
+  }
+}
+
+
+
 export default{
   getOrdersByUserId,
   deleteOrder,
@@ -196,5 +241,6 @@ export default{
   createOrder,
   updateOrderStatus,
   decreaseProductStock,
-  decreaseStock
+  decreaseStock,
+  updateOrderAfterReturn
 }

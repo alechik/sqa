@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { readExcelFile, calculatePMP, addProductsBatch, getProductNameById } from '../../../../infraestructure/api/product';
+import {
+    readExcelFile,
+    calculatePMP,
+    addProductsBatch,
+    getProductNameById,
+    getProducts
+} from '../../../../infraestructure/api/product';
 import { addProfitPerLot, getAllProfitPerLot } from '../../../../infraestructure/api/profit_per_lot';
 import "./crudproductos.css";
+import {collection, doc, writeBatch} from "firebase/firestore";
+import {db} from "../../../../infraestructure/firebase--config.js";
 
 const CrudProductExcel = () => {
     const [file, setFile] = useState(null);
@@ -14,12 +22,21 @@ const CrudProductExcel = () => {
         const fetchProfits = async () => {
             const fetchedProfits = await getAllProfitPerLot();
             const profitsWithNames = await Promise.all(fetchedProfits.map(async (profit) => {
-                const productName = await getProductNameById(profit.id_product);
-                return {
-                    ...profit,
-                    productName,
-                    id: profit.id || 'temp-' + Math.random().toString(36).substr(2, 9)
-                };
+                try {
+                    const productName = await getProductNameById(profit.id_product);
+                    return {
+                        ...profit,
+                        productName,
+                        id: profit.id || 'temp-' + Math.random().toString(36).substr(2, 9)
+                    };
+                } catch (error) {
+                    console.error('Error fetching product name:', error);
+                    return {
+                        ...profit,
+                        productName: 'Nombre no encontrado',
+                        id: profit.id || 'temp-' + Math.random().toString(36).substr(2, 9)
+                    };
+                }
             }));
             setProfits(profitsWithNames);
         };
@@ -42,23 +59,51 @@ const CrudProductExcel = () => {
 
     const handleProcess = async () => {
         setLoading(true);
-        const ids = await addProductsBatch(products);
-        const profitsData = products.map((product, index) => ({
-            cost: product.costo_lote,
-            id_product: ids[index],
-            profit: product.gananciaLote,
-            total_sell: product.unitary_price * product.stock,
-            time: new Date()  // Asegura que la fecha actual se envía
-        }));
+        const existingProducts = await getProducts(); // Obtén todos los productos actuales
+        const productMap = new Map(existingProducts.map(p => [p.product_name.toLowerCase(), p]));
 
-        for (const profit of profitsData) {
+        const batch = writeBatch(db);
+        const profitsToAdd = []; // Para almacenar los datos de ganancias para añadir después
+
+        for (const product of products) {
+            const existingProduct = productMap.get(product.product_name.toLowerCase());
+            let productId;
+            if (existingProduct) {
+                // Producto existe, actualiza el stock
+                const productRef = doc(db, "products", existingProduct.id);
+                batch.update(productRef, {
+                    stock: existingProduct.stock + product.stock  // Suma el stock existente con el nuevo
+                });
+                productId = existingProduct.id;  // Usa el ID existente para las ganancias
+            } else {
+                // Producto no existe, crea uno nuevo
+                const newDocRef = doc(collection(db, "products"));
+                batch.set(newDocRef, product);
+                productId = newDocRef.id;  // Usa el nuevo ID para las ganancias
+            }
+
+            // Prepara datos de ganancias por lote usando el ID del producto
+            profitsToAdd.push({
+                cost: product.costo_lote,
+                id_product: productId,
+                profit: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
+                total_sell: product.unitary_price * product.stock,
+                time: new Date()
+            });
+        }
+
+        await batch.commit();  // Ejecutar todas las operaciones en batch para productos
+
+        // Añadir los lotes de ganancias después de actualizar/crear productos
+        for (const profit of profitsToAdd) {
             await addProfitPerLot(profit);
         }
 
-        setProcessed(true);
-        alert('Productos y ganancias por lote procesados y añadidos correctamente.');
         setLoading(false);
+        setProcessed(true);
+        alert('Productos procesados y actualizados correctamente, ganancias por lote añadidas.');
     };
+
 
     return (
         <div className='crud-product-excel'>

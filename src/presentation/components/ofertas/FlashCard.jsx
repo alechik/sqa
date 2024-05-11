@@ -31,17 +31,14 @@ const FlashCard = ({ productItems, productos, addtoCart }) => {
     const [productsWithRatings, setProductsWithRatings] = useState([]);
 
     useEffect(() => {
-        console.log("Updated productsWithRatings:", productsWithRatings);
     }, [productsWithRatings]);
 
     useEffect(() => {
         const loadRatings = async () => {
             const tempProductsWithRatings = await Promise.all(productos.map(async producto => {
                 const averageRating = await fetchRatingsForProduct(producto.id);
-                console.log(`Rating for product ${producto.id}:`, averageRating);  // Muestra la calificación promedio para cada producto
                 return { ...producto, averageRating };  // Añade el promedio de calificaciones al objeto del producto
             }));
-            console.log("All products with ratings:", tempProductsWithRatings);  // Muestra todos los productos con sus calificaciones
             setProductsWithRatings(tempProductsWithRatings);
         };
 

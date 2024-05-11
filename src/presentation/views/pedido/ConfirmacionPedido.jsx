@@ -4,6 +4,7 @@ import { getOrderById, updateOrder } from '../../../infraestructure/api/orders';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TailSpin } from 'react-loader-spinner'; // Importar el spinner deseado
+import { updateProductStock } from '../../../infraestructure/api/product';
 import './ConfirmacionPedido.css'; // Asegúrate de que el camino de CSS es correcto
 
 export default function ConfirmarPedido() {
@@ -29,15 +30,27 @@ export default function ConfirmarPedido() {
   }, [orderId]);
 
   const confirmOrder = async () => {
-    try {
-      await updateOrder(orderId, { status: 'En Camino' });
-      toast.success('Pedido confirmado y en camino');
-      navigate(`/seguimientopedido/${orderId}`);
-    } catch (error) {
-      console.error('Error al confirmar el pedido:', error);
-      toast.error('Error al confirmar el pedido.');
+    if (!order || !order.products || order.products.length === 0) {
+        toast.error("Pedido no válido o sin productos.");
+        return;
     }
-  };
+
+    try {
+        await updateOrder(orderId, { status: 'En Camino' });
+        for (const product of order.products) {
+            if (!product.productId || product.quantity <= 0) {
+                toast.error("Detalles de producto no válidos.");
+                return;
+            }
+            await updateProductStock(product.productId, product.quantity);
+        }
+        toast.success('Pedido confirmado y en camino');
+        navigate(`/seguimientopedido/${orderId}`);
+    } catch (error) {
+        console.error('Error al confirmar el pedido:', error);
+        toast.error(`Error al confirmar el pedido: ${error.message}`);
+    }
+};
 
   const renderProductList = (products) => {
     return products.map((product, index) => (

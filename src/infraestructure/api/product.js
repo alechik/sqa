@@ -10,7 +10,8 @@ import {
     deleteDoc,
     writeBatch,
     query,
-    where
+    where,
+    runTransaction
 } from "firebase/firestore";
 import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -98,31 +99,35 @@ export async function createProduct(productData, file) {
     return productRef.id;
 }
 
+/**
+ * Actualiza el stock de un producto en Firestore de manera segura mediante una transacción.
+ * @param {string} productId - El ID del producto a actualizar.
+ * @param {number} quantityPurchased - La cantidad del producto que se ha vendido.
+ */
 export async function updateProductStock(productId, quantityPurchased) {
-    const productDocRef = doc(db, "products", productId);
-    const productDoc = await getDoc(productDocRef);
+    const productRef = doc(db, "products", productId);
 
-    if (!productDoc.exists()) {
-        throw new Error("Product not found");
+    try {
+        await runTransaction(db, async (transaction) => {
+            const productDoc = await transaction.get(productRef);
+            if (!productDoc.exists()) {
+                throw new Error("El producto no existe en la base de datos.");
+            }
+
+            const currentStock = productDoc.data().stock;
+            if (currentStock < quantityPurchased) {
+                throw new Error("No hay suficiente stock disponible.");
+            }
+
+            const newStock = currentStock - quantityPurchased;
+            transaction.update(productRef, { stock: newStock });
+        });
+
+        console.log("Stock actualizado correctamente.");
+    } catch (error) {
+        console.error("Error al actualizar el stock del producto:", error);
+        throw error; // Re-lanza el error para manejarlo más arriba si es necesario
     }
-
-    const productData = productDoc.data();
-    const updatedStock = productData.stock - quantityPurchased;
-
-    const product = new Product(
-        productDoc.id,
-        productData.description,
-        productData.pictures,
-        productData.banner_pictures,
-        productData.CategoryID,
-        productData.product_name,
-        updatedStock,
-        productData.gramaje,
-        productData.unitary_price,
-        productData.state
-    );
-
-    await updateDoc(productDocRef, product.toFirestore());
 }
 
 export async function deleteProduct(productId) {

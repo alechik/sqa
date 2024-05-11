@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getUsers, deleteUser } from "../../../../infraestructure/api/user.js";
+import { getUsers, removeUser } from "../../../../infraestructure/api/user.js";
 import { useNavigate } from 'react-router-dom';
 import './crudUsuarios.css'; // Importa el archivo CSS
-import { getUserTypeNameById } from "../../../../infraestructure/api/user_type.js";
 
 export default function CrudUsuarios() {
     const [users, setUsers] = useState([]);
@@ -44,7 +43,7 @@ export default function CrudUsuarios() {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await deleteUser(userId);
+            await removeUser(userId);
             setUsers(users.filter(user => user.id !== userId));
         } catch (error) {
             console.error('Error al eliminar el usuario:', error);

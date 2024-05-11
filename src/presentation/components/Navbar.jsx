@@ -43,7 +43,7 @@ export default function Navbar({ cartItems = [] }) {
 
     const logout = () => {
         signOut(auth); // Usa signOut de firebase/auth para cerrar sesión
-        navigate('/iniciarsesion');
+        navigate('/login');
     };
 
     const handleLogoClick = () => {
@@ -90,7 +90,7 @@ export default function Navbar({ cartItems = [] }) {
                     </li>
                 ) : (
                     <li className='links'>
-                        <Link to="/iniciarsesion">Iniciar sesión</Link>
+                        <Link to="/login">Iniciar sesión</Link>
                     </li>
                 )}
             </ul>

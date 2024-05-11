@@ -86,9 +86,10 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
                         <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
-                        <Route path="/iniciarsesion" element={<Login />} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="/registrarse" element={<Register />} />
                         <Route path="/search" element={<SearchesPage />} />
+
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
                         <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />

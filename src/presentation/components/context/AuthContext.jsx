@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../../infraestructure/firebase--config';
+import { TailSpin } from 'react-loader-spinner'; 
 
 export const AuthContext = createContext();
 
@@ -16,12 +17,20 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         });
 
-        return unsubscribe; x
+        return unsubscribe;
     }, []);
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <TailSpin color="#00BFFF" height={80} width={80} />
+            </div>
+        );
+    }
 
     return (
         <AuthContext.Provider value={{ currentUser }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };

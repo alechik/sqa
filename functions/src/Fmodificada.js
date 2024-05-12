@@ -1,11 +1,11 @@
 const functions = require("firebase-functions");
-const { db } = require("../firebaseAdmin");
+const {db} = require("../firebaseAdmin");
 const nodemailer = require("nodemailer");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-const { doc, updateDoc, getDoc } = require("firebase/firestore");
+const {doc, updateDoc, getDoc} = require("firebase/firestore");
 
 // Configuración de Nodemailer para enviar correos
 const transporter = nodemailer.createTransport({
@@ -31,10 +31,10 @@ exports.updateAndSendInvoice = functions.firestore.document("orders/{orderId}").
 
   if (invoiceSnap.exists()) {
     const invoiceData = invoiceSnap.data();
-    
+
     // Marcar la factura anterior como anulada
     await updateDoc(invoiceRef, {
-      status: "Anulado"
+      status: "Anulado",
     });
 
     // Crear y guardar la nueva factura
@@ -42,7 +42,7 @@ exports.updateAndSendInvoice = functions.firestore.document("orders/{orderId}").
     await updateDoc(newInvoiceRef, {
       ...invoiceData,
       status: "Activo",
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     // Generar PDF de la nueva factura
@@ -51,20 +51,20 @@ exports.updateAndSendInvoice = functions.firestore.document("orders/{orderId}").
     const pdfDoc = new PDFDocument();
 
     pdfDoc.pipe(writeStream);
-    pdfDoc.fontSize(22).text("Factura Actualizada", { align: "center" });
+    pdfDoc.fontSize(22).text("Factura Actualizada", {align: "center"});
     pdfDoc.moveDown();
     pdfDoc.fontSize(12).text(`Fecha de actualización: ${new Date().toLocaleString()}`);
     pdfDoc.moveDown();
     pdfDoc.text(`Total: $${orderData.totalPrice.toFixed(2)}`);
 
     // Suponiendo que el objeto de productos está bien estructurado
-    orderData.products.forEach(product => {
+    orderData.products.forEach((product) => {
       pdfDoc.moveDown();
       pdfDoc.text(`Producto: ${product.name}, Cantidad: ${product.quantity}, Precio Unitario: $${product.unitPrice.toFixed(2)}`);
     });
 
     pdfDoc.end();
-    await new Promise(resolve => writeStream.on("finish", resolve));
+    await new Promise((resolve) => writeStream.on("finish", resolve));
 
     // Diseño HTML del correo
     const mailHtml = `
@@ -98,15 +98,15 @@ exports.updateAndSendInvoice = functions.firestore.document("orders/{orderId}").
 
     // Enviar correo con la nueva factura
     const mailOptions = {
-        from: "ecommercesantillo@gmail.com",
-        to: orderData.userEmail,
-        subject: "Su Factura Actualizada",
-        html: mailHtml,
-        attachments: [{
-            filename: `${orderId}_updated.pdf`,
-            path: pdfPath,
-            contentType: 'application/pdf'
-      }]
+      from: "ecommercesantillo@gmail.com",
+      to: orderData.userEmail,
+      subject: "Su Factura Actualizada",
+      html: mailHtml,
+      attachments: [{
+        filename: `${orderId}_updated.pdf`,
+        path: pdfPath,
+        contentType: "application/pdf",
+      }],
     };
 
     await transporter.sendMail(mailOptions);

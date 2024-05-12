@@ -10,6 +10,7 @@ import logoutIcon from '../assets/logout.png';
 import defaultAvatar from '../assets/usuario.png';
 import bagIcon from '../assets/bag.png';
 import bellIcon from '../assets/notificacion.png';
+import categoryIcon from '../assets/category.png';
 
 export default function Navbar({ cartItems = [] }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
@@ -47,6 +48,12 @@ export default function Navbar({ cartItems = [] }) {
                 {userProfile ? (
                     <>
                         <li>
+                        <div className='wishlist'>
+                                <Link to='/Category' className="wishlist-link">
+                                    <img src={categoryIcon} alt="wishlist" />
+                                    
+                                </Link>
+                            </div>
                             {/* Wishlist visible solo para clientes y admin */}
                             {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
                                 <div className='wishlist'>

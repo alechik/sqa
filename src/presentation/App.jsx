@@ -28,6 +28,7 @@ import Wishlist from "./views/Wishlist/Wishlist";
 import OrderDetails from './components/historial/OrderDetails';
 import CrudCategoria from "./views/user/admin/CrudCategoria";
 import NotificationsPage from './views/user/worker/Notificaciones/notificationspage';
+import Category from "./components/category";
 
 function App() {
     const { currentUser } = useAuth();
@@ -108,6 +109,7 @@ function App() {
                         <Route path="/admin/crud-products-excel" element={<CrudProductExcel />} />
                         <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />
                         <Route path="/orders/:orderId" element={<OrderDetails />} />
+                        <Route path="/Category" element={<Category />} />
                     </Routes>
                 </main>
                 <Footer />

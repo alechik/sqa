@@ -10,7 +10,6 @@ import {
     updatePassword,
     deleteUser,
     signInWithRedirect,
-    signInWithPopup,
 } from 'firebase/auth';
 
 // Constantes para los IDs de tipos de usuario

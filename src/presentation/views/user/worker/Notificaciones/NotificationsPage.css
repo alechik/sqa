@@ -1,0 +1,90 @@
+.notifications-page {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.page-title {
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.order-list {
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-item {
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.order-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-id,
+.order-total,
+.order-address {
+    margin: 4px ;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.accept-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.accept-button:hover {
+    background-color: #45a049;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.no-orders {
+    font-size: 1rem;
+    color: #888;
+    text-align: center;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    .order-item {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+
+    .accept-button {
+        padding: 8px 16px;
+    }
+
+    .page-title {
+        font-size: 1.2rem;
+    }
+}

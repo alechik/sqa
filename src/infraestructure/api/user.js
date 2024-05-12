@@ -74,6 +74,8 @@ export async function createUser(userData) {
     console.log("New user created with ID:", userRef.id);
     return userRef.id; 
 }
+
+
 export async function getUsers() {
     const usersCollectionRef = collection(db, "users");
     const querySnapshot = await getDocs(usersCollectionRef);

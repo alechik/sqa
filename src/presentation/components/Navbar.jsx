@@ -8,26 +8,14 @@ import tuImagen from '../assets/iconoW.png';
 import shoppingCartIcon from '../assets/shopping-cart.png';
 import logoutIcon from '../assets/logout.png';
 import defaultAvatar from '../assets/usuario.png';
-import bagIcon from '../assets/bag.png'; // Asegúrate de tener esta imagen en tus assets si la quieres usar
+import bagIcon from '../assets/bag.png';
+import bellIcon from '../assets/notificacion.png';
 
 export default function Navbar({ cartItems = [] }) {
-    const totalItems = cartItems.reduce((total, item) => total + item.qty, 0); // Calcula el total de items en el carrito, sumando cantidades
+    const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
-    const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const auth = getAuth();
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const mockCategories = [
-                { id: 1, name: 'Category 1' },
-                { id: 2, name: 'Category 2' },
-                { id: 3, name: 'Category 3' }
-            ];
-            setCategories(mockCategories);
-        };
-        fetchCategories();
-    }, []);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -42,7 +30,7 @@ export default function Navbar({ cartItems = [] }) {
     }, [auth]);
 
     const logout = () => {
-        signOut(auth); // Usa signOut de firebase/auth para cerrar sesión
+        signOut(auth);
         navigate('/login');
     };
 
@@ -57,37 +45,39 @@ export default function Navbar({ cartItems = [] }) {
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
-                    <li>
-                        <div className='wishlist'>
-                            <Link to='/wishlist' className='wishlist-link'>
-                                <img src={bagIcon} alt='Wishlist' />
+                    <>
+                        <li>
+                            {/* Wishlist visible solo para clientes y admin */}
+                            {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
+                                <div className='wishlist'>
+                                    <Link to='/wishlist' className='wishlist-link'>
+                                        <img src={bagIcon} alt='Wishlist' />
+                                    </Link>
+                                </div>
+                            )}
+                            {/* Notificaciones visibles solo para trabajadores */}
+                            {userProfile.userTypeId === '2' && (
+                                <div className='notifications'>
+                                    <Link to='/notifications' className='notification-link'>
+                                        <img src={bellIcon} alt='Notificaciones' />
+                                        <span>3</span> {/* Ejemplo de número de notificaciones */}
+                                    </Link>
+                                </div>
+                            )}
+                            <div className='cart'>
+                                <Link to='/cart' className="cart-link">
+                                    <img src={shoppingCartIcon} alt="Carrito" />
+                                    <span>{totalItems}</span>
+                                </Link>
+                            </div>
+                            <Link to={userProfile.userTypeId === '1' ? "/admin/AdminInfo" : "/perfil"} className="perfil-link">
+                                <img src={userProfile.avatar || defaultAvatar} alt="Perfil" className="navbar-avatar" />
                             </Link>
-                        </div>
-                        <div className='cart'>
-                            <Link to='/cart' className="cart-link">
-                                <img src={shoppingCartIcon} alt="Carrito" />
-                                <span>{totalItems}</span>
-                            </Link>
-                        </div>
-                        {userProfile.userTypeId === '1' && <Link to="/admin/AdminInfo" className="perfil-link"><img
-                            src={userProfile.avatar || defaultAvatar}
-                            alt="Perfil"
-                            className="navbar-avatar"
-                        /></Link>}
-                        {userProfile.userTypeId === '2' && <Link to="/admin/crud-productos" className="perfil-link"><img
-                            src={userProfile.avatar || defaultAvatar}
-                            alt="Perfil"
-                            className="navbar-avatar"
-                        /></Link>}
-                        {userProfile.userTypeId === '3' && <Link to="/perfil" className="perfil-link"><img
-                            src={userProfile.avatar || defaultAvatar}
-                            alt="Perfil"
-                            className="navbar-avatar"
-                        /></Link>}
-                        <button onClick={logout} className="logout-button" title="Cerrar Sesión">
-                            <img src={logoutIcon} alt="Cerrar Sesión" />
-                        </button>
-                    </li>
+                            <button onClick={logout} className="logout-button" title="Cerrar Sesión">
+                                <img src={logoutIcon} alt="Cerrar Sesión" />
+                            </button>
+                        </li>
+                    </>
                 ) : (
                     <li className='links'>
                         <Link to="/login">Iniciar sesión</Link>

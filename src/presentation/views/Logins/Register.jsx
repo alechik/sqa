@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { createUser } from "../../../infraestructure/api/user.js";
+import { ToastContainer, toast } from 'react-toastify';
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 const CLIENT_USER_TYPE_ID = '3';
 
@@ -31,10 +33,15 @@ export default function Register() {
             return;
         }
 
+        const auth = getAuth();
         try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Ahora user.uid contiene el UID generado por Firebase Authentication
             await createUser({
+                uid: user.uid,
                 email,
-                password,
                 names: `${firstName} ${lastName}`,
                 numero,
                 address,
@@ -44,19 +51,12 @@ export default function Register() {
                 avatar: '',
                 userTypeId: CLIENT_USER_TYPE_ID,
             });
+
             toast.success("Registro exitoso!");
-            navigate('/');  
+            navigate('/');
         } catch (error) {
             console.error('Error al registrar usuario:', error.message);
-            toast.error(`Error al registrar usuario: ${error.message}`, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.error(`Error al registrar usuario: ${error.message}`);
         }
     };
 
@@ -149,6 +149,7 @@ export default function Register() {
                     </div>
                 </form>
             </div>
+            <ToastContainer/>
         </section>
     );
 }

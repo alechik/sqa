@@ -16,17 +16,21 @@ import SeguimientoPedido from "../presentation/views/pedido/SeguimientoPedido";
 import Cart from "./views/carrito/Cart";
 import SearchesPage from './views/busquedas/SearchesPage';
 import { AuthProvider } from './components/context/AuthContext';
+import { useAuth } from './components/context/AuthContext';
 import Footer from './components/Footer';
 import { getProducts } from '../infraestructure/api/product';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { OrderProvider } from './components/context/OrderContext'
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import CrudProductExcel from './views/user/admin/CrudProductsExcel';
 import Wishlist from "./views/Wishlist/Wishlist";
 import OrderDetails from './components/historial/OrderDetails';
 import CrudCategoria from "./views/user/admin/CrudCategoria";
+import NotificationsPage from './views/user/worker/Notificaciones/notificationspage';
 
 function App() {
+    const { currentUser } = useAuth();
     const [productos, setProductos] = useState([]);
     const [cartItems, setCartItems] = useState([]);
 
@@ -80,6 +84,7 @@ function App() {
 
     return (
         <AuthProvider>
+            <OrderProvider user={currentUser}>
             <Router>
                 <Navbar cartItems={cartItems} />
                 <main>
@@ -92,6 +97,7 @@ function App() {
 
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
+                        <Route path="/notifications" element={<PrivateRoute> <NotificationsPage/> </PrivateRoute>}/>
                         <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                         <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
                         <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
@@ -106,6 +112,7 @@ function App() {
                 </main>
                 <Footer />
             </Router>
+            </OrderProvider>
         </AuthProvider>
     );
 }

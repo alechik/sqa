@@ -378,6 +378,64 @@
     }
 }
 
+.notifications {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 50px;
+    /* Ajusta el tamaño del contenedor del ícono */
+    height: 50px;
+    /* Mantiene la altura consistente con otros íconos */
+    border-radius: 50%;
+    /* Crea un efecto circular */
+    transition: background-color 0.3s;
+    /* Suaviza la transición de color de fondo */
+    cursor: pointer;
+    /* Indica que el elemento es interactivo */
+    margin-left: 20px;
+    /* Espacio desde el elemento anterior en el Navbar */
+}
+
+.notifications img {
+    width: 30px;
+    /* Tamaño específico del ícono de notificación */
+    height: 30px;
+    /* Mantener el ícono centrado y proporcional */
+}
+
+.notifications:hover {
+    background-color: rgba(155, 155, 155, 0.33);
+    /* Efecto de hover para mejorar la interactividad */
+}
+
+/* Posicionamiento del badge para notificaciones (número de notificaciones) */
+.notifications span {
+    position: absolute;
+    top: -5px;
+    /* Posiciona el badge en la parte superior del ícono */
+    right: -5px;
+    /* Asegura que el badge no se desborde del contenedor circular */
+    width: 18px;
+    /* Tamaño del badge */
+    height: 18px;
+    /* Altura para mantenerlo circular */
+    border-radius: 50%;
+    /* Redondea las esquinas para un badge circular */
+    text-align: center;
+    /* Centra el texto dentro del badge */
+    background-color: #ff0000;
+    /* Color de fondo llamativo para el badge */
+    color: white;
+    /* Color del texto dentro del badge */
+    font-size: 12px;
+    /* Tamaño del texto dentro del badge */
+    line-height: 18px;
+    /* Alinea verticalmente el texto dentro del badge */
+    z-index: 10;
+    /* Asegura que el badge siempre esté por encima del ícono */
+}
+
 .select-custom {
     appearance: none;
     background-color: transparent;

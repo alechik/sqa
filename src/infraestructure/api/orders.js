@@ -156,32 +156,49 @@ export async function getOrdersByUserId(userId) {
   }
 }
 
-async function updateOrderStatus(nuevoEstado) {
-  try {
-    // Obtener todos los pedidos
-    const orders = await getAllOrders();
+// Función para actualizar el estado de un pedido con manejo de devoluciones parciales y completas
+export async function updateOrderStatus(orderId, newStatus, productsReturned) {
+  const orderRef = doc(db, "orders", orderId);
+  const orderSnap = await getDoc(orderRef);
 
-    // Verificar si hay pedidos
-    if (orders.length === 0) {
-      console.error('No hay pedidos en la base de datos.');
-      return;
-    }
-
-    // Ordenar los pedidos por fecha de creación de forma descendente
-    orders.sort((a, b) => b.createdAt - a.createdAt);
-
-    // Obtener el ID del último pedido
-    const ultimoPedidoId = orders[0].id;
-
-    // Actualizar el estado del último pedido utilizando updateOrderStatus
-    await updateOrderStatus(ultimoPedidoId, { status: nuevoEstado });
-
-    console.log(`El estado del último pedido con ID ${ultimoPedidoId} se ha actualizado correctamente a "${nuevoEstado}".`);
-  } catch (error) {
-    console.error('Error al actualizar el estado del último pedido:', error);
-    throw new Error('No se pudo actualizar el estado del último pedido.');
+  if (!orderSnap.exists()) {
+    throw new Error('Order not found');
   }
+
+  const orderData = orderSnap.data();
+  let allReturned = true; // Asumir que todo es devuelto a menos que se encuentre lo contrario
+
+  // Actualizar productos basado en devoluciones parciales
+  const updatedProducts = orderData.products.map(product => {
+    const returnedProduct = productsReturned.find(p => p.productId === product.productId);
+    if (returnedProduct) {
+      const remainingQuantity = product.quantity - returnedProduct.quantity;
+      if (remainingQuantity > 0) {
+        allReturned = false; // Si queda alguna cantidad, no está totalmente devuelto
+      }
+      return {
+        ...product,
+        quantity: remainingQuantity,
+        returnedQuantity: (product.returnedQuantity || 0) + returnedProduct.quantity
+      };
+    } else {
+      allReturned = false; // Si algún producto no está devuelto, marcar como no totalmente devuelto
+      return product;
+    }
+  });
+
+  // Determinar el estado final del pedido
+  let status = newStatus;
+  if (productsReturned && productsReturned.length > 0) {
+    status = allReturned ? 'Devuelto' : 'Parcialmente Devuelto';
+  }
+
+  // Actualizar el documento del pedido
+  await updateDoc(orderRef, { products: updatedProducts, status });
+
+  return { success: true, status };
 }
+
 
 // Llamar a la función para actualizar el estado del último pedido
 const nuevoEstado = 'Etregado'; // Define el nuevo estado del pedido

@@ -2,16 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../infraestructure/firebase--config';
-import { format } from 'date-fns'; // Asegúrate de tener importado format
-import './orderdetails.css'
-import {updateOrderAfterReturn} from "../../../infraestructure/api/orders.js";
-import {addProductStock} from "../../../infraestructure/api/product.js";
+import { format } from 'date-fns';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './orderdetails.css';
+import { updateOrderAfterReturn } from "../../../infraestructure/api/orders.js";
+import { addProductStock } from "../../../infraestructure/api/product.js";
+import Modal from '../Modal/Modal.jsx';
 
 function OrderDetails() {
     const { orderId } = useParams();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [returnData, setReturnData] = useState({ productId: '', quantity: 1, maxQuantity: 1 });
 
     const fetchOrder = async () => {
         try {
@@ -34,26 +39,29 @@ function OrderDetails() {
     };
 
     useEffect(() => {
-
-
         fetchOrder();
     }, [orderId]);
 
-    const handleReturn = async (productId, quantity) => {
+    const handleReturn = async () => {
+        if (returnData.quantity > returnData.maxQuantity) {
+            toast.error("No puedes devolver más productos de los que compraste.");
+            return;
+        }
+
         try {
-            // Añadir el stock devuelto al inventario del producto
-            await addProductStock(productId, quantity);
-
-            // Actualizar el pedido después de la devolución
-            await updateOrderAfterReturn(orderId, productId, quantity);
-
-            // Actualizar la información en la UI, por ejemplo, re-fetching o ajustando el estado local
-            fetchOrder();  // Re-fetch la orden para reflejar los cambios (dependiendo de cómo esté estructurado fetchOrder)
-            console.log('Product returned and order updated successfully.');
+            await addProductStock(returnData.productId, returnData.quantity);
+            await updateOrderAfterReturn(orderId, returnData.productId, returnData.quantity);
+            fetchOrder();  // Refresh the order to reflect the changes
+            setShowModal(false); // Hide the modal after the operation
         } catch (error) {
             console.error('Error handling product return:', error);
-            alert('Failed to process the return. Please try again.');
+            toast.error("Error al procesar la devolución.");
         }
+    };
+
+    const openModal = (product) => {
+        setReturnData({ productId: product.productId, quantity: 1, maxQuantity: product.quantity });
+        setShowModal(true);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -64,51 +72,51 @@ function OrderDetails() {
         <div className='order-card'>
             <h1>Order Details</h1>
             <div className="order-detail">
-                <p> <span className="detail-label"> Order ID:</span>  {order.id}</p>
-            </div>
-            <div className="order-detail">
-                <p> <span className="detail-label">Date :</span> {order.date}</p>
-            </div>
-            <div className="order-detail">
-            <p>    <span className="detail-label"> Status: </span>{order.status}</p>
-            </div>
-            <div className="order-detail">
-                <p> <span className="detail-label"> Total Price: </span> ${order.totalPrice?.toFixed(2)}</p>
-            </div>
-            <div className="order-detail">
-                <p> <span className="detail-label">  Delivery Address: </span> {order.deliveryAddress}</p>
-            </div>
-            <div className="order-detail">
-                <p> <span className="detail-label"> Payment Method: </span> {order.paymentMethod}</p>
+                <p><span className="detail-label">Order ID:</span>{order.id}</p>
+                <p><span className="detail-label">Date:</span>{order.date}</p>
+                <p><span className="detail-label">Status:</span>{order.status}</p>
+                <p><span className="detail-label">Total Price:</span>${order.totalPrice?.toFixed(2)}</p>
+                <p><span className="detail-label">Delivery Address:</span>{order.deliveryAddress}</p>
+                <p><span className="detail-label">Payment Method:</span>{order.paymentMethod}</p>
             </div>
             <h2>Productos Ordenados:</h2>
             <table>
                 <thead>
-                <tr>
-                    <th>ID de producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio unitario</th>
-                    <th>Total</th>
-                    <th>Accion</th>
-                </tr>
+                    <tr>
+                        <th>ID de producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Total</th>
+                        <th>Accion</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {order.products.map((product, index) => (
-                    <tr key={index}>
-                        <td>{product.productId}</td>
-                        <td>{product.quantity}</td>
-                        <td>${product.unitPrice.toFixed(2)}</td>
-                        <td>${(product.quantity * product.unitPrice).toFixed(2)}</td>
-                        <td>
-                            { /* Botón de devolución, condicional basado en la lógica de negocio */ }
-                            <button onClick={() => handleReturn(product.productId, product.quantity)}>
-                                Devolver
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                    {order.products.map((product, index) => (
+                        <tr key={index}>
+                            <td>{product.productId}</td>
+                            <td>{product.quantity}</td>
+                            <td>${product.unitPrice.toFixed(2)}</td>
+                            <td>${(product.quantity * product.unitPrice).toFixed(2)}</td>
+                            <td>
+                                <button onClick={() => openModal(product)}>
+                                    Devolver
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
+            {showModal && (
+                <Modal onClose={() => setShowModal(false)}>
+                    <div>
+                        <h2>Devolver Producto</h2>
+                        <p>¿Estás seguro de que quieres devolver este producto?</p>
+                        <input type="number" value={returnData.quantity} onChange={e => setReturnData({ ...returnData, quantity: parseInt(e.target.value, 10) })} min="1" max={returnData.maxQuantity} className="input-quantity" />
+                        <button onClick={handleReturn} className="confirm-button">Confirmar Devolución</button>
+                    </div>
+                </Modal>
+            )}
+            <ToastContainer />
         </div>
     );
 }

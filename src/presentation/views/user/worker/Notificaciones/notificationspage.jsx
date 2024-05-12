@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { getPendingOrders, acceptOrder } from '../../../../../infraestructure/api/orders';
 import { useAuth } from '../../../../components/context/AuthContext';
 import "./NotificationsPage.css"
@@ -7,6 +8,7 @@ function NotificationsPage() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const { currentUser } = useAuth();
+    const {useNavigate} = useNavigate();
 
     useEffect(() => {
         async function fetchOrders() {
@@ -27,6 +29,7 @@ function NotificationsPage() {
         try {
             await acceptOrder(orderId, currentUser.uid);
             setOrders(orders.filter(order => order.id !== orderId));
+            Navigate('/delivery/${orderId}');
         } catch (error) {
             console.error("Error accepting order:", error);
         }

@@ -5,7 +5,7 @@ const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-const {getFirestore, doc, setDoc, getDoc} = require("firebase/firestore");
+const {doc, setDoc, getDoc} = require("firebase/firestore");
 
 // Configuración de Nodemailer para enviar correos
 const transporter = nodemailer.createTransport({

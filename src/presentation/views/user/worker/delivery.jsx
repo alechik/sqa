@@ -22,12 +22,15 @@ function DeliveryDetailsPage() {
                     const date = new Date(fetchedOrder.createdAt.seconds * 1000);
                     const userDetails = await getUserProfileByEmail(fetchedOrder.userEmail);
 
+                    const hasAllProductsReturned = fetchedOrder.products.every(product => product.returned);
+
                     if (userDetails) {
                         setOrder({
                             ...fetchedOrder,
                             formattedDate: formatRelative(date, new Date()),
                             userName: userDetails.names || 'Nombre no disponible',
-                            userPhone: userDetails.numero || 'Número no disponible'
+                            userPhone: userDetails.numero || 'Número no disponible',
+                            allProductsReturned: hasAllProductsReturned
                         });
                     } else {
                         console.error("Detalles del usuario no encontrados para el email:", fetchedOrder.userEmail);
@@ -35,7 +38,8 @@ function DeliveryDetailsPage() {
                             ...fetchedOrder,
                             formattedDate: formatRelative(date, new Date()),
                             userName: 'Nombre no disponible',
-                            userPhone: 'Número no disponible'
+                            userPhone: 'Número no disponible',
+                            allProductsReturned: hasAllProductsReturned
                         });
                     }
                 } else {
@@ -80,7 +84,7 @@ function DeliveryDetailsPage() {
             <div className="delivery-details-content">
                 <p className="delivery-order-id"><strong>Order ID:</strong> {order.id}</p>
                 <p className="delivery-order-total"><strong>Total:</strong> ${order.totalPrice}</p>
-                <p className="delivery-address"><strong>Direccion del cliente: </strong> {order.deliveryAddress}</p>
+                <p className="delivery-address"><strong>Dirección del cliente: </strong> {order.deliveryAddress}</p>
                 <button className="delivery-button google-maps-button" onClick={() => openGoogleMaps(order.deliveryAddress)}>
                     <img src={googleMapsIcon} alt="Google Maps" className="delivery-button-icon" />Ir a Google Maps
                 </button>
@@ -90,6 +94,9 @@ function DeliveryDetailsPage() {
                     <img src={whatsappIcon} alt="WhatsApp" className="delivery-button-icon" />Contactar por WhatsApp
                 </button>
                 <p className="delivery-order-date"><strong>Ordenado: </strong> {order.formattedDate}</p>
+                {order.allProductsReturned && (
+                    <p className="delivery-status"><strong>Estado:</strong> Todos los productos devueltos</p>
+                )}
                 <button className="delivery-button delivered-button" onClick={handleDelivered}>
                     <img src={deliveryIcon} alt="Delivered" className="delivery-button-icon" />Marcar como Entregado
                 </button>

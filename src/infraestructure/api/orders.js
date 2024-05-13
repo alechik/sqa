@@ -208,37 +208,37 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
 
   if (orderSnap.exists()) {
     let allReturned = true;
+    let anyReturned = false; // Indica si algún producto ha sido parcialmente devuelto
     const products = orderSnap.data().products;
     const updatedProducts = products.map(product => {
       if (product.productId === productId) {
         const remainingQuantity = product.quantity - quantity;
-        const returnedQuantity = (product.returnedQuantity || 0) + quantity;
+        if (remainingQuantity > 0) {
+          allReturned = false;
+          anyReturned = true; // Se ha devuelto parcialmente este producto
+        }
         return {
           ...product,
           quantity: remainingQuantity,
-          returnedQuantity: returnedQuantity,
-          returnDate: returnDate || new Date() // Asegúrate de que returnDate siempre tenga un valor
+          returnedQuantity: (product.returnedQuantity || 0) + quantity,
+          returnDate: returnDate || new Date()
         };
       } else {
         if (!product.returnedQuantity || product.returnedQuantity < product.quantity) {
-          allReturned = false;
+          allReturned = false; 
         }
         return product;
       }
     });
 
     const updateData = { products: updatedProducts };
-
     if (allReturned) {
       updateData.status = 'Devuelto';
+    } else if (anyReturned) {
+      updateData.status = 'Parcialmente devuelto';
     }
 
-    if (updatedProducts.every(product => product.quantity !== undefined && product.returnedQuantity !== undefined)) {
-      await updateDoc(orderRef, updateData);
-      console.log(`Order ${orderId} updated with returns.`);
-    } else {
-      console.error('Some product updates have undefined values');
-    }
+    await updateDoc(orderRef, updateData);
   } else {
     console.error('Order not found');
     throw new Error('Order not found');

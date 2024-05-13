@@ -30,14 +30,7 @@ function NotificationsPage() {
     const handleAccept = async (orderId) => {
         try {
             await acceptOrder(orderId, currentUser.uid);
-            // Actualizar el estado de la orden en el cliente
-            const updatedOrders = orders.map(order => {
-                if (order.id === orderId) {
-                    return { ...order, status: "En camino" };
-                }
-                return order;
-            });
-            setOrders(updatedOrders);
+            setOrders(orders.filter(order => order.id !== orderId));
             navigate(`/delivery/${orderId}`);
         } catch (error) {
             console.error("Error accepting order:", error);

@@ -1,8 +1,10 @@
 
 const sendOrderConfirmation = require("./src/correos");
 const paymentCallback = require("./src/paymentCallback");
-const correollegada = require("./src/correollegada");
+const sendDeliveryConfirmation = require("./src/correollegada");
+const handleFullRefund = require("./src/Fmodificada.js");
 
 exports.sendOrderConfirmation = sendOrderConfirmation;
 exports.paymentCallback = paymentCallback;
-exports.correollegada = correollegada;
+exports.sendDeliveryConfirmation = sendDeliveryConfirmation;
+exports.handleFullRefund = handleFullRefund;

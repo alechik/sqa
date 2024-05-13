@@ -155,8 +155,7 @@ export async function getOrdersByUserId(userId) {
     throw new Error('Unable to fetch orders for user.');
   }
 }
-
-export async function updateOrderStatus(orderId, newStatus, productsReturned) {
+export async function updateOrderStatus(orderId, newStatus, productsReturned = []) {
   console.log("Updating order status for ID:", orderId); // Log para ver qué ID se está procesando
   const orderRef = doc(db, "orders", orderId);
   const orderSnap = await getDoc(orderRef);
@@ -169,9 +168,12 @@ export async function updateOrderStatus(orderId, newStatus, productsReturned) {
   const orderData = orderSnap.data();
   let allReturned = true; // Asumir que todo es devuelto a menos que se encuentre lo contrario
 
+  // Asegurar que productsReturned es un arreglo
+  const safeProductsReturned = productsReturned || [];
+
   // Actualizar productos basado en devoluciones parciales
   const updatedProducts = orderData.products.map(product => {
-    const returnedProduct = productsReturned.find(p => p.productId === product.productId);
+    const returnedProduct = safeProductsReturned.find(p => p.productId === product.productId);
     if (returnedProduct) {
       const remainingQuantity = product.quantity - returnedProduct.quantity;
       if (remainingQuantity > 0) {
@@ -190,7 +192,7 @@ export async function updateOrderStatus(orderId, newStatus, productsReturned) {
 
   // Determinar el estado final del pedido
   let status = newStatus;
-  if (productsReturned && productsReturned.length > 0) {
+  if (safeProductsReturned.length > 0) {
     status = allReturned ? 'Devuelto' : 'Parcialmente Devuelto';
   }
 
@@ -256,7 +258,7 @@ export async function getPendingOrders() {
 export async function acceptOrder(orderId, workerId) {
   const orderRef = doc(db, "orders", orderId);
   await updateDoc(orderRef, {
-    status: "Aceptada",
+    status: "En Camino",
     workerId: workerId
   });
 }

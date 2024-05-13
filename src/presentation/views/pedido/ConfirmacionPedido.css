@@ -11,7 +11,8 @@
 }
 
 /* Estilos para las condiciones de carga y error */
-.loading, .error {
+.loading,
+.error {
     padding: 20px;
     color: #d33;
     font-size: 18px;
@@ -26,13 +27,13 @@
     animation: fadeIn 2s ease-out;
 }
 
-/* Keyframes para la animación de aparición */
 @keyframes fadeIn {
-    0% {
+    from {
         opacity: 0;
         transform: translateY(-20px);
     }
-    100% {
+
+    to {
         opacity: 1;
         transform: translateY(0);
     }
@@ -45,7 +46,7 @@
     margin-top: 20px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilo para listado de productos */
@@ -71,7 +72,8 @@
 }
 
 /* Estilo general para botones */
-.confirm-button, .button {
+.confirm-button,
+.button {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -84,9 +86,30 @@
     transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-/* Efecto hover para botones */
-.confirm-button:hover, .button:hover {
+.confirm-button:hover,
+.button:hover {
     background-color: #45a049;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+
+    .confirmar-pedido,
+    .order-details {
+        padding: 10px;
+        max-width: 100%;
+        box-shadow: none;
+    }
+
+    .product-summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .product-image {
+        width: 80px;
+        height: 80px;
+    }
 }

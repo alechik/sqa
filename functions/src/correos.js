@@ -1,11 +1,11 @@
 const functions = require("firebase-functions");
-const {db} = require("../firebaseAdmin");
+const {admin} = require("../firebaseAdmin.js");
 const nodemailer = require("nodemailer");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-const {doc, setDoc, getDoc} = require("firebase/firestore");
+
 
 // Configuración de Nodemailer para enviar correos
 const transporter = nodemailer.createTransport({
@@ -26,9 +26,9 @@ exports.sendOrderConfirmation = functions.firestore.document("orders/{orderId}")
   if (orderData.status !== "En Camino") return null;
 
   // Verificar si la factura ya ha sido generada
-  const invoiceRef = doc(db, "factura", orderId);
-  const invoiceSnap = await getDoc(invoiceRef);
-  if (invoiceSnap.exists()) {
+  const invoiceRef = admin.firestore().doc(`invoice/${orderId}`);
+  const invoiceSnap = await invoiceRef.get();
+  if (invoiceSnap.exists) {
     console.log("Factura ya generada y enviada.");
     return null; // Salir si la factura ya fue generada
   }
@@ -61,7 +61,7 @@ exports.sendOrderConfirmation = functions.firestore.document("orders/{orderId}")
     status: "Enviado",
     products: orderData.products,
   };
-  await setDoc(invoiceRef, invoiceData);
+  await admin.firestore().collection("invoice").doc(orderId).set(invoiceData);
   console.log("Factura guardada en Firestore");
 
   // Diseño HTML del correo

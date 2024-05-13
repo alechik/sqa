@@ -43,8 +43,8 @@ export default function Wishlist( {addtoCart}) {
     return (
         <>
             <ToastContainer position="bottom-right" autoClose={5000} newestOnTop />
-            <section className="cart-items">
-                <div className="cart-details">
+            <section className="wishlist-items">
+                <div className="wishlist-details">
                     <h2>Lista de deseos</h2>
                     {loading ? (
                         <p>Cargando productos...</p>
@@ -55,7 +55,7 @@ export default function Wishlist( {addtoCart}) {
                     ) : (
                         <div className="wishlist-items">
                             {wishlist.map((item) => (
-                                <div key={item.id} className="cart-list product d_flex">
+                                <div key={item.id} className="wishlist-list product d_flex">
                                     <div className="product-info">
                                         <h3>{item.product.product_name}</h3>
                                         <p>{item.product.description}</p>
@@ -64,7 +64,6 @@ export default function Wishlist( {addtoCart}) {
                                         <p>Precio: ${item.product.unitary_price.toFixed(2)}</p>
                                         <button onClick={() => addtoCart(item.product)}> + </button>
                                     </div>
-                                    {/* Agrega más detalles del producto según tus necesidades */}
                                 </div>
                             ))}
                         </div>
@@ -73,4 +72,5 @@ export default function Wishlist( {addtoCart}) {
             </section>
         </>
     );
+
 }

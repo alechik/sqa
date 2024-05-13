@@ -245,6 +245,8 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
   }
 }
 
+
+
 export async function getPendingOrders() {
   const q = query(collection(db, "orders"), where("status", "==", "Pendiente"));
   const querySnapshot = await getDocs(q);

@@ -34,22 +34,29 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
         <>
             <ToastContainer position="bottom-right" autoClose={5000} newestOnTop />
             <section className="cart-items">
-                <div className="container d_flex">
+                <div className=" d_flex">
                     <div className="cart-details">
-                        {cartItems.length === 0 && <h1 className='no-items product'>No hay productos en el carrito</h1>}
+                        {cartItems.length === 0 && <h1 className='no-items'>No hay productos en el carrito</h1>}
                         {cartItems.map((item) => (
                             <div key={item.id} className='cart-list product d_flex'>
                                 <div className="img">
                                     <img src={item.pictures} alt={item.product_name} />
                                 </div>
                                 <div className="cart-details">
-                                    <h3>{item.product_name}</h3>
-                                    <h4>${item.unitary_price.toFixed(2)} x {item.qty}</h4>
-                                    <span>${(item.unitary_price * item.qty).toFixed(2)}</span>
+                                    <div className="cart-info">
+                                        <h3>{item.product_name}</h3>
+                                        <div className="">
+                                            <h4>${item.unitary_price.toFixed(2)} x {item.qty}</h4>
+                                            <span>${(item.unitary_price * item.qty).toFixed(2)}</span>
+                                        </div>
+                                    </div>
                                     <div className="cart-items-function">
+                                        <div className="removeCart">
                                         <button className="removeCart" onClick={() => handleRemove(item)}>
                                             <i className="fas fa-times"></i>
                                         </button>
+                                        </div>
+
                                         <div className="cartControl d_flex">
                                             <button className="incCart" onClick={() => handleIncrease(item)}>
                                                 <i className="fa fa-plus"></i>
@@ -63,13 +70,13 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                             </div>
                         ))}
                     </div>
-                    <div className="cart-total product">
+                    <div className="cart-total d-flex" id='carttotal'>
                         <h3>Detalle del pedido</h3>
                         <div className="d_flex">
                             <h4>Precio total:</h4>
                             <h3>${cartItems.reduce((total, item) => total + item.unitary_price * item.qty, 0).toFixed(2)}</h3>
                         </div>
-                        <div className="button-purchase">
+                        <div className="botoncompra">
                             <button onClick={handleProceedToCheckout}>Pagar Productos</button>
                         </div>
                     </div>

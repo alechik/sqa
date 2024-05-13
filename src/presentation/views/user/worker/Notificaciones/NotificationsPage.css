@@ -38,7 +38,8 @@
 
 .order-id,
 .order-total,
-.order-address {
+.order-address,
+.order-time {
     margin: 4px ;
     font-size: 0.9rem;
     color: #666;

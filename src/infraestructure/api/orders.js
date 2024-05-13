@@ -156,12 +156,13 @@ export async function getOrdersByUserId(userId) {
   }
 }
 
-// Función para actualizar el estado de un pedido con manejo de devoluciones parciales y completas
 export async function updateOrderStatus(orderId, newStatus, productsReturned) {
+  console.log("Updating order status for ID:", orderId); // Log para ver qué ID se está procesando
   const orderRef = doc(db, "orders", orderId);
   const orderSnap = await getDoc(orderRef);
 
   if (!orderSnap.exists()) {
+    console.error('Order not found for ID:', orderId); // Log más específico con el ID
     throw new Error('Order not found');
   }
 
@@ -196,13 +197,16 @@ export async function updateOrderStatus(orderId, newStatus, productsReturned) {
   // Actualizar el documento del pedido
   await updateDoc(orderRef, { products: updatedProducts, status });
 
+  console.log("Order status updated to:", status); // Log del estado actualizado
   return { success: true, status };
 }
+
 
 
 // Llamar a la función para actualizar el estado del último pedido
 const nuevoEstado = 'Entregado'; // Define el nuevo estado del pedido
 updateOrderStatus(nuevoEstado);
+
 
 export async function updateOrderAfterReturn(orderId, productId, quantity, returnDate) {
   const orderRef = doc(db, 'orders', orderId);

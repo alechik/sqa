@@ -43,13 +43,15 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                                     <img src={item.pictures} alt={item.product_name} />
                                 </div>
                                 <div className="cart-details">
+                                    <div className="cart-flex">
                                     <div className="cart-info">
                                         <h3>{item.product_name}</h3>
-                                        <div className="">
+                                        <div className="price-info">
                                             <h4>${item.unitary_price.toFixed(2)} x {item.qty}</h4>
                                             <span>${(item.unitary_price * item.qty).toFixed(2)}</span>
                                         </div>
                                     </div>
+
                                     <div className="cart-items-function">
                                         <div className="removeCart">
                                         <button className="removeCart" onClick={() => handleRemove(item)}>
@@ -67,6 +69,7 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -77,7 +80,7 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                             <h3>${cartItems.reduce((total, item) => total + item.unitary_price * item.qty, 0).toFixed(2)}</h3>
                         </div>
                         <div className="botoncompra">
-                            <button onClick={handleProceedToCheckout}>Pagar Productos</button>
+                            <button onClick={handleProceedToCheckout}>Pagar Productos</button >
                         </div>
                     </div>
                 </div>

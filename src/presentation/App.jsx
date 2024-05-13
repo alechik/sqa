@@ -29,6 +29,7 @@ import OrderDetails from './components/historial/OrderDetails';
 import CrudCategoria from "./views/user/admin/CrudCategoria";
 import NotificationsPage from './views/user/worker/Notificaciones/notificationspage';
 import Category from "./components/category";
+import DeliveryDetailsPage from './views/user/worker/delivery';
 
 function App() {
     const { currentUser } = useAuth();
@@ -98,6 +99,7 @@ function App() {
 
                         <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
                         <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
+                        <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />
                         <Route path="/notifications" element={<PrivateRoute> <NotificationsPage/> </PrivateRoute>}/>
                         <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                         <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />

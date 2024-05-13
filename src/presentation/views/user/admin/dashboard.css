@@ -1,45 +1,46 @@
 .content {
-    position: relative;
     display: grid;
-    grid-template-columns: repeat(2, 24%);
-    grid-gap: 10px;
-    padding: 10px;
+    grid-template-columns: repeat(12, 1fr);  /* 12 column layout */
+    grid-gap: 20px;
+    padding: 20px;
 }
-.content .row {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+.section-title {
+    grid-column: 1 / -1;  /* Span across all columns */
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Analytics and GeneralSellInfo side by side */
+.analytics {
+    grid-column: 1 / 10; /* Takes 9 out of 12 columns */
+}
+
+.general-info {
+    grid-column: 10 / -1; /* Takes remaining 3 columns */
+}
+
+/* Full width components below */
+.full-width {
+    grid-column: 1 / -1; /* Span across all columns */
+}
+
+.row {
     background: linear-gradient(40deg, #00484e, #810551);
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
-    transition: 0.2s ease;
     overflow: hidden;
-}
-.content .row.square::after {
-    position: absolute;
-    content: "";
-    height: calc(100% - 4px);
-    aspect-ratio: 1;
-    border-radius: 8px;
-    background-color: #F2F2F2;
-    width: 99%;
+    transition: 0.2s ease;
 }
 
-.content .row:hover{
-    scale: 0.99;
-}
-.content .section-title{
-    color: rgb(121,121,121);
-    font-size: 14px;
-    grid-column: span 4;
-    margin-left: 5px ;
+.row:hover {
+    transform: scale(0.99);
 }
 
-.content .row.square{
-    aspect-ratio: 1;
-    flex: 1;
-    grid-column: span 2;
-    width: 97%;
+/* Ensures tables and other content in rows do not exceed the container width */
+.row > * {
+    max-width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling if necessary */
 }

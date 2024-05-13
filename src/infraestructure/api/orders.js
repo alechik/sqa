@@ -12,6 +12,8 @@ import {
   getDoc,
   serverTimestamp
 } from 'firebase/firestore';
+import { format } from 'date-fns';
+import { getProductNameById } from './product';
 
 export async function getAllOrders() {
   try {
@@ -21,6 +23,30 @@ export async function getAllOrders() {
   } catch (error) {
     console.error("Failed to fetch all orders:", error);
     throw new Error('Unable to fetch orders.');
+  }
+}
+
+
+export async function getOrdersRecord() {
+  const ordersCollectionRef = collection(db, 'orders');
+  try {
+      const ordersSnapshot = await getDocs(ordersCollectionRef);
+      const orders = ordersSnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id,
+          createdAt: doc.data().createdAt ? format(doc.data().createdAt.toDate(), "PPpp") : 'Date not available'
+      }));
+
+      // Log de datos crudos directamente de Firestore
+      console.log("Datos crudos de Firestore:", ordersSnapshot.docs.map(doc => doc.data()));
+
+      // Log de los datos procesados con fechas formateadas
+      console.log("Datos procesados:", orders);
+
+      return orders;
+  } catch (error) {
+      console.error("Failed to fetch all orders:", error);
+      throw new Error('Unable to fetch orders.');
   }
 }
 
@@ -231,9 +257,105 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
 }
 
 
+export async function sellByProduct() {
+  const ordersCollectionRef = collection(db, 'orders');
+  try {
+      const ordersSnapshot = await getDocs(ordersCollectionRef);
+      const productCounts = {};
+
+      for (const orderDoc of ordersSnapshot.docs) {
+          const order = orderDoc.data();
+          for (const product of order.products) {
+              if (order.status !== "Devuelto" && order.status !== "Cancelado") {  // Filtra por productos no devueltos o cancelados
+                  const productName = await getProductNameById(product.productId);  // Usa la función para obtener el nombre
+                  if (!productCounts[productName]) {
+                      productCounts[productName] = { totalUnits: 0, totalSales: 0 };
+                  }
+                  productCounts[productName].totalUnits += product.quantity;
+                  productCounts[productName].totalSales += product.unitPrice * product.quantity;
+              }
+          }
+      }
+
+      // Convierte el objeto en un array de productos vendidos y ordena por unidades vendidas
+      const sortedProducts = Object.keys(productCounts).map(key => ({
+          productName: key,
+          totalUnits: productCounts[key].totalUnits,
+          totalSales: productCounts[key].totalSales
+      })).sort((a, b) => b.totalUnits - a.totalUnits);
+
+      return sortedProducts;
+  } catch (error) {
+      console.error("Error fetching product sales data:", error);
+      throw new Error('Unable to fetch product sales data.');
+  }
+}
+
+export async function calculateSelledItems() {
+  const ordersCollectionRef = collection(db, 'orders');
+  let totalItems = 0;
+
+  try {
+    const ordersSnapshot = await getDocs(ordersCollectionRef);
+    ordersSnapshot.forEach(doc => {
+      const order = doc.data();
+      if (order.status === "Entregado") {
+        order.products.forEach(product => {
+          totalItems += product.quantity;
+        });
+      }
+    });
+
+    return totalItems;
+  } catch (error) {
+    console.error("Failed to count selled items:", error);
+    throw new Error('Unable to count selled items.');
+  }
+}
+
+export async function calculateTotalSell() {
+  const ordersCollectionRef = collection(db, 'orders');
+  let totalSales = 0;
+
+  try {
+    const ordersSnapshot = await getDocs(ordersCollectionRef);
+    ordersSnapshot.forEach(doc => {
+      const order = doc.data();
+      if (order.status !== "Devuelto") {
+        totalSales += order.totalPrice;
+      }
+    });
+
+    return totalSales;
+  } catch (error) {
+    console.error("Failed to calculate total sales:", error);
+    throw new Error('Unable to calculate total sales.');
+  }
+}
+
+export async function allCanceledOrders() {
+  const ordersCollectionRef = collection(db, 'orders');
+  let count = 0;
+
+  try {
+    const ordersSnapshot = await getDocs(ordersCollectionRef);
+    ordersSnapshot.forEach(doc => {
+      const order = doc.data();
+      if (order.status === "Devuelto") {
+        count++;
+      }
+    });
+
+    return count;
+  } catch (error) {
+    console.error("Failed to count canceled orders:", error);
+    throw new Error('Unable to count canceled orders.');
+  }
+}
 
 export default{
   getOrdersByUserId,
+  getOrdersRecord,
   deleteOrder,
   updateOrder,
   getAllOrders,
@@ -242,5 +364,8 @@ export default{
   updateOrderStatus,
   decreaseProductStock,
   decreaseStock,
-  updateOrderAfterReturn
+  updateOrderAfterReturn,
+  calculateSelledItems,
+  calculateTotalSell,
+  allCanceledOrders
 }

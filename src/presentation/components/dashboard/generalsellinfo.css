@@ -1,0 +1,24 @@
+.general-sell-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.general-sell-info h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.info-item strong {
+    float: right;
+    color: #333;
+}

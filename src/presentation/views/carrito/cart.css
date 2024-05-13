@@ -2,20 +2,35 @@
 .cart-items {
     height: auto;
     padding: 50px 0;
+
+}
+#carttotal{
+    height: 200px;
+}
+.cart-items .cart-details{
+    width: 70%;
 }
 
 .cart-details {
-    width: 70%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+.cart-info{
+    flex: 2;
     display: flex;
     flex-direction: column;
 }
 
 .cart-list {
+    width: 70%;
     background: #fff;
     margin-top: 30px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+    margin-left: 100px;
 }
 
 .cart-list .img {
@@ -44,6 +59,10 @@
 .cart-details h4 {
     font-size: 16px;
     color: grey;
+    display: inline-block;
+}
+.cart-items-function{
+    flex: 1;
 }
 
 /* Estilos para botones y controles */
@@ -69,6 +88,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
 }
 
 .cartControl .incCart:hover,
@@ -80,12 +100,18 @@
 .cart-total {
     width: 30%;
     margin-top: 30px;
-    margin-left: 30px;
     background: #fafafa;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex; /* Usa flexbox para alinear el contenido */
+    flex-direction: column; /* Alineación vertical de los elementos */
+    justify-content: space-between; /* Espacio entre elementos */ /* Espacio por encima del contenedor */
+    margin-left: auto; /* Alineación a la derecha */
+    margin-right: 30px; /* Espacio a la derecha */
+    position: relative; /* Posicionamiento relativo para el posicionamiento absoluto del botón */
 }
+
 
 .cart-total .d_flex {
     display: flex;
@@ -101,7 +127,7 @@
 /* Botón de compra */
 .botoncompra {
     text-align: center;
-    padding: 20px 0;
+
 }
 
 .botoncompra button {
@@ -120,7 +146,9 @@
     background-color: #a6204a;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
-
+.no-items{
+    margin: auto;
+}
 /* Responsividad */
 @media (max-width: 768px) {
 

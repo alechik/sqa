@@ -70,15 +70,16 @@ function OrderDetails() {
 
     return (
         <div className='order-card'>
-            <h1>Order Details</h1>
-            <div className="order-detail">
-                <p><span className="detail-label">Order ID:</span>{order.id}</p>
+            <h1>Detalles del Pedido</h1>
+
+                <p ><span className="detail-label">Order ID:</span>{order.id}</p>
+
                 <p><span className="detail-label">Date:</span>{order.date}</p>
                 <p><span className="detail-label">Status:</span>{order.status}</p>
                 <p><span className="detail-label">Total Price:</span>${order.totalPrice?.toFixed(2)}</p>
                 <p><span className="detail-label">Delivery Address:</span>{order.deliveryAddress}</p>
                 <p><span className="detail-label">Payment Method:</span>{order.paymentMethod}</p>
-            </div>
+
             <h2>Productos Ordenados:</h2>
             <table>
                 <thead>

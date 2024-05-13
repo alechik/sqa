@@ -1,7 +1,7 @@
 import { db, auth } from "../firebase--config.js";
 import { User } from "../../domain/User.js";
 import {
-    doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc
+    doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, query, where
 } from "firebase/firestore";
 import {
     GoogleAuthProvider,
@@ -87,6 +87,19 @@ export const getUserProfile = async (uid) => {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
     return userDocSnap.exists() ? userDocSnap.data() : null;
+};
+
+export const getUserProfileByEmail = async (email) => {
+    if (!email) return null;
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+        console.log("No matching user found for email:", email);
+        return null;
+    }
+    const userData = querySnapshot.docs[0].data();
+    return userData;
 };
 
 export async function updateUser(userId, updatedData) {

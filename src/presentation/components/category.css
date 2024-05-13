@@ -20,7 +20,7 @@
     border-left: 4px solid #f26739;
     text-transform: capitalize;
     transition: all .7s;
-    font-family: 'Exo 2', Arial;
+
 }
 
 .category-list li a:hover {

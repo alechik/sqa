@@ -273,20 +273,6 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
   }
 }
 
-export async function getPendingOrders() {
-  const q = query(collection(db, "orders"), where("status", "==", "Pendiente"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-
-export async function acceptOrder(orderId, workerId) {
-  const orderRef = doc(db, "orders", orderId);
-  await updateDoc(orderRef, {
-    status: "En Camino",
-    workerId: workerId
-  });
-}
-
 export async function sellByProduct() {
   const ordersCollectionRef = collection(db, 'orders');
   try {

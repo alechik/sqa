@@ -145,7 +145,7 @@ export default function Register() {
                     {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
                     <button type="submit" disabled={!isPasswordMatch}>Registrarse</button>
                     <div className="register-link">
-                        <p>¿Ya tienes una cuenta? <Link to="/iniciarsesion">Iniciar sesión</Link></p>
+                        <p>¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link></p>
                     </div>
                 </form>
             </div>

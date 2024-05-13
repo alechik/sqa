@@ -20,7 +20,7 @@ export default function Compra({ cartItems }) {
     useEffect(() => {
         if (!user) {
             toast.error('Por favor, inicia sesión para continuar.');
-            navigate('/iniciarsesion');
+            navigate('/login');
             return;
         }
 
@@ -33,7 +33,7 @@ export default function Compra({ cartItems }) {
                 if (data.address) updateMapLocation(data.address);
             } else {
                 toast.error('Datos de usuario no encontrados.');
-                navigate('/iniciarsesion');
+                navigate('/login');
             }
         });
 

@@ -14,18 +14,33 @@ export default function ConfirmarPedido() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoading(true);
-    getOrderById(orderId)
-      .then(orderData => {
+    const loadOrder = async () => {
+      try {
+        setIsLoading(true);
+        const orderData = await getOrderById(orderId);
         setOrder(orderData);
-        setIsLoading(false);
-      })
-      .catch(err => {
+        // Check if order status is "En camino" and redirect
+        if (orderData.status === "En Camino") {
+          navigate(`/seguimientopedido/${orderId}`);
+        }
+      } catch (err) {
         console.error("Failed to fetch order details:", err);
         setError(err.message);
         toast.error(`Error al obtener los detalles del pedido: ${err.message}`);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+
+    loadOrder();
+
+    // Polling: Refresh order data every 10 seconds
+    const intervalId = setInterval(() => {
+      loadOrder();
+    }, 10000);
+
+    // Cleanup function to clear interval when component unmounts
+    return () => clearInterval(intervalId);
   }, [orderId, navigate]);
 
   const renderProductList = (products) => {
@@ -39,6 +54,10 @@ export default function ConfirmarPedido() {
         </div>
       </div>
     ));
+  };
+
+  const goToDetailsPage = () => {
+    navigate(`/orders/${orderId}`);
   };
 
   if (isLoading) {
@@ -60,7 +79,7 @@ export default function ConfirmarPedido() {
 
   return (
     <div className="confirmar-pedido">
-      <h1>Confirmación de Pedido</h1>
+      <h1>Buscando Delivery</h1>
       {order && (
         <div className="order-details">
           <h2>Pedido #{order.id}</h2>
@@ -70,6 +89,9 @@ export default function ConfirmarPedido() {
           <div className="product-list">
             {renderProductList(order.products)}
           </div>
+          <button onClick={goToDetailsPage} className="details-button">
+            ¿Quieres ver más detalles?
+          </button>
         </div>
       )}
       <ToastContainer position="top-center" autoClose={5000} />

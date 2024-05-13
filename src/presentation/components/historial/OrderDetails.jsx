@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../infraestructure/firebase--config';
 import { format } from 'date-fns';
@@ -17,6 +17,7 @@ function OrderDetails() {
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [returnData, setReturnData] = useState({ productId: '', quantity: 1, maxQuantity: 1 });
+    const navigate = useNavigate();
 
     const fetchOrder = async () => {
         try {
@@ -64,6 +65,10 @@ function OrderDetails() {
         setShowModal(true);
     };
 
+    const goToTracking = () => {
+        navigate(`/seguimientopedido/${orderId}`);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
     if (!order) return <p>No order data available.</p>;
@@ -79,6 +84,8 @@ function OrderDetails() {
                 <p><span className="detail-label">Total Price:</span>${order.totalPrice?.toFixed(2)}</p>
                 <p><span className="detail-label">Delivery Address:</span>{order.deliveryAddress}</p>
                 <p><span className="detail-label">Payment Method:</span>{order.paymentMethod}</p>
+
+            <button onClick={goToTracking} className="track-button">Seguimiento del Pedido</button>
 
             <h2>Productos Ordenados:</h2>
             <table>

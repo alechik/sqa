@@ -1,5 +1,5 @@
 const functions = require("firebase-functions");
-const {admin} = require("../firebaseAdmin.js"); // Asegúrate de que la ruta al archivo firebaseAdmin.js es correcta
+const {admin} = require("../firebaseAdmin.js");
 const nodemailer = require("nodemailer");
 const PDFDocument = require("pdfkit");
 const path = require("path");

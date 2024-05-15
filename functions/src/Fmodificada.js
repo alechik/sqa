@@ -2,7 +2,6 @@ const functions = require("firebase-functions");
 const {admin} = require("../firebaseAdmin.js");
 const nodemailer = require("nodemailer");
 
-
 // Configuración de Nodemailer para enviar correos
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",

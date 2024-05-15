@@ -11,7 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import "./ordenes.css";
-import { format } from 'date-fns'; // Asegúrate de tener importado format
+import { format } from 'date-fns';
 
 function Ordenes() {
     const { currentUser } = useAuth();
@@ -22,8 +22,7 @@ function Ordenes() {
     useEffect(() => {
         if (currentUser?.email) {
             const ordersCol = collection(db, "orders");
-            // Ordenar por 'createdAt' en orden descendente y limitar los resultados
-            const q = query(ordersCol, where("userEmail", "==", currentUser.email), orderBy("createdAt", "desc"), limit(10));
+            const q = query(ordersCol, where("userEmail", "==", currentUser.email), orderBy("createdAt", "desc"), limit(5));
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
                 const newOrders = querySnapshot.docs.map(doc => ({
                     id: doc.id,
@@ -37,7 +36,7 @@ function Ordenes() {
                 setLoading(false);
             });
 
-            return () => unsubscribe(); // Limpiar el escuchador
+            return () => unsubscribe();
         }
     }, [currentUser]);
 
@@ -63,7 +62,7 @@ function Ordenes() {
                             </TableCell>
                             <TableCell align="right">{orden.date}</TableCell>
                             <TableCell align="right">
-                                <span className={`order-dot ${orden.status === 'Entregado' ? 'greenDot' : orden.status === 'En Camino' ? 'yellowDot' : 'redDot'}`}></span>
+                                <span className={`order-dot ${getDotClass(orden.status)}`}></span>
                                 {orden.status}
                             </TableCell>
                             <TableCell align="right">
@@ -75,6 +74,23 @@ function Ordenes() {
             </Table>
         </TableContainer>
     );
+}
+
+function getDotClass(status) {
+    switch (status) {
+        case 'Entregado':
+            return 'greenDot';
+        case 'En Camino':
+            return 'yellowDot';
+        case 'Pendiente':
+            return 'redDot';
+        case 'Parcialmente devuelto':
+            return 'blueDot';
+        case 'Devuelto':
+            return 'purpleDot';
+        default:
+            return 'greyDot';
+    }
 }
 
 export default Ordenes;

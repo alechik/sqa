@@ -1,17 +1,6 @@
 import { Order } from '../../domain/Order';
+import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase--config';
-import {
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  getDocs,
-  getDoc,
-  serverTimestamp
-} from 'firebase/firestore';
 import { format } from 'date-fns';
 import { getProductNameById } from './product';
 
@@ -26,27 +15,26 @@ export async function getAllOrders() {
   }
 }
 
-
 export async function getOrdersRecord() {
   const ordersCollectionRef = collection(db, 'orders');
   try {
-      const ordersSnapshot = await getDocs(ordersCollectionRef);
-      const orders = ordersSnapshot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id,
-          createdAt: doc.data().createdAt ? format(doc.data().createdAt.toDate(), "PPpp") : 'Date not available'
-      }));
+    const ordersSnapshot = await getDocs(ordersCollectionRef);
+    const orders = ordersSnapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+      createdAt: doc.data().createdAt ? format(doc.data().createdAt.toDate(), "PPpp") : 'Date not available'
+    }));
 
-      // Log de datos crudos directamente de Firestore
-      console.log("Datos crudos de Firestore:", ordersSnapshot.docs.map(doc => doc.data()));
+    // Log de datos crudos directamente de Firestore
+    console.log("Datos crudos de Firestore:", ordersSnapshot.docs.map(doc => doc.data()));
 
-      // Log de los datos procesados con fechas formateadas
-      console.log("Datos procesados:", orders);
+    // Log de los datos procesados con fechas formateadas
+    console.log("Datos procesados:", orders);
 
-      return orders;
+    return orders;
   } catch (error) {
-      console.error("Failed to fetch all orders:", error);
-      throw new Error('Unable to fetch orders.');
+    console.error("Failed to fetch all orders:", error);
+    throw new Error('Unable to fetch orders.');
   }
 }
 
@@ -60,8 +48,7 @@ export async function getOrderById(orderId) {
     if (!orderSnapshot.exists()) {
       throw new Error('Order not found');
     }
-    const orderData = orderSnapshot.data(); // Esto te da los datos crudos del documento
-    // No necesitas transformar los datos, solo devuélvelos
+    const orderData = orderSnapshot.data();
     return orderData;
   } catch (error) {
     console.error("Error fetching order with ID", orderId, error);
@@ -115,9 +102,6 @@ export async function createOrder(user, cartItems) {
     throw new Error('No se pudo crear la orden.');
   }
 }
-
-
-
 
 async function decreaseStock(productId, quantity) {
   const productRef = doc(db, 'products', productId);
@@ -181,6 +165,7 @@ export async function getOrdersByUserId(userId) {
     throw new Error('Unable to fetch orders for user.');
   }
 }
+
 export async function updateOrderStatus(orderId, newStatus, productsReturned = []) {
   console.log("Updating order status for ID:", orderId); // Log para ver qué ID se está procesando
   const orderRef = doc(db, "orders", orderId);
@@ -219,7 +204,7 @@ export async function updateOrderStatus(orderId, newStatus, productsReturned = [
   // Determinar el estado final del pedido
   let status = newStatus;
   if (safeProductsReturned.length > 0) {
-    status = allReturned ? 'Devuelto' : 'Parcialmente Devuelto';
+    status = allReturned ? 'Devuelto' : 'Parcialmente devuelto';
   }
 
   // Actualizar el documento del pedido
@@ -228,7 +213,6 @@ export async function updateOrderStatus(orderId, newStatus, productsReturned = [
   console.log("Order status updated to:", status); // Log del estado actualizado
   return { success: true, status };
 }
-
 
 export async function updateOrderAfterReturn(orderId, productId, quantity, returnDate) {
   const orderRef = doc(db, 'orders', orderId);
@@ -253,7 +237,7 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
         };
       } else {
         if (!product.returnedQuantity || product.returnedQuantity < product.quantity) {
-          allReturned = false; 
+          allReturned = false;
         }
         return product;
       }
@@ -276,34 +260,34 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
 export async function sellByProduct() {
   const ordersCollectionRef = collection(db, 'orders');
   try {
-      const ordersSnapshot = await getDocs(ordersCollectionRef);
-      const productCounts = {};
+    const ordersSnapshot = await getDocs(ordersCollectionRef);
+    const productCounts = {};
 
-      for (const orderDoc of ordersSnapshot.docs) {
-          const order = orderDoc.data();
-          for (const product of order.products) {
-              if (order.status !== "Devuelto" && order.status !== "Cancelado") {  // Filtra por productos no devueltos o cancelados
-                  const productName = await getProductNameById(product.productId);  // Usa la función para obtener el nombre
-                  if (!productCounts[productName]) {
-                      productCounts[productName] = { totalUnits: 0, totalSales: 0 };
-                  }
-                  productCounts[productName].totalUnits += product.quantity;
-                  productCounts[productName].totalSales += product.unitPrice * product.quantity;
-              }
+    for (const orderDoc of ordersSnapshot.docs) {
+      const order = orderDoc.data();
+      for (const product of order.products) {
+        if (order.status !== "Devuelto" && order.status !== "Cancelado") {  // Filtra por productos no devueltos o cancelados
+          const productName = await getProductNameById(product.productId);  // Usa la función para obtener el nombre
+          if (!productCounts[productName]) {
+            productCounts[productName] = { totalUnits: 0, totalSales: 0 };
           }
+          productCounts[productName].totalUnits += product.quantity;
+          productCounts[productName].totalSales += product.unitPrice * product.quantity;
+        }
       }
+    }
 
-      // Convierte el objeto en un array de productos vendidos y ordena por unidades vendidas
-      const sortedProducts = Object.keys(productCounts).map(key => ({
-          productName: key,
-          totalUnits: productCounts[key].totalUnits,
-          totalSales: productCounts[key].totalSales
-      })).sort((a, b) => b.totalUnits - a.totalUnits);
+    // Convierte el objeto en un array de productos vendidos y ordena por unidades vendidas
+    const sortedProducts = Object.keys(productCounts).map(key => ({
+      productName: key,
+      totalUnits: productCounts[key].totalUnits,
+      totalSales: productCounts[key].totalSales
+    })).sort((a, b) => b.totalUnits - a.totalUnits);
 
-      return sortedProducts;
+    return sortedProducts;
   } catch (error) {
-      console.error("Error fetching product sales data:", error);
-      throw new Error('Unable to fetch product sales data.');
+    console.error("Error fetching product sales data:", error);
+    throw new Error('Unable to fetch product sales data.');
   }
 }
 
@@ -383,10 +367,133 @@ export async function acceptOrder(orderId, workerId) {
   });
 }
 
-export default{
+// Nueva función para manejar las solicitudes de devolución
+export async function addReturnRequest(orderId, productId, quantity) {
+  if (!orderId || !productId) {
+    throw new Error('orderId and productId are required');
+  }
+
+  const orderRef = doc(db, 'orders', orderId);
+
+  try {
+    // Crear la solicitud de devolución sin utilizar serverTimestamp
+    const returnRequest = {
+      productId,
+      quantity,
+      requestedAt: new Date().toISOString(), // Utilizar la fecha actual en formato ISO
+      status: 'En revisión'
+    };
+
+    await updateDoc(orderRef, {
+      returnRequests: arrayUnion(returnRequest),
+      status: 'En revisión'
+    });
+
+    console.log("Return request added successfully:", returnRequest);
+  } catch (error) {
+    console.error('Error adding return request:', error);
+    throw new Error('Failed to add return request.');
+  }
+}
+export async function getReturnRequests() {
+  const ordersCollectionRef = collection(db, 'orders');
+  try {
+    const querySnapshot = await getDocs(ordersCollectionRef);
+    const returnRequests = [];
+
+    querySnapshot.forEach(doc => {
+      const orderData = doc.data();
+      if (orderData.returnRequests) {
+        orderData.returnRequests.forEach(request => {
+          if (request.status === 'En revisión') {
+            const matchingProducts = orderData.products.filter(product => product.productId === request.productId);
+            if (matchingProducts.length > 0) {
+              returnRequests.push({
+                id: doc.id,
+                orderId: doc.id,
+                productId: request.productId,
+                ...request,
+                products: matchingProducts,
+                userEmail: orderData.userEmail,
+                deliveryAddress: orderData.deliveryAddress,
+                totalPrice: orderData.totalPrice
+              });
+            }
+          }
+        });
+      }
+    });
+
+    console.log("Fetched return requests (inside function):", returnRequests);
+    return returnRequests;
+  } catch (error) {
+    console.error("Error fetching return requests:", error);
+    throw new Error('Unable to fetch return requests.');
+  }
+}
+
+
+export async function handleReturnRequest(orderId, productId, action, workerId) {
+  const orderRef = doc(db, 'orders', orderId);
+  const orderSnap = await getDoc(orderRef);
+
+  if (!orderSnap.exists()) {
+    throw new Error('Order not found');
+  }
+
+  const orderData = orderSnap.data();
+  const updatedReturnRequests = orderData.returnRequests.map(request => {
+    if (request.productId === productId && request.status === 'En revisión') {
+      return {
+        ...request,
+        status: action === 'accept' ? 'Aceptado' : 'Rechazado',
+        handledBy: workerId,
+        handledAt: new Date().toISOString() // Utilizar la fecha actual en formato ISO
+      };
+    }
+    return request;
+  });
+
+  await updateDoc(orderRef, { returnRequests: updatedReturnRequests });
+
+  if (action === 'accept') {
+    let allReturned = true;
+    let anyReturned = false;
+
+    const updatedProducts = orderData.products.map(product => {
+      if (product.productId === productId) {
+        const returnedProduct = updatedReturnRequests.find(request => request.productId === product.productId && request.status === 'Aceptado');
+        if (returnedProduct) {
+          const remainingQuantity = product.quantity - returnedProduct.quantity;
+          if (remainingQuantity > 0) {
+            allReturned = false;
+            anyReturned = true;
+            return { ...product, quantity: remainingQuantity };
+          }
+          return null;
+        }
+      }
+      allReturned = false;
+      return product;
+    }).filter(product => product !== null);
+
+    let newStatus = 'Pendiente';
+    if (allReturned) {
+      newStatus = 'Devuelto';
+    } else if (anyReturned) {
+      newStatus = 'Parcialmente devuelto';
+    }
+
+    await updateDoc(orderRef, { products: updatedProducts, status: newStatus });
+  }
+}
+
+
+export default {
   getOrdersByUserId,
   getPendingOrders,
   acceptOrder,
+  addReturnRequest,
   getOrdersRecord,
   deleteOrder,
   updateOrder,
@@ -399,5 +506,8 @@ export default{
   updateOrderAfterReturn,
   calculateSelledItems,
   calculateTotalSell,
-  allCanceledOrders
+  getReturnRequests,
+  allCanceledOrders,
+  handleReturnRequest,
+  sellByProduct
 }

@@ -1,91 +1,166 @@
 .notifications-page {
-    padding: 20px;
+    padding: 40px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    background-color: #fafafa;
 }
 
 .page-title {
-    color: #333;
-    font-size: 1.5rem;
+    color: #2C3E50;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
 }
 
-.order-list {
-    width: 100%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.order-item {
-    background-color: #ffffff;
-    margin-bottom: 10px;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-}
-
-.order-item:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.order-details {
+.notifications-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
-.order-id,
-.order-total,
-.order-address,
-.order-time {
-    margin: 4px ;
-    font-size: 0.9rem;
-    color: #666;
+.orders-section,
+.returns-section {
+    position: relative;
+    /* Para un mejor control del posicionamiento */
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+}
+
+.orders-section:hover,
+.returns-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.order-item,
+.return-item {
+    background-color: #f7f7f7;
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.order-item:hover,
+.return-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permitir que los botones se ajusten según el tamaño */
+    gap: 10px;
+    /* Espaciado entre botones */
+    margin-top: 10px;
+}
+
+.button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    transition: transform 0.3s ease, background-color 0.2s;
+    color: #ffffff;
+    flex: 1 1 48%;
+    /* Ajustar el tamaño a casi la mitad del contenedor */
 }
 
 .accept-button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    width: 100%;
-    text-align: center;
+    background-color: #27ae60;
 }
 
 .accept-button:hover {
-    background-color: #45a049;
+    background-color: #2ecc71;
+    transform: scale(1.03);
+}
+
+.reject-button {
+    background-color: #e74c3c;
+}
+
+.reject-button:hover {
+    background-color: #c0392b;
+    transform: scale(1.03);
+}
+
+.map-button {
+    background-color: #3498db;
+}
+
+.map-button:hover {
+    background-color: #2980b9;
+    transform: scale(1.03);
+}
+
+.whatsapp-button {
+    background-color: #25D366;
+}
+
+.whatsapp-button:hover {
+    background-color: #2ecc71;
+    transform: scale(1.03);
 }
 
 .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+    font-size: 1.5rem;
+    color: #555;
 }
 
-.no-orders {
-    font-size: 1rem;
-    color: #888;
-    text-align: center;
+.botoness {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
 }
 
-/* Responsive design for mobile devices */
 @media (max-width: 768px) {
-    .order-item {
-        padding: 10px;
-        font-size: 0.8rem;
+    .notifications-container {
+        flex-direction: column;
     }
 
-    .accept-button {
-        padding: 8px 16px;
+    .orders-section,
+    .returns-section {
+        margin: 10px 0;
+    }
+
+    .button-container {
+        flex-direction: column;
+        /* Apilar botones verticalmente en móviles */
+    }
+
+    .button {
+        width: 100%;
+        /* Botones a ancho completo para facilitar la interacción */
     }
 
     .page-title {
-        font-size: 1.2rem;
+        font-size: 1.8rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
     }
 }

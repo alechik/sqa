@@ -39,7 +39,7 @@ function SeguimientoPedido() {
   }, [orderId, orderComplete]);
 
   const renderTimeline = (order) => {
-    const statuses = ['En camino', 'Previo a devolución', 'Devuelto', 'Entregado'];
+    const statuses = ['En Camino', 'Parcialmente devuelto', 'Devuelto', 'Entregado'];
     const currentIndex = statuses.indexOf(order.status);
 
     return (

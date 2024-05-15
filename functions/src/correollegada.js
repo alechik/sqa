@@ -22,7 +22,9 @@ exports.sendDeliveryConfirmation = functions.firestore.document("orders/{orderId
   const orderId = context.params.orderId;
 
   // Verifica si el estado del pedido es "Entregado"
-  if (orderData.status !== "Entregado") return null;
+  if (orderData.status !== "Entregado" && orderData.status !== "Parcialmente devuelto") {
+    return null;
+  }
 
   // Verifica si el pedido fue "Parcialmente devuelto" y si la factura necesita actualización
   if (orderData.status === "Parcialmente devuelto" && !orderData.invoiceUpdated) {
@@ -137,7 +139,7 @@ exports.sendDeliveryConfirmation = functions.firestore.document("orders/{orderId
         <div class="header">
           <h1>¡Pedido Entregado!</h1>
         </div>
-        <div the="content">
+        <div class="content">
           <p>Hola, tu pedido con ID <strong>${orderId}</strong> ha sido entregado exitosamente.</p>
           <a href="https://tu-website.com/pedidos/${orderId}" class="button">Ver Detalle del Pedido</a>
         </div>

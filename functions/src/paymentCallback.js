@@ -7,7 +7,7 @@ exports.paymentCallback = functions.https.onRequest((req, res) => {
     res.status(405).send({error: "Método no permitido"});
     return;
   }
-
+  
   // Verificar si req.body está definido
   if (!req.body) {
     res.status(400).send({error: "Cuerpo de la solicitud vacío"});

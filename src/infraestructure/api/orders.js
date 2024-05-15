@@ -360,12 +360,20 @@ export async function getPendingOrders() {
 }
 
 export async function acceptOrder(orderId, workerId) {
-  const orderRef = doc(db, "orders", orderId);
-  await updateDoc(orderRef, {
-    status: "En Camino",
-    workerId: workerId
-  });
+  console.log("Accepting order", orderId, "with worker", workerId); // Log para confirmar que la función se ejecuta
+  try {
+    const orderRef = doc(db, "orders", orderId);
+    await updateDoc(orderRef, {
+      status: "En Camino",
+      workerId: workerId
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    return { success: false, error: error };
+  }
 }
+
 
 // Nueva función para manejar las solicitudes de devolución
 export async function addReturnRequest(orderId, productId, quantity) {
@@ -395,6 +403,8 @@ export async function addReturnRequest(orderId, productId, quantity) {
     throw new Error('Failed to add return request.');
   }
 }
+
+
 export async function getReturnRequests() {
   const ordersCollectionRef = collection(db, 'orders');
   try {
@@ -424,7 +434,6 @@ export async function getReturnRequests() {
       }
     });
 
-    console.log("Fetched return requests (inside function):", returnRequests);
     return returnRequests;
   } catch (error) {
     console.error("Error fetching return requests:", error);
@@ -438,56 +447,48 @@ export async function handleReturnRequest(orderId, productId, action, workerId) 
   const orderSnap = await getDoc(orderRef);
 
   if (!orderSnap.exists()) {
-    throw new Error('Order not found');
+    console.error('Order not found for ID:', orderId);
+    return { success: false, message: 'Order not found' };
   }
 
   const orderData = orderSnap.data();
+  let allReturned = true; // Inicialmente asumimos que todos los productos están devueltos
+  let anyReturned = false; // Para detectar si algún producto es parcialmente devuelto
+
   const updatedReturnRequests = orderData.returnRequests.map(request => {
-    if (request.productId === productId && request.status === 'En revisión') {
-      return {
-        ...request,
-        status: action === 'accept' ? 'Aceptado' : 'Rechazado',
-        handledBy: workerId,
-        handledAt: new Date().toISOString() // Utilizar la fecha actual en formato ISO
-      };
+    if (request.productId === productId) {
+      return { ...request, status: action, handledBy: workerId, handledAt: new Date().toISOString() };
     }
     return request;
   });
 
-  await updateDoc(orderRef, { returnRequests: updatedReturnRequests });
-
-  if (action === 'accept') {
-    let allReturned = true;
-    let anyReturned = false;
-
-    const updatedProducts = orderData.products.map(product => {
-      if (product.productId === productId) {
-        const returnedProduct = updatedReturnRequests.find(request => request.productId === product.productId && request.status === 'Aceptado');
-        if (returnedProduct) {
-          const remainingQuantity = product.quantity - returnedProduct.quantity;
-          if (remainingQuantity > 0) {
-            allReturned = false;
-            anyReturned = true;
-            return { ...product, quantity: remainingQuantity };
-          }
-          return null;
-        }
+  const updatedProducts = orderData.products.map(product => {
+    if (product.productId === productId && action === 'accept') {
+      const remainingQuantity = product.quantity - 1; // Asumimos devolución de una unidad
+      anyReturned = true;
+      if (remainingQuantity > 0) {
+        allReturned = false; // Si queda algo, no está completamente devuelto
+        return { ...product, quantity: remainingQuantity, returnedQuantity: (product.returnedQuantity || 0) + 1 };
+      } else {
+        return { ...product, quantity: 0, returnedQuantity: (product.returnedQuantity || 0) + 1 };
       }
-      allReturned = false;
+    } else {
+      if (product.quantity > 0) allReturned = false; // Aseguramos que si algún producto tiene cantidad, no está totalmente devuelto
       return product;
-    }).filter(product => product !== null);
-
-    let newStatus = 'Pendiente';
-    if (allReturned) {
-      newStatus = 'Devuelto';
-    } else if (anyReturned) {
-      newStatus = 'Parcialmente devuelto';
     }
+  });
 
-    await updateDoc(orderRef, { products: updatedProducts, status: newStatus });
-  }
+  let finalStatus = (allReturned && anyReturned) ? 'Devuelto' : (anyReturned ? 'Parcialmente devuelto' : 'Entregado');
+
+  await updateDoc(orderRef, {
+    products: updatedProducts,
+    returnRequests: updatedReturnRequests.filter(request => request.status === 'En revisión'), // Mantenemos solo las en revisión
+    status: finalStatus
+  });
+
+  console.log(`Order status updated to: ${finalStatus}`);
+  return { success: true, status: finalStatus };
 }
-
 
 export default {
   getOrdersByUserId,

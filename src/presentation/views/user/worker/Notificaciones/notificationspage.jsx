@@ -1,51 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPendingOrders, getReturnRequests, handleReturnRequest, acceptOrder } from '../../../../../infraestructure/api/orders';
+import { getProductById } from '../../../../../infraestructure/api/product';
 import { useAuth } from '../../../../components/context/AuthContext';
 import "./NotificationsPage.css";
+import { getUserProfileByEmail } from '../../../../../infraestructure/api/user';
 
 function NotificationsPage() {
     const [orders, setOrders] = useState([]);
     const [returnRequests, setReturnRequests] = useState([]);
-    const [loadingOrders, setLoadingOrders] = useState(true);
-    const [loadingReturns, setLoadingReturns] = useState(true);
+    const [loadingOrders, setLoadingOrders] = useState(false);
+    const [loadingReturns, setLoadingReturns] = useState(false);
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
+    const fetchOrders = async () => {
+        setLoadingOrders(true);
+        try {
+            const pendingOrders = await getPendingOrders();
+            setOrders(pendingOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        } catch (error) {
+            console.error("Error fetching pending orders:", error);
+        } finally {
+            setLoadingOrders(false);
+        }
+    };
+
+    const fetchReturnRequests = async () => {
+        setLoadingReturns(true);
+        try {
+            const data = await getReturnRequests();
+            const requestsWithProductDetails = await Promise.all(data.map(async request => {
+                const productDetails = await getProductById(request.productId);
+                const userDetails = await getUserProfileByEmail(request.userEmail);
+                return {
+                    ...request,
+                    productName: productDetails.product_name,
+                    productDescription: productDetails.description,
+                    productImage: productDetails.pictures,
+                    userPhone: userDetails.numero,
+                };
+            }));
+            setReturnRequests(requestsWithProductDetails);
+        } catch (error) {
+            console.error("Error fetching return requests:", error);
+        } finally {
+            setLoadingReturns(false);
+        }
+    };
+
     useEffect(() => {
-        async function fetchOrders() {
-            try {
-                let pendingOrders = await getPendingOrders();
-                pendingOrders = pendingOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                setOrders(pendingOrders);
-                setLoadingOrders(false);
-            } catch (error) {
-                console.error("Error fetching pending orders:", error);
-                setLoadingOrders(false);
-            }
-        }
-
-        async function fetchReturnRequests() {
-            try {
-                let returnRequests = await getReturnRequests();
-                returnRequests = returnRequests.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));
-                setReturnRequests(returnRequests);
-                setLoadingReturns(false);
-            } catch (error) {
-                console.error("Error fetching return requests:", error);
-                setLoadingReturns(false);
-            }
-        }
-
         fetchOrders();
         fetchReturnRequests();
     }, []);
 
     const handleAccept = async (orderId) => {
         try {
-            await acceptOrder(orderId, currentUser.uid);
-            setOrders(orders.filter(order => order.id !== orderId));
-            navigate(`/delivery/${orderId}`);
+            const result = await acceptOrder(orderId, currentUser.uid);
+            if (result.success) {
+                fetchOrders(); // Refresh orders to reflect new status
+                navigate(`/delivery/${orderId}`);
+            } else {
+                throw new Error('Failed to update order status');
+            }
         } catch (error) {
             console.error("Error accepting order:", error);
         }
@@ -53,26 +70,42 @@ function NotificationsPage() {
 
     const handleReturnRequestAction = async (orderId, productId, action) => {
         try {
-            await handleReturnRequest(orderId, productId, action, currentUser.uid);
-            setReturnRequests(returnRequests.filter(request => !(request.orderId === orderId && request.productId === productId)));
+            const result = await handleReturnRequest(orderId, productId, action, currentUser.uid);
+            if (result.success) {
+                fetchOrders(); // Refresh orders to reflect changes
+                fetchReturnRequests(); // Refresh return requests to see updates
+            } else {
+                console.error(result.message);
+                throw new Error(`Failed to update return request status: ${result.message}`);
+            }
         } catch (error) {
             console.error(`Error ${action === 'accept' ? 'accepting' : 'rejecting'} return request:`, error);
         }
     };
+
+    if (loadingOrders || loadingReturns) {
+        return <div className="loading">Loading...</div>;
+    }
 
     const openMap = (address) => {
         const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
         window.open(mapUrl, '_blank');
     };
 
-    const openWhatsApp = (phoneNumber) => {
-        const waUrl = `https://wa.me/${phoneNumber}`;
-        window.open(waUrl, '_blank');
+    const openWhatsApp = (number) => {
+        if (!number) {
+            console.error("Número de teléfono no disponible");
+            return;
+        }
+        const cleanNumber = number.replace(/[^0-9]/g, '');
+        const fullNumber = `591${cleanNumber}`;
+        window.open(`https://wa.me/${fullNumber}`, '_blank');
     };
 
     if (loadingOrders || loadingReturns) {
         return <div className="loading">Loading...</div>;
     }
+
 
     return (
         <div className="notifications-page">
@@ -103,26 +136,25 @@ function NotificationsPage() {
                             {returnRequests.map(request => (
                                 <li key={request.id} className="return-item">
                                     <div className="return-details">
-                                        <p className="return-id"><strong>Request ID:</strong> {request.id}</p>
+                                        <p className="return-id"><strong>Orden ID:</strong> {request.id}</p>
                                         <p className="return-total"><strong>Total:</strong> ${request.totalPrice.toFixed(2)}</p>
                                         <p className="return-time"><strong>Requested At:</strong> {new Date(request.requestedAt).toLocaleString()}</p>
-                                        <p className="return-email"><strong>Customer Email:</strong> {request.userEmail}</p>
-                                        <p className="return-address"><strong>Delivery Address:</strong> {request.deliveryAddress}</p>
+                                        <p className="return-email"><strong>Email:</strong> {request.userEmail}</p>
+                                        <p className="return-address"><strong>Address:</strong> {request.deliveryAddress}</p>
                                         <div className="return-products">
                                             <h3 className="products-title">Products to Return</h3>
                                             <ul className="products-list">
-                                                {request.products.map(product => (
-                                                    <li key={product.productId} className="product-item">
-                                                        <img src={product.picture} alt={product.name} className="product-image" />
-                                                        <p className="product-name"><strong>{product.name}</strong></p>
-                                                        <p className="product-description">{product.description}</p>
-                                                    </li>
-                                                ))}
+                                                <li className="product-item">
+                                                    <img src={request.productImage} alt={request.productName} className="product-image" />
+                                                    
+                                                    <p className="product-name"><strong>{request.productName}</strong></p>
+                                                    <p className="product-description">{request.productDescription}</p>
+                                                </li>
                                             </ul>
                                         </div>
                                         <div className="botoness">
                                             <button className="map-button" onClick={() => openMap(request.deliveryAddress)}>View on Map</button>
-                                            <button className="whatsapp-button" onClick={() => openWhatsApp(request.customerPhone)}>Contact on WhatsApp</button>
+                                            <button className="whatsapp-button" onClick={() => openWhatsApp(request.userPhone)}>Contact on WhatsApp</button>
                                             <button className="accept-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'accept')}>Accept Return</button>
                                             <button className="reject-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'reject')}>Reject Return</button>
                                         </div>

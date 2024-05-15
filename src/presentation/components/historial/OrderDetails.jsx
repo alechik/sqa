@@ -44,8 +44,7 @@ function OrderDetails() {
         }
 
         try {
-            console.log("Order ID:", orderId);
-            console.log("Product ID:", returnData.productId);
+            
             await addReturnRequest(orderId, returnData.productId, returnData.quantity);
             toast.success("Solicitud de devolución enviada.");
             setShowModal(false); // Hide the modal after the operation

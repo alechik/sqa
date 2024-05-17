@@ -1,10 +1,11 @@
 class Order {
-  constructor(id, userEmail, products, deliveryAddress, status, totalPrice, paymentMethod, createdAt) {
+  constructor(id, userEmail, products, deliveryAddress, status, totalPrice, paymentMethod, createdAt, statusPay) {
     this.id = id;
     this.userEmail = userEmail;
     this.products = products;
     this.deliveryAddress = deliveryAddress;
     this.status = status;
+    this.statusPay = statusPay;
     this.totalPrice = totalPrice;
     this.createdAt = createdAt
     this.paymentMethod = paymentMethod;
@@ -18,6 +19,7 @@ class Order {
       data.products,
       data.deliveryAddress,
       data.status,
+      data.statusPay,
       data.createdAt,
       data.totalPrice,
       data.paymentMethod

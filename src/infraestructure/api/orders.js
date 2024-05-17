@@ -1,5 +1,5 @@
 import { Order } from '../../domain/Order';
-import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, collection, query, where, getDocs, addDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase--config';
 import { format } from 'date-fns';
 import { getProductNameById } from './product';
@@ -59,7 +59,8 @@ export async function getOrderById(orderId) {
 // Variable de bloqueo para controlar la creación de orden
 let isCreatingOrder = false;
 
-export async function createOrder(user, cartItems) {
+// Modifica la función para aceptar el paymentNumber
+export async function createOrder(user, cartItems, paymentNumber) {
   if (isCreatingOrder) {
     console.error("Una orden ya está en proceso de creación.");
     throw new Error("Operación en proceso: Ya se está creando una orden.");
@@ -82,19 +83,21 @@ export async function createOrder(user, cartItems) {
     })),
     deliveryAddress: user.address || 'No especificada',
     status: 'Pendiente',
+    statusPay: false,
     createdAt: serverTimestamp(),
     totalPrice: cartItems.reduce((total, item) => total + (item.unitary_price * item.qty), 0),
-    paymentMethod: 'QR'
+    paymentMethod: 'QR',
+    PedidoID: paymentNumber, 
   };
 
-  const ordersCollectionRef = collection(db, 'orders');
   try {
+    const ordersCollectionRef = collection(db, 'orders');
     const orderDocRef = await addDoc(ordersCollectionRef, orderData);
     console.log("Pedido creado con éxito, ID del pedido:", orderDocRef.id);
 
     // Liberar el bloqueo después de crear la orden
     isCreatingOrder = false;
-    return orderDocRef.id;
+    return orderDocRef.id;  // Retorna el ID del documento de la orden para referencia futura
   } catch (error) {
     console.error("Error al crear la orden:", error);
     // Asegurarse de liberar el bloqueo si falla la creación de la orden
@@ -102,6 +105,16 @@ export async function createOrder(user, cartItems) {
     throw new Error('No se pudo crear la orden.');
   }
 }
+
+export async function checkPaymentStatus(orderId) {
+  const orderRef = doc(db, 'orders', orderId);
+  const orderSnap = await getDoc(orderRef);
+  if (!orderSnap.exists()) {
+    throw new Error('Order not found');
+  }
+  return orderSnap.data().statusPay; 
+}
+
 
 async function decreaseStock(productId, quantity) {
   const productRef = doc(db, 'products', productId);
@@ -356,11 +369,11 @@ export async function allCanceledOrders() {
 export async function getPendingOrders() {
   const q = query(collection(db, "orders"), where("status", "==", "Pendiente"));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));  
 }
 
 export async function acceptOrder(orderId, workerId) {
-  console.log("Accepting order", orderId, "with worker", workerId); // Log para confirmar que la función se ejecuta
+  console.log("Accepting order", orderId, "with worker", workerId); 
   try {
     const orderRef = doc(db, "orders", orderId);
     await updateDoc(orderRef, {
@@ -499,6 +512,7 @@ export default {
   deleteOrder,
   updateOrder,
   getAllOrders,
+  checkPaymentStatus,
   getOrderById,
   createOrder,
   updateOrderStatus,

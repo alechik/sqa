@@ -5,10 +5,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import downloadIcon from '../../assets/descargas.png';
 import "./qrcompra.css";
 import { generateQRCodeAndOrder } from '../../../Controlador/paymentController';
+import { checkPaymentStatus } from '../../../infraestructure/api/orders';  // Asumiendo que esta función existe
 
 function QRCompra() {
   const [qrImage, setQRImage] = useState('');
   const [orderId, setOrderId] = useState(null);
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const { user, cartItems } = useLocation().state || {};
   const navigate = useNavigate();
 
@@ -18,6 +20,8 @@ function QRCompra() {
         onSuccess: (message, newOrderId) => {
           toast.success(message);
           setOrderId(newOrderId);
+          // Iniciar la verificación del estado de pago
+          startPaymentStatusCheck(newOrderId);
         },
         onError: message => {
           toast.error(message);
@@ -28,12 +32,15 @@ function QRCompra() {
     }
   }, [user, cartItems, navigate]);
 
-  const handleConfirmPayment = () => {
-    if (!orderId) {
-      toast.error("No se ha generado una orden.");
-      return;
-    }
-    navigate(`/pedidoconfirmado/${orderId}`);
+  const startPaymentStatusCheck = (orderId) => {
+    const interval = setInterval(async () => {
+      const isConfirmed = await checkPaymentStatus(orderId);
+      if (isConfirmed) {
+        setPaymentConfirmed(true);
+        clearInterval(interval);
+        navigate(`/pedidoconfirmado/${orderId}`);
+      }
+    }, 5000);  // Verificar cada 5 segundos
   };
 
   const downloadImage = () => {
@@ -60,9 +67,9 @@ function QRCompra() {
           <img className='descarga' src={downloadIcon} alt="Descargar QR" />
         </button>
       </div>
-      <button className="payment-button" onClick={handleConfirmPayment}>
+      {paymentConfirmed && <button className="payment-button" onClick={() => navigate(`/pedidoconfirmado/${orderId}`)}>
         He realizado el pago
-      </button>
+      </button>}
       <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} />
     </div>
   );

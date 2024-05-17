@@ -8,8 +8,16 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
         callbacks.onError("Datos inválidos: Falta el correo del usuario o los artículos del carrito.");
         return;
     }
-        try{
+
+    try {
+        // Primero obtenemos el próximo número de pago antes de cualquier otra operación
         const paymentNumber = await getNextPaymentNumber();
+
+        // Luego creamos la orden con este paymentNumber
+        const orderId = await createOrder(user, cartItems, paymentNumber); 
+        setOrderId(orderId);
+
+        // Preparar datos para la solicitud de generación de QR
         const postData = {
             tcCommerceID: "d029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c",
             tnMoneda: "1",
@@ -19,7 +27,7 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
             tnCiNit: user.ci || "123465",
             tcNroPago: paymentNumber,
             tnMontoClienteEmpresa: 0.01,
-            tcUrlCallBack: "https://us-central1-tienda-fa7e8.cloudfunctions.net/paymentCallback",
+            tcUrlCallBack: "https://us-central1-tienda-fa7e8.cloudfunctions.net/paymentCallback-paymentCallback",
             tcUrlReturn: "",
             taPedidoDetalle: cartItems.map((item, index) => ({
                 Serial: index + 1,
@@ -31,6 +39,7 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
             }))
         };
 
+        // Ahora generamos el QR con el mismo PedidoID
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
             'TokenSecret': '9E7BC239DDC04F83B49FFDA5',
@@ -38,21 +47,18 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
             'CommerceId': 'd029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c'
         };
 
-        
-            const data = await $.ajax({
-                url: 'https://serviciostigomoney.pagofacil.com.bo/api/servicio/generarqrv2',
-                method: 'POST',
-                headers: headers,
-                data: qs.stringify(postData),
-            });
+        const data = await $.ajax({
+            url: 'https://serviciostigomoney.pagofacil.com.bo/api/servicio/generarqrv2',
+            method: 'POST',
+            headers: headers,
+            data: qs.stringify(postData),
+        });
 
         if (data && data.values) {
             const parts = data.values.split(';');
             if (parts.length > 1) {
                 const qrBase64 = JSON.parse(parts[1]).qrImage;
                 setQRImage(`data:image/png;base64,${qrBase64}`);
-                const orderId = await createOrder(user, cartItems);
-                setOrderId(orderId);
                 callbacks.onSuccess('Código QR generado con éxito', orderId);
             } else {
                 callbacks.onError('QR base64 no encontrado en la respuesta.');
@@ -61,6 +67,6 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
             callbacks.onError('La respuesta del servidor no contiene "values" o es incorrecta.');
         }
     } catch (error) {
-        callbacks.onError('Error al generar el código QR: ' + error.message);
+        callbacks.onError('Error al generar el código QR y crear la orden: ' + error.message);
     }
 };

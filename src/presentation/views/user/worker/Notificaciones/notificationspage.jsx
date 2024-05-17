@@ -14,20 +14,32 @@ function NotificationsPage() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoadingOrders(true);
+            setLoadingReturns(true);
+            await fetchOrders();
+            await fetchReturnRequests();
+            setLoadingOrders(false);
+            setLoadingReturns(false);
+        };
+        fetchData();
+    }, []);
+
     const fetchOrders = async () => {
-        setLoadingOrders(true);
         try {
             const pendingOrders = await getPendingOrders();
-            setOrders(pendingOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+            const formattedOrders = pendingOrders.map(order => ({
+                ...order,
+                createdAt: new Date(order.createdAt.seconds * 1000).toLocaleString()
+            }));
+            setOrders(formattedOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         } catch (error) {
             console.error("Error fetching pending orders:", error);
-        } finally {
-            setLoadingOrders(false);
         }
     };
 
     const fetchReturnRequests = async () => {
-        setLoadingReturns(true);
         try {
             const data = await getReturnRequests();
             const requestsWithProductDetails = await Promise.all(data.map(async request => {
@@ -39,29 +51,22 @@ function NotificationsPage() {
                     productDescription: productDetails.description,
                     productImage: productDetails.pictures,
                     userPhone: userDetails.numero,
+                    requestedAt: new Date(request.requestedAt.seconds * 1000).toLocaleString()
                 };
             }));
             setReturnRequests(requestsWithProductDetails);
         } catch (error) {
             console.error("Error fetching return requests:", error);
-        } finally {
-            setLoadingReturns(false);
         }
     };
 
-    useEffect(() => {
-        fetchOrders();
-        fetchReturnRequests();
-    }, []);
 
     const handleAccept = async (orderId) => {
         try {
             const result = await acceptOrder(orderId, currentUser.uid);
             if (result.success) {
-                fetchOrders(); // Refresh orders to reflect new status
+                fetchOrders(); // Refrescar las órdenes después de aceptar una
                 navigate(`/delivery/${orderId}`);
-            } else {
-                throw new Error('Failed to update order status');
             }
         } catch (error) {
             console.error("Error accepting order:", error);
@@ -72,14 +77,10 @@ function NotificationsPage() {
         try {
             const result = await handleReturnRequest(orderId, productId, action, currentUser.uid);
             if (result.success) {
-                fetchOrders(); // Refresh orders to reflect changes
-                fetchReturnRequests(); // Refresh return requests to see updates
-            } else {
-                console.error(result.message);
-                throw new Error(`Failed to update return request status: ${result.message}`);
+                fetchReturnRequests(); // Refrescar las solicitudes de devolución
             }
         } catch (error) {
-            console.error(`Error ${action === 'accept' ? 'accepting' : 'rejecting'} return request:`, error);
+            console.error(`Error handling return request (${action}):`, error);
         }
     };
 
@@ -120,7 +121,7 @@ function NotificationsPage() {
                                     <div className="order-details">
                                         <p className="order-id"><strong>Order ID:</strong> {order.id}</p>
                                         <p className="order-total"><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</p>
-                                        <p className="order-time"><strong>Ordered At:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+                                        <p className="order-time"><strong>Tiempo Ordenado:</strong> {new Date(order.createdAt.seconds * 1000).toLocaleString()}</p>
                                         <p className="order-address"><strong>Delivery Address:</strong> {order.deliveryAddress}</p>
                                         <button className="accept-button" onClick={() => handleAccept(order.id)}>Accept Order</button>
                                     </div>
@@ -146,7 +147,7 @@ function NotificationsPage() {
                                             <ul className="products-list">
                                                 <li className="product-item">
                                                     <img src={request.productImage} alt={request.productName} className="product-image" />
-                                                    
+
                                                     <p className="product-name"><strong>{request.productName}</strong></p>
                                                     <p className="product-description">{request.productDescription}</p>
                                                 </li>

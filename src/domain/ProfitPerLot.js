@@ -1,11 +1,12 @@
 class ProfitPerLot {
-    constructor(id, cost, id_product, profit, total_sell, time) {
+    constructor(id, cost, id_product, profit, total_sell, time, ppp) {
         this.id = id;
         this.cost = cost;
         this.id_product = id_product;
         this.profit = profit;
         this.total_sell = total_sell;
-        this.time = time || new Date(); // Si no se provee una fecha, usa la fecha y hora actual
+        this.time = time;
+        this.ppp = ppp;  // Asegúrate de que esto esté incluido
     }
 
     toFirestore() {
@@ -14,7 +15,8 @@ class ProfitPerLot {
             id_product: this.id_product,
             profit: this.profit,
             total_sell: this.total_sell,
-            time: this.time
+            time: this.time,
+            ppp: this.ppp  // Asegúrate de que esto esté incluido
         };
     }
 }

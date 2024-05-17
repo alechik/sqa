@@ -4,7 +4,10 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(53, 53, 53, 0.24);
+    background-color: rgba(77, 77, 77, 0.466);
+    /* Oscurecer un poco más */
+    backdrop-filter: blur(5px);
+    /* Añadir desenfoque al fondo */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,37 +15,56 @@
 }
 
 .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px 40px 70px 40px;
+    /* Aumentar el padding para incluir espacio para el botón cerrar */
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 400px;
-    text-align: center;
+    max-width: 500px;
     position: relative;
+    /* Asegurar que está posicionado relativamente para el posicionamiento absoluto del botón cerrar */
 }
 
 .modal-header {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
+    font-size: 22px;
+    /* Aumentar el tamaño de la fuente para el título */
+    font-weight: 600;
+    /* Negrita más definida */
+    margin-bottom: 20px;
+    /* Más espacio después del título */
 }
 
 .modal-body {
-    margin-bottom: 20px;
-    font-size: 16px;
+    margin-bottom: 25px;
+    /* Más espacio antes de los botones */
+    font-size: 18px;
+    /* Fuente más grande para el cuerpo */
 }
 
 .close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 230px;
+    /* Aumentar el espacio desde el borde superior */
+    right: 0;
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 24px;
+    /* Aumentar el tamaño para mejor accesibilidad */
     cursor: pointer;
+    outline: none;
+    color: #333;
+    /* Asegurar que el color sea visible */
 }
 
 .close-button:hover {
+    color: #f44336;
+    /* Cambio a rojo al pasar el mouse para indicar interacción */
+}
+
+.close-button:hover,
+.close-button:focus {
     color: #ff0000;
+    /* Cambio de color al pasar el mouse o enfocar */
+    text-decoration: none;
+    /* Quitar cualquier subrayado */
 }

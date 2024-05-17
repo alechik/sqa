@@ -5,6 +5,8 @@ import { getAuth } from 'firebase/auth';
 import "./compra.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 
 export default function Compra({ cartItems }) {
     const [userData, setUserData] = useState({});
@@ -251,7 +253,7 @@ export default function Compra({ cartItems }) {
                 <h2>Resumen del Pedido</h2>
                 {cartItems.map(item => (
                     <div key={item.id} className="cart-item">
-                        <img src={item.imageUrl} alt={item.productid} className="product-image" />
+                        <img src={item.pictures} alt={item.id} className="product-image" />
                         <div>
                             <h4>{item.product_name}</h4>
                             <p>Cantidad: {item.qty}</p>

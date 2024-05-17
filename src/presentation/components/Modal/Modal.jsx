@@ -11,7 +11,7 @@ const Modal = ({ children, onClose }) => {
             </div>
         </div>,
         document.body
-    );
+    );  
 };
 
 export default Modal;

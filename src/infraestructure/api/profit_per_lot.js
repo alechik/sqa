@@ -9,7 +9,8 @@ export async function addProfitPerLot(data) {
         data.id_product,
         data.profit,
         data.total_sell,
-        Timestamp.fromDate(new Date()) // Guarda la fecha y hora actual como un Timestamp de Firestore
+        Timestamp.fromDate(new Date()), // Guarda la fecha y hora actual como un Timestamp de Firestore
+        data.ppp  // Asegúrate de incluir el PPP aquí
     );
     const docRef = await addDoc(collection(db, "profits_per_lot"), newProfitPerLot.toFirestore());
     return docRef.id;
@@ -47,7 +48,16 @@ export async function getAllProfitPerLot() {
     const profitList = [];
     snapshot.forEach(doc => {
         const data = doc.data();
-        profitList.push(new ProfitPerLot(doc.id, data.cost, data.id_product, data.profit, data.total_sell, data.time.toDate()));
+        // Asegúrate de que el constructor de ProfitPerLot y la clase estén actualizados para manejar ppp
+        profitList.push(new ProfitPerLot(
+            doc.id,
+            data.cost,
+            data.id_product,
+            data.profit,
+            data.total_sell,
+            data.time.toDate(), // Convierte el timestamp de Firestore a un objeto Date de JavaScript
+            data.ppp  // Incluye el campo ppp aquí
+        ));
     });
     return profitList;
 }

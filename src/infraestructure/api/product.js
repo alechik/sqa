@@ -271,7 +271,12 @@ export async function addProductStock(productId, quantity) {
         console.error('Product not found');
         throw new Error('Product not found');
     }
+
 }
+
+export const calculatePPP = (costoLote, stock) => {
+    return stock !== 0 ? costoLote / stock : 0; // Asegurarse de no dividir por cero
+};
 
 export default {
     getProducts,
@@ -285,5 +290,6 @@ export default {
     addProductsBatch,
     getProductNameById,
     getProductByName,
-    addProductStock
+    addProductStock,
+    calculatePPP
 };

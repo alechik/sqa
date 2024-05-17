@@ -1,9 +1,12 @@
-
 import './dashboard.css'
 import Analytics from "../../../components/dashboard/Analytics.jsx";
 import {useEffect, useState} from "react";
 import {db} from "../../../../infraestructure/firebase--config.js";
 import {doc, getDocs, collection, getDoc} from "firebase/firestore";
+import SellsReport from '../../../components/dashboard/SellsReport.jsx';
+import SelledProductsList from '../../../components/dashboard/SelledProductList.jsx';
+import GeneralSellInfo from '../../../components/dashboard/GeneralSellInfo.jsx';
+
 export default function Dashboard(){
     const [topProducts, setTopProducts] = useState([]);
     useEffect(() => {
@@ -72,12 +75,18 @@ export default function Dashboard(){
     }, []);
     return (
         <div className='content'>
-           <span className="section-title">Datos estadisticos</span>
-            <div className="row square">
-                <Analytics topProducts={topProducts}/>
+            <span className="section-title">Dashboard de Ventas</span>
+            <div className="analytics">
+                <Analytics topProducts={topProducts} />
             </div>
-            <div className="row square">
-                <Analytics topProducts={topProducts}/>
+            <div className="general-info">
+                <GeneralSellInfo />
+            </div>
+            <div className="full-width">
+                <SellsReport />
+            </div>
+            <div className="full-width">
+                <SelledProductsList />
             </div>
         </div>
     );

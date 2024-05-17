@@ -14,7 +14,7 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
     };
 
     const handleDecrease = (item) => {
-    decreaseQty(item)
+        decreaseQty(item)
     };
 
 
@@ -44,31 +44,31 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                                 </div>
                                 <div className="cart-details">
                                     <div className="cart-flex">
-                                    <div className="cart-info">
-                                        <h3>{item.product_name}</h3>
-                                        <div className="price-info">
-                                            <h4>${item.unitary_price.toFixed(2)} x {item.qty}</h4>
-                                            <span>${(item.unitary_price * item.qty).toFixed(2)}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="cart-items-function">
-                                        <div className="removeCart">
-                                        <button className="removeCart" onClick={() => handleRemove(item)}>
-                                            <i className="fas fa-times"></i>
-                                        </button>
+                                        <div className="cart-info">
+                                            <h3>{item.product_name}</h3>
+                                            <div className="price-info">
+                                                <h4>${item.unitary_price.toFixed(2)} x {item.qty}</h4>
+                                                <span>${(item.unitary_price * item.qty).toFixed(2)}</span>
+                                            </div>
                                         </div>
 
-                                        <div className="cartControl d_flex">
-                                            <button className="incCart" onClick={() => handleIncrease(item)}>
-                                                <i className="fa fa-plus"></i>
-                                            </button>
-                                            <button className="desCart" onClick={() => handleDecrease(item)}>
-                                                <i className="fas fa-minus"></i>
-                                            </button>
+                                        <div className="cart-items-function">
+                                            <div className="removeCart">
+                                                <button className="removeCart" onClick={() => handleRemove(item)}>
+                                                    <i className="fas fa-times"></i>
+                                                </button>
+                                            </div>
+
+                                            <div className="cartControl d_flex">
+                                                <button className="incCart" onClick={() => handleIncrease(item)}>
+                                                    <i className="fa fa-plus"></i>
+                                                </button>
+                                                <button className="desCart" onClick={() => handleDecrease(item)}>
+                                                    <i className="fas fa-minus"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         ))}

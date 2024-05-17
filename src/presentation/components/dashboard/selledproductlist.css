@@ -1,0 +1,36 @@
+.selled-products-list-container {
+    margin: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.selled-products-table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.selled-products-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.selled-products-table th, .selled-products-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.export-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.export-btn:hover {
+    background-color: #45a049;
+}

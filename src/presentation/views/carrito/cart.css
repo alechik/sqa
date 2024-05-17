@@ -4,13 +4,16 @@
     padding: 50px 0;
 
 }
-.cart-flex{
+
+.cart-flex {
     display: flex;
 }
-#carttotal{
+
+#carttotal {
     height: 200px;
 }
-.cart-items .cart-details{
+
+.cart-items .cart-details {
     width: 70%;
 }
 
@@ -20,15 +23,18 @@
     flex-direction: column;
     flex: 1;
 }
-.cart-info{
+
+.cart-info {
     flex: 2;
     display: flex;
     flex-direction: column;
     margin-left: 20px;
 }
-.price-info{
+
+.price-info {
     margin-top: 20px;
 }
+
 .cart-list {
     width: 70%;
     background: #fff;
@@ -67,7 +73,8 @@
     color: grey;
     display: inline-block;
 }
-.cart-items-function{
+
+.cart-items-function {
     flex: 1;
 }
 
@@ -86,7 +93,7 @@
     text-align: right;
 }
 
-.fas.fa-times{
+.fas.fa-times {
     text-align: center;
 }
 
@@ -101,13 +108,15 @@
     justify-content: center;
 
 }
-.cartControl{
+
+.cartControl {
     text-align: right;
     display: flex;
     align-items: center;
     justify-content: space-around;
     margin-top: 100px;
 }
+
 .cartControl .incCart:hover,
 .cartControl .desCart:hover {
     background-color: #f0f0f0;
@@ -121,12 +130,19 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex; /* Usa flexbox para alinear el contenido */
-    flex-direction: column; /* Alineación vertical de los elementos */
-    justify-content: space-between; /* Espacio entre elementos */ /* Espacio por encima del contenedor */
-    margin-left: auto; /* Alineación a la derecha */
-    margin-right: 30px; /* Espacio a la derecha */
-    position: relative; /* Posicionamiento relativo para el posicionamiento absoluto del botón */
+    display: flex;
+    /* Usa flexbox para alinear el contenido */
+    flex-direction: column;
+    /* Alineación vertical de los elementos */
+    justify-content: space-between;
+    /* Espacio entre elementos */
+    /* Espacio por encima del contenedor */
+    margin-left: auto;
+    /* Alineación a la derecha */
+    margin-right: 30px;
+    /* Espacio a la derecha */
+    position: relative;
+    /* Posicionamiento relativo para el posicionamiento absoluto del botón */
 }
 
 
@@ -163,9 +179,11 @@
     background-color: #a6204a;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
-.no-items{
+
+.no-items {
     margin: auto;
 }
+
 /* Responsividad */
 @media (max-width: 768px) {
 

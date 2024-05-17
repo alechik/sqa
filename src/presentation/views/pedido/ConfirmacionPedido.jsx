@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getOrderById, updateOrder } from '../../../infraestructure/api/orders';
+import { getOrderById } from '../../../infraestructure/api/orders';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { TailSpin } from 'react-loader-spinner'; // Importar el spinner deseado
-import { updateProductStock } from '../../../infraestructure/api/product';
-import './ConfirmacionPedido.css'; // Asegúrate de que el camino de CSS es correcto
+import { TailSpin } from 'react-loader-spinner';
+import './ConfirmacionPedido.css';
 
 export default function ConfirmarPedido() {
   const { orderId } = useParams();
@@ -15,42 +14,34 @@ export default function ConfirmarPedido() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoading(true);
-    getOrderById(orderId)
-      .then(orderData => {
+    const loadOrder = async () => {
+      try {
+        setIsLoading(true);
+        const orderData = await getOrderById(orderId);
         setOrder(orderData);
-        setIsLoading(false);
-      })
-      .catch(err => {
+        // Check if order status is "En camino" and redirect
+        if (orderData.status === "En Camino") {
+          navigate(`/seguimientopedido/${orderId}`);
+        }
+      } catch (err) {
         console.error("Failed to fetch order details:", err);
         setError(err.message);
         toast.error(`Error al obtener los detalles del pedido: ${err.message}`);
+      } finally {
         setIsLoading(false);
-      });
-  }, [orderId]);
+      }
+    };
 
-  const confirmOrder = async () => {
-    if (!order || !order.products || order.products.length === 0) {
-        toast.error("Pedido no válido o sin productos.");
-        return;
-    }
+    loadOrder();
 
-    try {
-        await updateOrder(orderId, { status: 'En Camino' });
-        for (const product of order.products) {
-            if (!product.productId || product.quantity <= 0) {
-                toast.error("Detalles de producto no válidos.");
-                return;
-            }
-            await updateProductStock(product.productId, product.quantity);
-        }
-        toast.success('Pedido confirmado y en camino');
-        navigate(`/seguimientopedido/${orderId}`);
-    } catch (error) {
-        console.error('Error al confirmar el pedido:', error);
-        toast.error(`Error al confirmar el pedido: ${error.message}`);
-    }
-};
+    // Polling: Refresh order data every 10 seconds
+    const intervalId = setInterval(() => {
+      loadOrder();
+    }, 10000);
+
+    // Cleanup function to clear interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, [orderId, navigate]);
 
   const renderProductList = (products) => {
     return products.map((product, index) => (
@@ -65,17 +56,22 @@ export default function ConfirmarPedido() {
     ));
   };
 
+  const goToDetailsPage = () => {
+    navigate(`/orders/${orderId}`);
+  };
+
   if (isLoading) {
     return (
-      <div className="loading-container">
+      <div className="loading loading-container">
         <TailSpin color="#00BFFF" height={50} width={50} />
+        <p>Por favor, espera mientras obtenemos los detalles del pedido...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="error-container">
+      <div className="error error-container">
         Ha ocurrido un error: {error}
       </div>
     );
@@ -83,7 +79,7 @@ export default function ConfirmarPedido() {
 
   return (
     <div className="confirmar-pedido">
-      <h1>Confirmación de Pedido</h1>
+      <h1>Buscando Delivery</h1>
       {order && (
         <div className="order-details">
           <h2>Pedido #{order.id}</h2>
@@ -93,7 +89,9 @@ export default function ConfirmarPedido() {
           <div className="product-list">
             {renderProductList(order.products)}
           </div>
-          <button onClick={confirmOrder} className="confirm-button">Seguimiento del pedido</button>
+          <button onClick={goToDetailsPage} className="details-button">
+            ¿Quieres ver más detalles?
+          </button>
         </div>
       )}
       <ToastContainer position="top-center" autoClose={5000} />

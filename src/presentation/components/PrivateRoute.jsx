@@ -13,7 +13,7 @@ const PrivateRoute = ({ children }) => {
         return <div>Error: {error.message}</div>;  // Muestra mensajes de error relacionados con la autenticación
     }
 
-    return currentUser ? children : <Navigate to="/iniciarsesion" replace />;
+    return currentUser ? children : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

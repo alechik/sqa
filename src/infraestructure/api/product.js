@@ -33,7 +33,8 @@ export async function getProducts() {
             data.stock,
             data.gramaje,
             data.unitary_price,
-            data.state
+            data.state,
+            data.ppp !== undefined ? data.ppp : null // Asegúrate de incluir el campo PPP, si existe
         );
         products.push(product);
     });

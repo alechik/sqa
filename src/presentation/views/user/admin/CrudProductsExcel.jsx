@@ -2,108 +2,115 @@ import React, { useState, useEffect } from 'react';
 import {
     readExcelFile,
     calculatePMP,
-    calculatePPP, // Importamos la nueva función
-    addProductsBatch,
+    calculatePPP,
     getProductNameById,
     getProducts
 } from '../../../../infraestructure/api/product';
 import { addProfitPerLot, getAllProfitPerLot } from '../../../../infraestructure/api/profit_per_lot';
 import "./crudproductos.css";
-import {collection, doc, writeBatch} from "firebase/firestore";
-import {db} from "../../../../infraestructure/firebase--config.js";
+import {collection, doc, writeBatch, getDoc, orderBy, query, getDocs} from "firebase/firestore";
+import { db } from "../../../../infraestructure/firebase--config.js";
 
 const CrudProductExcel = () => {
+    const [fileLoaded, setFileLoaded] = useState(false);
     const [file, setFile] = useState(null);
     const [products, setProducts] = useState([]);
+    const [productsFromExcel, setProductsFromExcel] = useState([]);
     const [profits, setProfits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [processed, setProcessed] = useState(false);
 
+
     useEffect(() => {
-        const fetchProfits = async () => {
-            const fetchedProfits = await getAllProfitPerLot();
-            const profitsWithNames = await Promise.all(fetchedProfits.map(async (profit) => {
-                try {
-                    const productName = await getProductNameById(profit.id_product);
-                    return {
-                        ...profit,
-                        productName,
-                        id: profit.id || 'temp-' + Math.random().toString(36).substr(2, 9)
-                    };
-                } catch (error) {
-                    console.error('Error fetching product name:', error);
-                    return {
-                        ...profit,
-                        productName: 'Nombre no encontrado',
-                        id: profit.id || 'temp-' + Math.random().toString(36).substr(2, 9)
-                    };
-                }
-            }));
-            setProfits(profitsWithNames);
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const fetchedProducts = await getProducts();
+                setProducts(fetchedProducts);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+            setLoading(false);
         };
 
-        fetchProfits();
+        fetchProducts();
     }, [processed]);
 
     const handleFileChange = async (event) => {
         setLoading(true);
         const file = event.target.files[0];
-        const productsFromExcel = await readExcelFile(file);
-        const processedProducts = productsFromExcel.map(product => ({
-            ...product,
-            gananciaLote: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
-            ppp: calculatePPP(product.costo_lote, product.stock) // Calculamos el PPP
-        }));
-        setProducts(processedProducts);
-        setLoading(false);
-        setProcessed(false);
-    };
+        if (!file) {
+            alert('No file selected or file input is corrupted');
+            setLoading(false);
+            return;
+        }
 
+        try {
+            const productsFromExcel = await readExcelFile(file);
+            const processedProducts = productsFromExcel.map(product => ({
+                ...product,
+                gananciaLote: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
+                ppp: calculatePPP(product.costo_lote, product.stock),
+                quantity: product.stock  // Usando el stock como cantidad
+            }));
+            setProductsFromExcel(processedProducts);
+            setFileLoaded(true);  // Establece que un archivo ha sido cargado y procesado
+            setProcessed(false);
+        } catch (error) {
+            console.error("Error reading file:", error);
+            alert('Error al leer el archivo. Asegúrate de que es el formato correcto.');
+        }
+        setLoading(false);
+    };
     const handleProcess = async () => {
         setLoading(true);
-        const existingProducts = await getProducts(); // Retrieve all current products
+        const existingProducts = await getProducts();
         const productMap = new Map(existingProducts.map(p => [p.product_name.toLowerCase(), p]));
 
         const batch = writeBatch(db);
-        const profitsToAdd = []; // To store profit data for adding later
+        const profitsToAdd = [];
 
-        for (const product of products) {
+        for (const product of productsFromExcel) {
             const existingProduct = productMap.get(product.product_name.toLowerCase());
-            let productId;
+
             if (existingProduct) {
-                // Product exists, update the stock
                 const productRef = doc(db, "products", existingProduct.id);
                 batch.update(productRef, {
-                    stock: existingProduct.stock + product.stock  // Add the new stock to the existing stock
+                    stock: existingProduct.stock + product.quantity,  // Actualizar stock
+                    ppp: product.ppp  // Asumiendo que el PPP se recalcula externamente si es necesario
                 });
-                productId = existingProduct.id;  // Use the existing ID for the profit data
+
+                product.id = existingProduct.id;  // Asignar el ID existente al producto
             } else {
-                // Product does not exist, create a new one
                 const newDocRef = doc(collection(db, "products"));
-                batch.set(newDocRef, product);
-                productId = newDocRef.id;  // Use the new ID for the profit data
+                batch.set(newDocRef, {
+                    ...product,
+                    stock: product.quantity
+                });
+                product.id = newDocRef.id;  // Asignar el nuevo ID al producto
             }
+
             console.log("PPP to be saved:", product.ppp);
-            // Prepare profit data per lot using the product ID
             profitsToAdd.push({
                 cost: product.costo_lote,
-                id_product: productId,
+                quantity: product.quantity,
+                id_product: product.id,
                 profit: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
-                total_sell: product.unitary_price * product.stock,
+                total_sell: product.unitary_price * product.quantity,
                 time: new Date(),
-                ppp: product.ppp // Ensure to include the PPP
+                ppp: product.ppp
             });
         }
 
         try {
-            await batch.commit();  // Execute all the operations in the batch for products
-
-            // Add the profit lots after updating/creating products
+            await batch.commit();
             for (const profit of profitsToAdd) {
-                await addProfitPerLot(profit);  // Ensure this function handles the PPP
+                await addProfitPerLot(profit);
             }
 
             setProcessed(true);
+            setFileLoaded(false);  // Limpiar productos del Excel
+            setProductsFromExcel([]);
             alert('Productos procesados y actualizados correctamente, ganancias por lote añadidas.');
         } catch (error) {
             console.error("Error processing products:", error);
@@ -117,13 +124,13 @@ const CrudProductExcel = () => {
         <div className='crud-product-excel'>
             <input type="file" onChange={handleFileChange} accept=".xlsx, .xls"/>
             {loading && <p>Cargando...</p>}
-            {!loading && products.length > 0 && (
+            {!loading && fileLoaded && productsFromExcel.length > 0 && (
                 <div>
                     <h3>Productos a añadir</h3>
                     <ul>
-                        {products.map((product, index) => (
+                        {productsFromExcel.map((product, index) => (
                             <li key={index}>
-                                {product.product_name} - Ganancia por lote: {product.gananciaLote} - PPP: {product.ppp}
+                                {product.product_name} - Ganancia por lote: {product.gananciaLote} - PPP: {product.ppp} - Cantidad: {product.quantity}
                             </li>
                         ))}
                     </ul>
@@ -131,31 +138,21 @@ const CrudProductExcel = () => {
                 </div>
             )}
             <div>
-                <h3>Registro de Ganancias por Lote</h3>
+                <h3>Seguimiento de Productos</h3>
                 <table>
                     <thead>
                     <tr>
-                        <th>Lote de:</th>
-                        <th>ID Producto</th>
-                        <th>Costo del Lote</th>
-                        <th>Venta Total</th>
-                        <th>Ganancia</th>
-                        <th>Fecha/Hora</th>
+                        <th>Nombre del Producto</th>
+                        <th>Stock</th>
                         <th>PPP</th>
-                        {/* Añadimos la columna para el PPP */}
                     </tr>
                     </thead>
                     <tbody>
-                    {profits.map((profit) => (
-                        <tr key={profit.id}>
-                            <td>{profit.productName}</td>
-                            <td>{profit.id_product}</td>
-                            <td>{profit.cost || 'N/A'}</td>
-                            <td>{profit.total_sell || 'N/A'}</td>
-                            <td>{profit.profit || 'N/A'}</td>
-                            <td>{profit.time ? profit.time.toLocaleString() : 'N/A'}</td>
-                            <td>{profit.ppp || 'N/A'}</td>
-                            {/* Mostramos el PPP */}
+                    {products.map((product) => (
+                        <tr key={product.id}>
+                            <td>{product.product_name}</td>
+                            <td>{product.stock}</td>
+                            <td>{product.ppp !== null ? product.ppp : 'N/A'}</td>  {/* Mostrar N/A si no tiene PPP */}
                         </tr>
                     ))}
                     </tbody>
@@ -163,6 +160,6 @@ const CrudProductExcel = () => {
             </div>
         </div>
     );
+};
 
-}
-    export default CrudProductExcel;
+export default CrudProductExcel;

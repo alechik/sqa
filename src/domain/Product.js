@@ -1,5 +1,17 @@
 class Product {
-    constructor(id, description, pictures, banner_pictures, CategoryID, product_name, stock, gramaje, unitary_price, state) {
+    constructor(
+        id,
+        description,
+        pictures,
+        banner_pictures,
+        CategoryID,
+        product_name,
+        stock,
+        gramaje,
+        unitary_price,
+        state,
+        ppp = null // Añadir el campo ppp con un valor por defecto de null
+    ) {
         this.id = id;
         this.description = description;
         this.pictures = pictures;
@@ -9,11 +21,8 @@ class Product {
         this.stock = stock;
         this.gramaje = gramaje;
         this.unitary_price = unitary_price;
-        this.state = state || (stock >= 1 ? "disponible" : "No disponible");
-    }
-
-    updateStateBasedOnStock() {
-        this.state = this.stock >= 1 ? "disponible" : "No disponible";
+        this.state = state;
+        this.ppp = ppp; // Asignar el campo ppp
     }
 
     toFirestore() {

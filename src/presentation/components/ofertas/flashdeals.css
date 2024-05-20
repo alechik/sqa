@@ -138,3 +138,12 @@
     color: white;
     cursor: pointer;
 }
+
+.product-details h3 {
+    font-size: 16px;
+    min-height: 52px;
+    max-height: 52px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -29,6 +29,16 @@ function Footer() {
         fetchIconUrls();
     }, []);
 
+    const scrollToTop = (event) => {
+        // Prevenir el comportamiento predeterminado del enlace
+        event.preventDefault();
+        // Animación suave hacia la parte superior de la página
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
     return (
         <footer className="footer">
             <div className="footer-top">
@@ -49,7 +59,9 @@ function Footer() {
                     <Link to="/privacidad">Política de Privacidad</Link>
                 </div>
                 <div className="footer-brand">
-                    <Link to="/" className="nombre-sitio"> <img src={tuImagen} alt="logo" /></Link>
+                    <a href="/" onClick={scrollToTop} className="nombre-sitio">
+                        <img src={tuImagen} alt="logo" />
+                    </a>
                     <p>Tienda Los Chambis</p>
                 </div>
                 <div className="footer-copy">

@@ -72,5 +72,5 @@ exports.handleFullRefund = functions.firestore.document("orders/{orderId}").onUp
     console.log("Correo de devolución completa enviado con éxito.");
   }
 
-  return null;
+
 });

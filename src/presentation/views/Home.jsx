@@ -13,6 +13,12 @@ export default function Home({productItems, productos, addtoCart}) {
         <Carousel/>
 
 
+
+        <FlashDeals productItems={productItems} productos={productos} addtoCart={addtoCart} titulo="recien añadidos"/>
+        <FlashDeals productItems={productItems} productos={productos} addtoCart={addtoCart} titulo="Mas puntuado"/>
+        <FlashDeals productItems={productItems} productos={productos} addtoCart={addtoCart} titulo="Mas vendidos"/>
+
+
         <div className="contenedorr">
             <div className="square colegio">
                 <span className='span'></span>
@@ -48,9 +54,5 @@ export default function Home({productItems, productos, addtoCart}) {
             </div>
         </div>
 
-
-        <FlashDeals productItems={productItems} productos={productos} addtoCart={addtoCart} titulo="recien añadidos"/>
-        <FlashDeals productItems={productItems} productos={productos} addtoCart={addtoCart} titulo="Mas puntuado"/>
-        <FlashDeals productItems={productItems} productos={productos} addtoCart={addtoCart} titulo="Mas vendidos"/>
     </div>
 }

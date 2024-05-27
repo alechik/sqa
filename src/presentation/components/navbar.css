@@ -150,8 +150,10 @@
 }
 
 .navegacion .cart-link img {
-    margin-right: 10px;
+    margin-right: -10px;
 }
+
+
 
 .cart,
 .logout-button,
@@ -483,7 +485,6 @@
 .cart-link,
 .wishlist-link {
     display: inline-block;
-    margin: 0 10px;
 }
 
 .cart,

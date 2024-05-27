@@ -10,7 +10,7 @@ const FlashDeals = ({ productItems, addtoCart, productos , titulo}) => {
                 <div className='contenedor'>
                     <div className='heading f_flex'>
                         <i className='fa fa-bolt'></i>
-                        <h1>Productos {titulo}</h1>
+                        <h1 className="productossr">Productos {titulo}</h1>
                     </div>
                     <FlashCard productItems={productItems} addtoCart={addtoCart} productos={productos} />
                 </div>

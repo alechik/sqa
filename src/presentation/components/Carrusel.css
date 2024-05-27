@@ -5,9 +5,8 @@
 .cascade-slider_container {
     position: relative;
     width: 100%;
-    height: 420px;
+    height: 270px;
     padding-top: 150px;
-    top: -50px;
     overflow-x: hidden;
 }
 .cascade-slider_item {

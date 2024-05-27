@@ -42,7 +42,12 @@ export default function Navbar({ cartItems = [] }) {
 
     return (
         <nav className="nav">
-            <Link to="/" className="nombre-sitio" onClick={handleLogoClick}><img src={tuImagen} alt="logo" /></Link>
+            <div className="logo-container">
+                <Link to="/" className="logo-link" onClick={handleLogoClick}>
+                    <img src={tuImagen} alt="logo" className="logo-image" />
+                    <span className="store-name">Saltillo</span>
+                </Link>
+            </div>
             <Search />
             <ul className="navegacion">
                 {userProfile ? (
@@ -51,10 +56,8 @@ export default function Navbar({ cartItems = [] }) {
                         <div className='wishlist'>
                                 <Link to='/Category' className="wishlist-link">
                                     <img src={categoryIcon} alt="wishlist" />
-                                    
                                 </Link>
                             </div>
-                            {/* Wishlist visible solo para clientes y admin */}
                             {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
                                 <div className='wishlist'>
                                     <Link to='/wishlist' className='wishlist-link'>
@@ -62,12 +65,11 @@ export default function Navbar({ cartItems = [] }) {
                                     </Link>
                                 </div>
                             )}
-                            {/* Notificaciones visibles solo para trabajadores */}
                             {userProfile.userTypeId === '2' && (
                                 <div className='notifications'>
                                     <Link to='/notifications' className='notification-link'>
                                         <img src={bellIcon} alt='Notificaciones' />
-                                        <span>3</span> {/* Ejemplo de número de notificaciones */}
+                                        <span>3</span>
                                     </Link>
                                 </div>
                             )}

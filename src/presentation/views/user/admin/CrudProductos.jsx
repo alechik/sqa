@@ -8,7 +8,6 @@ export default function CrudProductos({ productos }) {
     const [productList, setProductList] = useState(productos);
     const navigate = useNavigate();
 
-
     const handleDeleteProduct = async (productId) => {
         try {
             await deleteProduct(productId);
@@ -28,13 +27,13 @@ export default function CrudProductos({ productos }) {
     return (
         <div className='crud-productos'>
             <div className="crud-options">
-
                 <Link to="/admin/addcategory">
                     <button>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
-                        Añadir Categoria</button>
+                        Añadir Categoria
+                    </button>
                 </Link>
 
                 <Link to='/admin/add-product'>
@@ -52,12 +51,9 @@ export default function CrudProductos({ productos }) {
                     </svg>
                     Añadir productos (Excel)</button>
                 </Link>
-
-
             </div>
             <div className="table-container">
                 <table>
-                    {/* Encabezados de la tabla */}
                     <thead>
                         <tr>
                             <th>Nombre producto</th>
@@ -68,11 +64,10 @@ export default function CrudProductos({ productos }) {
                         </tr>
                     </thead>
                 </table>
-                {/* Cuerpo de la tabla */}
                 <div className="scrollable-content">
                     <table>
                         <tbody>
-                            {productos.map((producto) => (
+                            {productList.map((producto) => (
                                 <tr key={producto.id}>
                                     <td>{producto.product_name}</td>
                                     <td className="product_description">{producto.description}</td>
@@ -98,4 +93,4 @@ export default function CrudProductos({ productos }) {
             </div>
         </div>
     );
-}    
+}

@@ -1,10 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:400,700,900');
-
-
-
-.links {
-    padding: 10px;
-}
 .nav {
     display: flex;
     justify-content: space-between;
@@ -19,11 +12,22 @@
     z-index: 5000;
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+}
 
-.nav img {
+.logo-container img {
     margin-left: 20px;
     width: 60px;
     height: 60px;
+}
+
+.store-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000000;
+    margin-left: 10px;
 }
 
 .nombre-sitio {
@@ -31,7 +35,6 @@
     font-size: 1.5rem;
     text-decoration: none;
     transition: transform 0.2s ease;
-    /* Espaciado a la derecha del nombre del sitio */
 }
 
 .nav .nombre-sitio:hover {
@@ -62,8 +65,6 @@
 
         color: #000000;
         background-color: transparent;
-        /*         background-image: url(http://mihaeltomic.com/codepen/input-search/ic_search_black_24px.svg); */
-
         background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z' fill='black'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-size: 18px 18px;
@@ -100,12 +101,9 @@
     justify-content: center;
 }
 
-
-
 .navegacion li {
     margin: 0.5rem 4rem;
     padding: -2rem -1rem;
-    /* Espaciado alrededor de los elementos de la lista */
 }
 
 .navegacion li:last-child {
@@ -122,9 +120,7 @@
 
 .navegacion .perfil-link,
 .navegacion .cart-link {
-    /* Asumiendo que existe esta clase para el enlace del carrito */
     margin-right: 20px;
-    /* Ajusta este valor según tus necesidades */
 }
 
 .navegacion a {
@@ -136,24 +132,18 @@
     padding: 0.5rem 1rem;
 }
 
-
 .navegacion a:not(.cart-link, .perfil-link, .wishlist-link)::after {
     content: '';
     position: absolute;
     bottom: -0.5rem;
-    /* Ubicación de la línea bajo el texto */
     left: 50.5%;
     top: 28px;
-    /* Comienza en el centro */
     transform: translateX(-50%) scaleX(0);
-    /* Empieza escalado en 0 para no verse */
     width: 78%;
-    /* El ancho completo, pero escalado estará en 0 inicialmente */
     height: 2px;
     background-color: #633154;
     transition: transform 0.7s ease;
     transform-origin: center;
-    /* Punto de origen para la transformación */
 }
 
 .navegacion a:not(.cart-link):hover::after {
@@ -174,7 +164,6 @@
     padding: 0.3rem;
     margin: 0 50px 0 0.5rem;
 }
-
 
 .cart img,
 .c_flex {
@@ -208,21 +197,13 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    /* Importante para la posición absoluta del span del contador */
     width: 50px;
-    /* Ancho fijo para el contenedor del ícono */
     height: 50px;
-    /* Alto fijo para el contenedor del ícono */
     border-radius: 50%;
-    /* Bordes redondeados para el efecto circular */
     transition: background-color 0.3s;
-    /* Transición suave del fondo */
     cursor: pointer;
-    /* Cursor pointer para indicar que es clickable */
     margin-right: 20px;
-    /* Margen a la derecha para separarlo del siguiente elemento */
-    /*background-color: #522b46;*/
-    background-color:rgba(255, 255, 255, 0) ;
+    background-color:rgba(255, 255, 255, 0);
 }
 
 .cart:hover,
@@ -234,20 +215,12 @@
     display: inline-flex;
     justify-content: center;
     position: relative;
-    /* Importante para la posición absoluta del span del contador */
     width: 50px;
-    /* Ancho fijo para el contenedor del ícono */
     height: 50px;
-    /* Alto fijo para el contenedor del ícono */
     border-radius: 50%;
-    /* Bordes redondeados para el efecto circular */
     transition: background-color 0.3s;
-    /* Transición suave del fondo */
     cursor: pointer;
     top: -8px;
-    /* Cursor pointer para indicar que es clickable */
-    /* Margen a la derecha para separarlo del siguiente elemento */
-    /*background-color: #522b46;*/
     background-color: rgba(255, 255, 255, 0);
     align-items: center;
 }
@@ -296,7 +269,6 @@
         flex-direction: column;
         align-items: center;
         padding: 0.5rem 0;
-        /* Removemos el padding horizontal para evitar desbordamiento */
     }
 
     .navbar-avatar {
@@ -305,16 +277,12 @@
 
     .nombre-sitio {
         padding: 0;
-        /* Removemos el padding innecesario */
         margin-bottom: 1rem;
-        /* Añadimos margen abajo para separar del input de búsqueda */
     }
 
     .search {
         width: calc(100% - 20px);
-        /* Restamos 20px para tener en cuenta el padding */
         max-width: 300px;
-        /* Puedes ajustar esto para controlar el tamaño máximo */
         padding: 10px;
         box-sizing: border-box;
     }
@@ -322,31 +290,21 @@
     .search__input {
         width: 100%;
         padding: 12px 16px;
-        /* Reducimos el padding horizontal */
         box-sizing: border-box;
-        /* Aseguramos que el padding no sume al ancho */
         margin: 0 auto;
-        /* Centramos el input */
         border-radius: 50px;
-        /* Mantenemos la estética del input */
         border: 1px solid #000000;
-        /* Mantenemos el estilo de borde */
     }
 
     .navegacion {
         flex-direction: row;
-        /* Cambiamos a fila para alinear íconos horizontalmente */
         justify-content: center;
-        /* Centramos los elementos en la fila */
         padding: 0;
-        /* Eliminamos cualquier padding que pueda interferir con el centrado */
         margin-top: 1rem;
-        /* Añadimos margen arriba para separar de la barra de búsqueda */
     }
 
     .navegacion li {
         margin: 0 10px;
-        /* Margen horizontal para separar los ítems de la navegación */
     }
 
     .navegacion li:last-child {
@@ -356,24 +314,18 @@
     .cart,
     .logout-button {
         margin: 0;
-        /* Restablecemos los márgenes para evitar desalineaciones */
-        /* Ajustar el tamaño si es necesario para que los botones no sean demasiado grandes */
     }
 
     .perfil-link,
     .cart,
     .logout-button {
-        /* Eliminamos los márgenes para asegurar la alineación y añadimos padding si es necesario */
         padding: 8px;
-        /* Padding para hacer el área de clic más grande, ajustar según sea necesario */
     }
 
     .perfil-link,
     .cart img,
     .logout-button img {
-        /* Ajustamos los tamaños si es necesario */
         width: 30px;
-        /* Ajustamos el tamaño para que no sea demasiado grande */
         height: 30px;
     }
 }
@@ -384,56 +336,35 @@
     justify-content: center;
     position: relative;
     width: 50px;
-    /* Ajusta el tamaño del contenedor del ícono */
     height: 50px;
-    /* Mantiene la altura consistente con otros íconos */
     border-radius: 50%;
-    /* Crea un efecto circular */
     transition: background-color 0.3s;
-    /* Suaviza la transición de color de fondo */
     cursor: pointer;
-    /* Indica que el elemento es interactivo */
     margin-left: 20px;
-    /* Espacio desde el elemento anterior en el Navbar */
 }
 
 .notifications img {
     width: 30px;
-    /* Tamaño específico del ícono de notificación */
     height: 30px;
-    /* Mantener el ícono centrado y proporcional */
 }
 
 .notifications:hover {
     background-color: rgba(155, 155, 155, 0.33);
-    /* Efecto de hover para mejorar la interactividad */
 }
 
-/* Posicionamiento del badge para notificaciones (número de notificaciones) */
 .notifications span {
     position: absolute;
     top: -5px;
-    /* Posiciona el badge en la parte superior del ícono */
     right: -5px;
-    /* Asegura que el badge no se desborde del contenedor circular */
     width: 18px;
-    /* Tamaño del badge */
     height: 18px;
-    /* Altura para mantenerlo circular */
     border-radius: 50%;
-    /* Redondea las esquinas para un badge circular */
     text-align: center;
-    /* Centra el texto dentro del badge */
     background-color: #ff0000;
-    /* Color de fondo llamativo para el badge */
     color: white;
-    /* Color del texto dentro del badge */
     font-size: 12px;
-    /* Tamaño del texto dentro del badge */
     line-height: 18px;
-    /* Alinea verticalmente el texto dentro del badge */
     z-index: 10;
-    /* Asegura que el badge siempre esté por encima del ícono */
 }
 
 .select-custom {
@@ -463,4 +394,176 @@
 .result-item.selected {
     background-color: #f2f2f2;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700,900');
+
+.links {
+    padding: 10px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: rgba(252, 245, 235, 0.582);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 5000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+}
+
+.logo-image {
+    width: 60px;
+    height: 60px;
+}
+
+.store-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.search {
+    flex-grow: 1;
+    margin: 0 20px;
+    max-width: 400px; /* Ajustar este valor según sea necesario */
+}
+
+.search__input {
+    width: 100%;
+    padding: 12px 40px;
+    color: #000;
+    background-color: transparent;
+    border-radius: 50px;
+    border: 1px solid #000;
+    transition: all 250ms ease-in-out;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z' fill='black'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+    background-position: 95% center;
+}
+
+.search__input:hover,
+.search__input:focus {
+    padding: 12px 50px; /* Ajusta el padding aquí si es necesario */
+    outline: 0;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #000;
+    border-radius: 0;
+    background-position: 100% center;
+}
+
+.navegacion {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navegacion li {
+    margin: 0 10px;
+}
+
+.perfil-link,
+.cart-link,
+.wishlist-link {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.cart,
+.logout-button,
+.wishlist,
+.notifications {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.cart:hover,
+.logout-button:hover,
+.wishlist:hover,
+.notifications:hover {
+    background-color: #9b9b9b54;
+}
+
+.cart img,
+.logout-button img,
+.wishlist img,
+.notifications img {
+    width: 30px;
+    height: 30px;
+}
+
+.cart span,
+.notifications span {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #c82d5c;
+    color: #fff;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logo-container {
+        margin-bottom: 1rem;
+    }
+
+    .search {
+        width: 100%;
+        max-width: 300px;
+        margin: 10px 0;
+    }
+
+    .navegacion {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .navegacion li {
+        margin: 0 5px;
+    }
+}
+
 

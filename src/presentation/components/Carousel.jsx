@@ -35,7 +35,7 @@ function Carousel() {
         // Configurar el intervalo para el desplazamiento automático hacia la derecha cada 3 segundos
         const intervalId = setInterval(() => {
             scrollToImage('next');
-        }, 3500);
+        }, 10000);
 
 
         return () => clearInterval(intervalId);

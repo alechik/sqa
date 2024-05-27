@@ -1,24 +1,41 @@
 .crud-productos .crud-options button {
-    margin-right: 10px; /* Espaciado entre botones */
+    margin-right: 10px;
+    background-color: #c82d5c; /* Color de fondo vibrante para los botones */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px; /* Bordes muy redondeados para los botones */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición suave al cambiar el color de fondo */
+    font-size: 14px; /* Tamaño del texto en los botones */
+}
+
+.crud-productos .crud-options button:hover {
+    background-color: #a02147; /* Color más oscuro al pasar el ratón */
 }
 
 .table-container {
-    overflow-x: auto; /* Habilitar desplazamiento horizontal */
+    overflow-x: auto;
+    background-color: #fafafa; /* Fondo claro para el contenedor de la tabla */
+    padding: 20px;
+    border-radius: 10px; /* Bordes muy redondeados para el contenedor */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra ligera para dar profundidad */
+    margin-bottom: 30px; /* Espaciado en el fondo para evitar contenido pegado al footer */
 }
 
 .scrollable-content {
-    max-height: 400px; /* Altura máxima de la tabla con scroll */
-    overflow-y: auto; /* Habilitar desplazamiento vertical */
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .product_description {
-    white-space: nowrap; 
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 300px; /* Ajustar según el tamaño deseado */
+    color: #333; /* Color oscuro para el texto, mejora la legibilidad */
 }
 
-/* Estilos adicionales para separación visual y alineación */
 .crud-productos table {
     width: 100%;
     border-collapse: collapse;
@@ -29,19 +46,35 @@
 .crud-productos td {
     text-align: left;
     padding: 12px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ddd; /* Línea separadora entre filas */
+    border-radius: 5px; /* Bordes ligeramente redondeados en las celdas */
 }
 
 .crud-productos th {
-    background-color: #f0f0f0;
+    background-color: #ff4b4b; /* Color de fondo para los encabezados */
+    color: rgb(29, 29, 29); /* Texto blanco para contraste */
 }
 
 .crud-productos td {
-    background-color: #ffffff;
+    background-color: #ffffff; /* Fondo blanco para las celdas */
+    color: #333; /* Color de texto más oscuro para mejorar la legibilidad */
 }
 
 .crud-productos .crud-options {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+
+}
+
+/* Añade efectos visuales adicionales para los íconos SVG dentro de los botones */
+.crud-productos button svg {
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+    fill: white; /* Color del ícono */
+    width: 14px; /* Ancho del ícono reducido */
+    height: 14px; /* Altura del ícono reducido */
+    transition: fill 0.3s ease; /* Transición suave del color del ícono */
+}
+
+.crud-productos button:hover svg {
+    fill: #d8d8d8; /* Color del ícono al pasar el ratón */
 }

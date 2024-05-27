@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getUsers, removeUser } from "../../../../infraestructure/api/user.js";
 import { useNavigate } from 'react-router-dom';
-import './crudUsuarios.css'; // Importa el archivo CSS
+import './crudUsuarios.css';
 
 export default function CrudUsuarios() {
     const [users, setUsers] = useState([]);
@@ -12,26 +12,7 @@ export default function CrudUsuarios() {
         const fetchUsers = async () => {
             try {
                 let userList = await getUsers();
-                const usersWithTypeName = userList.map(user => {
-                    // Asigna el nombre del tipo de usuario basado en user.user_type_id
-                    let typeName = "";
-                    switch (user.user_type_id) {
-                        case "1":
-                            typeName = "Administrador";
-                            break;
-                        case "2":
-                            typeName = "Trabajador";
-                            break;
-                        case "3":
-                            typeName = "Cliente";
-                            break;
-                        default:
-                            typeName = "Desconocido";
-                            break;
-                    }
-                    return { ...user, typeName }; // Añade el nombre del tipo al objeto del usuario
-                });
-                setUsers(usersWithTypeName);
+                setUsers(userList);
             } catch (error) {
                 console.error('Error al obtener la lista de usuarios:', error);
                 alert('Error al obtener la lista de usuarios. Por favor, revisa la consola para más detalles.');
@@ -44,7 +25,7 @@ export default function CrudUsuarios() {
     const handleDeleteUser = async (userId) => {
         try {
             await removeUser(userId);
-            setUsers(users.filter(user => user.id !== userId));
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
         } catch (error) {
             console.error('Error al eliminar el usuario:', error);
             alert('Error al eliminar el usuario. Por favor, revisa la consola para más detalles.');

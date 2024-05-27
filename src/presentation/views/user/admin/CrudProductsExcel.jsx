@@ -7,7 +7,7 @@ import {
     getProducts
 } from '../../../../infraestructure/api/product';
 import { addProfitPerLot, getAllProfitPerLot } from '../../../../infraestructure/api/profit_per_lot';
-import "./crudproductos.css";
+import "./crudproductexcel.css";
 import {collection, doc, writeBatch, getDoc, orderBy, query, getDocs} from "firebase/firestore";
 import { db } from "../../../../infraestructure/firebase--config.js";
 

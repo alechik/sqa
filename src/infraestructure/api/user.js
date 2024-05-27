@@ -76,10 +76,28 @@ export async function createUser(userData) {
 }
 
 
+// Asumiendo que las constantes ADMIN_ID y WORKER_ID están correctamente definidas
 export async function getUsers() {
-    const usersCollectionRef = collection(db, "users");
-    const querySnapshot = await getDocs(usersCollectionRef);
-    return querySnapshot.docs.map(doc => new User(doc.id, doc.data()));
+    try {
+        const usersCollectionRef = collection(db, "users");
+        const q = query(usersCollectionRef, where("user_type_id", "in", [ADMIN_ID, WORKER_ID]));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => {
+            const userData = doc.data();
+            return {
+                id: doc.id,
+                names: userData.names,
+                email: userData.email,
+                ci: userData.ci,
+                gender: userData.gender,
+                user_type_id: userData.user_type_id,
+                typeName: userData.user_type_id === ADMIN_ID ? "Administrador" : "Trabajador"
+            };
+        });
+    } catch (error) {
+        console.error("Error al obtener los usuarios:", error);
+        throw new Error("Error al obtener los usuarios desde Firestore");
+    }
 }
 
 export const getUserProfile = async (uid) => {

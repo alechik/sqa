@@ -257,8 +257,8 @@ export default function Compra({ cartItems }) {
                         <div>
                             <h4>{item.product_name}</h4>
                             <p>Cantidad: {item.qty}</p>
-                            <p>Precio: ${item.unitary_price.toFixed(2)}</p>
-                            <p>Subtotal: ${(item.qty * item.unitary_price).toFixed(2)}</p>
+                            <p>Precio: ${parseFloat(item.unitary_price).toFixed(2)}</p>
+                            <p>Subtotal: ${parseFloat(item.qty * item.unitary_price).toFixed(2)}</p>
                         </div>
                     </div>
                 ))}

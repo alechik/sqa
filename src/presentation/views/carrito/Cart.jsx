@@ -47,8 +47,8 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                                         <div className="cart-info">
                                             <h3>{item.product_name}</h3>
                                             <div className="price-info">
-                                                <h4>${item.unitary_price.toFixed(2)} x {item.qty}</h4>
-                                                <span>${(item.unitary_price * item.qty).toFixed(2)}</span>
+                                                <h4>${parseFloat(item.unitary_price).toFixed(2)} x {item.qty}</h4>
+                                                <span>${(parseFloat(item.unitary_price) * item.qty).toFixed(2)}</span>
                                             </div>
                                         </div>
 

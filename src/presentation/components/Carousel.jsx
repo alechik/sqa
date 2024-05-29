@@ -2,6 +2,7 @@ import './Carrusel.css';
 import './carousel.css';  // Importa tu archivo CSS para estilos
 import React, { useEffect, useRef, useState } from 'react';
 import { data } from "../assets/data.js";
+import { useHref } from 'react-router-dom';
 
 function Carousel() {
     const listRef = useRef();
@@ -17,26 +18,22 @@ function Carousel() {
             newIndex = (currentIndex - 1 + totalSlides) % totalSlides;
         }
 
-        setCurrentIndex(newIndex); // Actualizar el estado del currentIndex
+        setCurrentIndex(newIndex);
     };
 
     useEffect(() => {
         const container = listRef.current;
         const slides = container.querySelectorAll('.cascade-slider_item');
 
-
         slides.forEach(slide => slide.classList.remove('now', 'next', 'prev'));
-
 
         slides[currentIndex].classList.add('now');
         slides[(currentIndex + 1) % data.length].classList.add('next');
         slides[(currentIndex - 1 + data.length) % data.length].classList.add('prev');
 
-        // Configurar el intervalo para el desplazamiento automático hacia la derecha cada 3 segundos
         const intervalId = setInterval(() => {
             scrollToImage('next');
         }, 10000);
-
 
         return () => clearInterval(intervalId);
     }, [currentIndex]);
@@ -46,9 +43,11 @@ function Carousel() {
             <div className="cascade-slider_slides" ref={listRef}>
                 {
                     data.map((item, index) => (
-                        <div className="cascade-slider_item" key={index}>
-                            <img className='imgs' src={item.imgUrl} alt={`tienda ${item.id}`} />
-                        </div>
+                        <a href={item.link} key={index}>
+                            <div className="cascade-slider_item">
+                                <img className='imgs' src={item.imgUrl} alt={`tienda ${item.id}`} />
+                            </div>
+                        </a>
                     ))
                 }
             </div>
@@ -57,7 +56,6 @@ function Carousel() {
                 {
                     data.map((_, index) => (
                         <li key={`dot-${index}`} className={`cascade-slider_dot ${index === currentIndex ? 'cur' : ''}`} />
-
                     ))
                 }
             </ol>

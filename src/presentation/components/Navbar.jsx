@@ -11,6 +11,8 @@ import defaultAvatar from '../assets/usuario.png';
 import bagIcon from '../assets/bag.png';
 import bellIcon from '../assets/notificacion.png';
 import categoryIcon from '../assets/category.png';
+import wishlistIcon from '../assets/wishlist.png'
+import categoriesIcon from '../assets/categories.png'
 
 export default function Navbar({ cartItems = [] }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
@@ -55,13 +57,13 @@ export default function Navbar({ cartItems = [] }) {
                         <li>
                         <div className='wishlist'>
                                 <Link to='/Category' className="wishlist-link">
-                                    <img src={categoryIcon} alt="wishlist" />
+                                    <img src={categoriesIcon} alt="wishlist" />
                                 </Link>
                             </div>
                             {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
                                 <div className='wishlist'>
                                     <Link to='/wishlist' className='wishlist-link'>
-                                        <img src={bagIcon} alt='Wishlist' />
+                                        <img src={wishlistIcon} alt='Wishlist' />
                                     </Link>
                                 </div>
                             )}

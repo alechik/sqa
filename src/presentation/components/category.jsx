@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { auth, db } from "../../infraestructure/firebase--config.js";
 import './category.css'; // Importa el archivo CSS con los estilos de categoría
-
+import tiendaimage from '../assets/tienda.jpg'
 const Category = ({ product, onClose, addToCart }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -95,15 +95,21 @@ const Category = ({ product, onClose, addToCart }) => {
 
     return (
         <div>
-            <ul className="category-list" id="djanrs">
+            <div className="category-list" id="djanrs">
                 {categories.map(category => (
-                    <li key={category.id}>
-                        <a href="#" onClick={() => handleCategoryClick(category.id)}>
-                            {category.name}
-                        </a>
-                    </li>
+                    <div  className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
+                        <img src={tiendaimage} alt=""/>
+                        <div className="card-category">
+
+                            <div className="card-content-category">
+                                <h3>{category.name}</h3>
+                                <p>{category.description}</p>
+                            </div>
+                        </div>
+
+                    </div>
                 ))}
-            </ul>
+            </div>
             <div className="product-popup">
                 {selectedCategory && (
                     <h2>Productos de la categoría: {categories.find(cat => cat.id === selectedCategory)?.name}</h2>

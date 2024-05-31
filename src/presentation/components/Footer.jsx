@@ -43,7 +43,7 @@ function Footer() {
         <footer className="footer">
             <div className="footer-top">
                 <div className="footer-contact">
-                    <p><strong>Teléfono:</strong> +591 60032422, +591 70841830</p>
+                    <p><strong>Teléfono:</strong> +591 60032422</p>
                     <p><strong>Email:</strong> <a href="mailto:ecommercesantillo@gmail.com">ecommercesantillo@gmail.com</a></p>
                 </div>
                 <div className="footer-social">
@@ -62,7 +62,6 @@ function Footer() {
                     <a href="/" onClick={scrollToTop} className="nombre-sitio">
                         <img src={tuImagen} alt="logo" />
                     </a>
-                    <p>Tienda Los Chambis</p>
                 </div>
                 <div className="footer-copy">
                     <p>© {new Date().getFullYear()} Chambis Developer - Todos los derechos reservados</p>

@@ -5,15 +5,15 @@ import PeopleIcon from "./admin/icons/people-outline.svg";
 import Create from "./admin/icons/create-outline.svg";
 import Stats from "./admin/icons/stats-chart-outline.svg";
 import Admin from "./admin/icons/person-circle-outline.svg";
-import AdminInfo from "../user/admin/AdminInfo.jsx"; 
+import AdminInfo from "../user/admin/AdminInfo.jsx";
 
-export default function Sidebar({ activepage, productos }) {
+export default function Sidebar({ activepage }) {
   return (
     <div className='navwrapper'>
       <div className='subnav secondnav'>
 
-      <Link to='/admin/AdminInfo' className={activepage === 'AdminInfo' ? 'navbutton selected' : 'navbutton'}>
-        <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+        <Link to='/admin/AdminInfo' className={activepage === 'AdminInfo' ? 'navbutton selected' : 'navbutton'}>
+          <div className='navicon' style={{ backgroundColor: 'transparent' }}>
             <img src={Admin} alt="Admin" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
           </div>
           <div className='navlabel'>Usuario</div>
@@ -40,11 +40,7 @@ export default function Sidebar({ activepage, productos }) {
           <div className='navlabel'>Ver Empleados</div>
         </Link>
 
-        </div>
-      
-     
+      </div>
     </div>
   );
 }
-
-

@@ -1,5 +1,4 @@
-
-.admin-sidebar{
+.admin-sidebar {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -7,15 +6,14 @@
     gap: 20px;
 }
 
-.left{
+.left {
     width: 20%;
-   /* border: 1px solid rgb(207,207,207); */
     border-radius: 5px;
     min-height: 50vh;
 }
-.right{
+
+.right {
     width: 75%;
-   /* border: 1px solid rgb(207,207,207); */
     border-radius: 5px;
     min-height: 50vh;
 }
@@ -24,7 +22,12 @@
     display: flex;
     gap: 1rem;
     width: 14rem;
+    position: fixed;
+    top: 50%; /* Ajusta para centrar verticalmente */
+    left: 1rem; /* Ajusta para alejar del borde */
+    transform: translateY(-50%); /* Centrar verticalmente */
 }
+
 .subnav {
     width: min-content;
     display: flex;
@@ -32,8 +35,9 @@
     background: #633154;
     border-radius: 1rem;
     padding: 0.5rem;
-    box-shadow: rgba(0,0,0, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
 }
+
 .navbutton {
     position: relative;
     display: flex;
@@ -44,10 +48,12 @@
     isolation: isolate;
     transition: width 300ms;
 }
+
 .subnav:has(.navbutton:hover) > .navbutton,
 .subnav.demoanim > .navbutton {
     width: 14rem;
 }
+
 .navbutton:after {
     position: absolute;
     content: "";
@@ -58,11 +64,13 @@
     opacity: 0;
     transition: inset 300ms, opacity 300ms;
 }
+
 .navbutton:hover:after,
 .subnav.demoanim .navbutton.demoanimhover:after {
     inset: 0;
     opacity: 1;
 }
+
 .navicon {
     flex-shrink: 0;
     position: relative;
@@ -74,6 +82,7 @@
     --ionicon-stroke-width: 40px;
     color: #c9c9ff;
 }
+
 .navicon:after {
     position: absolute;
     content: "";
@@ -84,16 +93,19 @@
     opacity: 0;
     transition: inset 300ms, opacity 300ms, border-radius 300ms ease;
 }
-.subnav:not(:has(.navbutton:hover), .demoanim) .navbutton.selected > .navicon:after{
+
+.subnav:not(:has(.navbutton:hover), .demoanim) .navbutton.selected > .navicon:after {
     inset: 0;
     opacity: 1;
     border-radius: 0.5rem;
 }
+
 .navbutton:hover > .navicon:after,
-.subnav.demoanim .navbutton.demoanimhover > .navicon:after{
+.subnav.demoanim .navbutton.demoanimhover > .navicon:after {
     inset: 0;
     opacity: 1;
 }
+
 .navlabel {
     flex-shrink: 0;
     display: grid;
@@ -102,8 +114,8 @@
     padding-left: 0.5rem;
     font-size: 1.125rem;
     color: #c9c9ff;
-    text-decoration: nope;
 }
+
 a {
     text-decoration: none;
-  }
+}

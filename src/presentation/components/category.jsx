@@ -3,6 +3,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where }
 import { auth, db } from "../../infraestructure/firebase--config.js";
 import './category.css'; // Importa el archivo CSS con los estilos de categoría
 import tiendaimage from '../assets/tienda.jpg'
+
 const Category = ({ product, onClose, addToCart }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -11,7 +12,6 @@ const Category = ({ product, onClose, addToCart }) => {
 
     useEffect(() => {
         loadCategories();
-        //checkIfInWishlist();
     }, []);
 
     useEffect(() => {
@@ -53,22 +53,19 @@ const Category = ({ product, onClose, addToCart }) => {
             const user = auth.currentUser;
             const wishlistRef = collection(db, 'wishlist');
             const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', productId), where('user_id', '==', user.uid)));
-            
+
             if (querySnapshot.empty) {
-                // Si el producto no está en la lista de deseos, agregarlo
                 await addDoc(wishlistRef, {
                     product_id: productId,
                     user_id: user.uid
                 });
                 console.log('Producto agregado a la lista de deseos.');
             } else {
-                // Si el producto está en la lista de deseos, eliminarlo
                 const docToDelete = querySnapshot.docs[0];
                 await deleteDoc(doc(wishlistRef, docToDelete.id));
                 console.log('El producto eliminado de la lista de deseos.');
             }
-            
-            // Recargamos los datos del producto para ver si está en la lista de deseos
+
             loadProductData(productId);
         } catch (error) {
             console.error('Error adding/removing product to/from wishlist:', error);
@@ -81,7 +78,6 @@ const Category = ({ product, onClose, addToCart }) => {
             const wishlistRef = collection(db, 'wishlist');
             const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', productId), where('user_id', '==', user.uid)));
             const isInWishlist = !querySnapshot.empty;
-            // Actualizamos el estado del producto para reflejar si está en la lista de deseos o no
             setProducts(products => products.map(p => {
                 if (p.id === productId) {
                     return { ...p, isInWishlist };
@@ -97,16 +93,14 @@ const Category = ({ product, onClose, addToCart }) => {
         <div>
             <div className="category-list" id="djanrs">
                 {categories.map(category => (
-                    <div  className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
-                        <img src={tiendaimage} alt=""/>
+                    <div className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
+                        <img src={tiendaimage} alt="" />
                         <div className="card-category">
-
                             <div className="card-content-category">
                                 <h3>{category.name}</h3>
-                                <p>{category.description}</p>
+                                <p className="ellipsis">{category.description}</p>
                             </div>
                         </div>
-
                     </div>
                 ))}
             </div>
@@ -140,9 +134,3 @@ const Category = ({ product, onClose, addToCart }) => {
 }
 
 export default Category;
-
-
-
-
-
-

@@ -73,6 +73,7 @@ export default function Dashboard(){
 
         fetchTopProducts();
     }, []);
+    
     return (
         <div className='content'>
             <span className="section-title">Dashboard de Ventas</span>

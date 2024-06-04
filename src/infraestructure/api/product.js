@@ -11,7 +11,8 @@ import {
     writeBatch,
     query,
     where,
-    runTransaction
+    runTransaction,
+    serverTimestamp
 } from "firebase/firestore";
 import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -87,6 +88,7 @@ export async function createProduct(productData, file) {
         CategoryID: productData.CategoryID,
         product_name: productData.product_name,
         stock: productData.stock,
+        date_added: serverTimestamp(),
         unitary_price: productData.unitary_price,
         gramaje: productData.gramaje,
         state: productState // Usamos el valor determinado basado en el stock

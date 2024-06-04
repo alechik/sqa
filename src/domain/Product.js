@@ -9,6 +9,7 @@ class Product {
         stock,
         gramaje,
         unitary_price,
+        date_added,
         state,
         ppp = null // Añadir el campo ppp con un valor por defecto de null
     ) {
@@ -19,6 +20,7 @@ class Product {
         this.CategoryID = CategoryID;
         this.product_name = product_name;
         this.stock = stock;
+        this.date_added = date_added
         this.gramaje = gramaje;
         this.unitary_price = unitary_price;
         this.state = state;
@@ -34,6 +36,7 @@ class Product {
             CategoryID: this.CategoryID,
             product_name: this.product_name,
             stock: this.stock,
+            date_added: this.date_added,
             unitary_price: this.unitary_price,
             gramaje: this.gramaje,
             state: this.state

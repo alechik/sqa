@@ -141,7 +141,7 @@ function Login() {
                 </form>
             </div>
             {loading && <div className="spinner-container">
-                <TailSpin color="#00BFFF" height={50} width={50} />
+                <TailSpin color="#CD5454" height={50} width={50} />
             </div>}
         </section>
     );

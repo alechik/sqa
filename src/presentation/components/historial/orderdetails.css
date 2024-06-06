@@ -1,13 +1,10 @@
-/* orderdetails.css */
-
 .order-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin: 20px;
-    max-width: 800px;
     margin: 20px auto;
+    max-width: 960px;
     animation: fadeIn 1s ease-in-out;
 }
 
@@ -30,59 +27,90 @@
     color: #333;
 }
 
-.track-button {
-    background-color: coral;
+.track-button,
+.confirm-button {
+    background-color: #4CAF50;
     color: white;
-    border-radius: 8px;
     border: none;
-    font-size: 1rem;
+    border-radius: 8px;
     padding: 10px 20px;
     cursor: pointer;
-    margin: 20px 0;
-    width: 100%;
+    transition: background-color 0.3s, transform 0.3s;
+    font-size: 1rem;
+    width: auto;
 }
 
-.track-button:hover {
-    background-color: #e57373;
+.btn-devolver{
+        background-color: #c95353;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        font-size: 1rem;
+        width: auto;
+    }
+
+.btn-devolver:hover{
+        background-color: #993f3f;
+        transform: translateY(-2px);
+    }
+
+.track-button:hover,
+.confirm-button:hover {
+    background-color: #3f9942;
+    transform: translateY(-2px);
 }
 
-.order-products-title {
-    margin-top: 30px;
-    font-size: 1.5em;
-    color: #5e35b1;
-    text-align: center;
+.product-card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: box-shadow 0.3s;
 }
 
-.order-products-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+.product-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.order-products-table th,
-.order-products-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+.product-info {
+    flex-grow: 1;
 }
 
-.order-products-table th {
-    background-color: #f4f4f4;
+.product-name {
+    font-size: 1.4em;
     color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
-.return-button {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 0.9rem;
+.product-detailss {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
 }
 
-.return-button:hover {
-    background-color: #d32f2f;
+.action-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    animation: scaleIn 0.3s ease-in-out;
 }
 
 /* Modal styles */
@@ -107,65 +135,46 @@
     width: 90%;
     max-width: 500px;
     text-align: center;
+    animation: scaleIn 0.3s ease-in-out;
 }
 
-.modal-header,
-.modal-body {
-    color: #333;
+.confirm-button-modal {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: auto;
+    margin-top: 20px;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.modal-header {
-    font-size: 24px;
-    margin-bottom: 25px;
-}
-
-.modal-body {
-    margin-bottom: 10px;
+.confirm-button-modal:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
 }
 
 .input-quantity {
-    width: 60%;
-    padding: 8px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-.confirm-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
 
-.confirm-button:hover {
-    background-color: #45a049;
-}
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
 
-.cerrar-button {
-    background-color: #f44336;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.cerrar-button:hover {
-    background-color: #d32f2f;
-}
-
-.btn-devolver{
-    color: white;
-    background-color: red;
-    margin: 10px;
-    margin-left: 20px;
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 @keyframes fadeIn {

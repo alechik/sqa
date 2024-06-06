@@ -69,7 +69,7 @@ function DeliveryDetailsPage() {
         window.open(`https://wa.me/${fullNumber}`, '_blank');
     };
 
-    if (!order) return <div className="delivery-loader"><TailSpin color="#00BFFF" height={80} width={80} /></div>;
+    if (!order) return <div className="delivery-loader"><TailSpin color="#CD5454" height={80} width={80} /></div>;
 
     return (
         <div className="delivery-details-container">

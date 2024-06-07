@@ -1,27 +1,40 @@
-.analytics{
-    position: relative;
-    z-index: 1;
+.analytics {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #f9f9f9; /* Fondo claro */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+    max-width: 700px; /* Ancho máximo para evitar estiramientos */
+    margin: auto; /* Centrar en la pantalla */
+    transition: all 0.3s ease; /* Transición suave */
 }
 
-.analytics header{
-    display: flex;
-    justify-content: space-between;
+.header {
     width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    border-radius: 8px; /* Bordes redondeados */
+    color: white; /* Texto blanco */
+}
+
+.title {
+    font-size: 28px;
     font-weight: bold;
-
+    font-family: 'Arial', sans-serif; /* Cambiar tipografía */
 }
 
-.analytics header .followers {
-    color: #00484e;
-    margin: auto;
+.chart-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: white; /* Fondo blanco para resaltar */
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+    transition: transform 0.3s ease; /* Transición suave */
 }
 
-.analytics header .earnings {
-    color: #810551
-}
-.leyenda{
-    margin: auto;
+.chart-container:hover {
+    transform: scale(1.02); /* Efecto de agrandamiento al pasar el ratón */
 }

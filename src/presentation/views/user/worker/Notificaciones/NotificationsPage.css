@@ -85,8 +85,23 @@
     /* Ajustar el tamaño a casi la mitad del contenedor */
 }
 
+.product-images {
+    width: 150px;
+    /* Ajusta el tamaño de la imagen */
+    height: 200px;
+    /* Mantén una relación de aspecto cuadrada */
+    object-fit: cover;
+    /* Asegura que la imagen se recorte para llenar el contenedor */
+    border-radius: 10px;
+    /* Añade bordes redondeados */
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Añade una sombra ligera */
+}
+
 .accept-button {
     background-color: #27ae60;
+    color: #fff;
 }
 
 .accept-button:hover {
@@ -96,6 +111,7 @@
 
 .reject-button {
     background-color: #e74c3c;
+    color: #fff;
 }
 
 .reject-button:hover {
@@ -105,6 +121,7 @@
 
 .map-button {
     background-color: #3498db;
+    color: #fff;
 }
 
 .map-button:hover {
@@ -114,6 +131,7 @@
 
 .whatsapp-button {
     background-color: #25D366;
+    color: #fff;
 }
 
 .whatsapp-button:hover {

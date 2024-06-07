@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getOrderById } from '../../../infraestructure/api/orders';
-import { ThreeDots } from 'react-loader-spinner';
+import { TailSpin } from 'react-loader-spinner';
 import './SeguimientoPedido.css';
 
 function SeguimientoPedido() {
@@ -31,7 +31,7 @@ function SeguimientoPedido() {
       if (!orderComplete) {
         fetchOrder();
       }
-    }, 10000); // Polling every 10 seconds
+    }, 5000); // Polling every 10 seconds
 
     fetchOrder(); // Also call immediately on mount
 
@@ -58,8 +58,8 @@ function SeguimientoPedido() {
 
   if (loading) {
     return (
-      <div className="loader-container">
-        <ThreeDots color="#00BFFF" height={80} width={80} />
+      <div className="loading loading-container">
+        <TailSpin color="#CD5454" height={50} width={50} />
       </div>
     );
   }
@@ -70,7 +70,7 @@ function SeguimientoPedido() {
 
   return (
     <div className="tracking-container">
-      <h1 className="tracking-title">Seguimiento del Pedido #{order && order.id}</h1>
+      <h1 className="tracking-title">Seguimiento del Pedido #{order && orderId}</h1>
       <h2 className="current-status">Estado actual: {order && order.status}</h2>
       <h3 className="delivery-address">Dirección de Entrega: {order && order.deliveryAddress}</h3>
       {order && renderTimeline(order)}

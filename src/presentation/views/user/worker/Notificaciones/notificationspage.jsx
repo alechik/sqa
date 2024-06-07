@@ -104,16 +104,16 @@ function NotificationsPage() {
     };
 
     if (loadingOrders || loadingReturns) {
-        return <div className="loading">Loading...</div>;
+        return <div className="loading">Cargando...</div>;
     }
 
 
     return (
         <div className="notifications-page">
-            <h1 className="page-title">Notifications</h1>
+            <h1 className="page-title">Notificacion</h1>
             <div className="notifications-container">
                 <div className="orders-section">
-                    <h2 className="section-title">Pending Orders</h2>
+                    <h2 className="section-title">Orden pendiente</h2>
                     {orders.length > 0 ? (
                         <ul className="order-list">
                             {orders.map(order => (
@@ -123,15 +123,15 @@ function NotificationsPage() {
                                         <p className="order-total"><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</p>
                                         <p className="order-time"><strong>Tiempo Ordenado:</strong> {new Date(order.createdAt.seconds * 1000).toLocaleString()}</p>
                                         <p className="order-address"><strong>Delivery Address:</strong> {order.deliveryAddress}</p>
-                                        <button className="accept-button" onClick={() => handleAccept(order.id)}>Accept Order</button>
+                                        <button className="accept-button" onClick={() => handleAccept(order.id)}>Aceptar orden</button>
                                     </div>
                                 </li>
                             ))}
                         </ul>
-                    ) : <p className="no-orders">No pending orders.</p>}
+                    ) : <p className="no-orders">No hay ordenes pendientes</p>}
                 </div>
                 <div className="returns-section">
-                    <h2 className="section-title">Return Requests</h2>
+                    <h2 className="section-title">Peticion de devolucion</h2>
                     {returnRequests.length > 0 ? (
                         <ul className="return-list">
                             {returnRequests.map(request => (
@@ -141,29 +141,27 @@ function NotificationsPage() {
                                         <p className="return-total"><strong>Total:</strong> ${request.totalPrice.toFixed(2)}</p>
                                         <p className="return-time"><strong>Requested At:</strong> {new Date(request.requestedAt).toLocaleString()}</p>
                                         <p className="return-email"><strong>Email:</strong> {request.userEmail}</p>
-                                        <p className="return-address"><strong>Address:</strong> {request.deliveryAddress}</p>
+                                        <p className="return-address"><strong>Direccion:</strong> {request.deliveryAddress}</p>
                                         <div className="return-products">
-                                            <h3 className="products-title">Products to Return</h3>
+                                            <h3 className="products-title">Producto para retorno</h3>
                                             <ul className="products-list">
                                                 <li className="product-item">
-                                                    <img src={request.productImage} alt={request.productName} className="product-image" />
-
-                                                    <p className="product-name"><strong>{request.productName}</strong></p>
-                                                    <p className="product-description">{request.productDescription}</p>
+                                                    <img src={request.productImage} alt={request.productName} className="product-images" />
+                                                    <p className="product-namen"><strong>{request.productName}</strong></p>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div className="botoness">
-                                            <button className="map-button" onClick={() => openMap(request.deliveryAddress)}>View on Map</button>
-                                            <button className="whatsapp-button" onClick={() => openWhatsApp(request.userPhone)}>Contact on WhatsApp</button>
-                                            <button className="accept-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'accept')}>Accept Return</button>
-                                            <button className="reject-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'reject')}>Reject Return</button>
+                                            <button className="map-button" onClick={() => openMap(request.deliveryAddress)}>Ver en Maps</button>
+                                            <button className="whatsapp-button" onClick={() => openWhatsApp(request.userPhone)}>Contactar en WhatsApp</button>
+                                            <button className="accept-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'accept')}>Aceptar devolucion</button>
+                                            <button className="reject-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'reject')}>Denegar devolucion</button>
                                         </div>
                                     </div>
                                 </li>
                             ))}
                         </ul>
-                    ) : <p className="no-returns">No return requests.</p>}
+                    ) : <p className="no-returns">No hay devoluciones pendientes</p>}
                 </div>
             </div>
         </div>

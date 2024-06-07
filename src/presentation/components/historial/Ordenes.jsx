@@ -68,6 +68,7 @@ function Ordenes() {
                 <div className="status-item"><span className="status-dot pendiente"></span> Pendiente</div>
                 <div className="status-item"><span className="status-dot parcialmente-devuelto"></span> Parcialmente Devuelto</div>
                 <div className="status-item"><span className="status-dot devuelto"></span> Devuelto</div>
+                <div className="status-item"><span className="status-dot en-revisión"></span> En Revisión</div>
             </div>
         </div>
     );

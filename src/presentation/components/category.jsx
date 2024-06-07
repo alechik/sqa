@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { auth, db } from "../../infraestructure/firebase--config.js";
+import { useNavigate } from 'react-router-dom';
 import './category.css'; // Importa el archivo CSS con los estilos de categoría
-import tiendaimage from '../assets/tienda.jpg'
+import tiendaimage from '../assets/tienda.jpg';
 
-const Category = ({ product, onClose, addToCart }) => {
+const Category = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [products, setProducts] = useState([]);
     const [wishlistProducts, setWishlistProducts] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadCategories();
@@ -32,6 +34,7 @@ const Category = ({ product, onClose, addToCart }) => {
 
     const listenToWishlistChanges = () => {
         const user = auth.currentUser;
+        if (!user) return () => { }; // No-op if no user is logged in
         const wishlistRef = collection(db, 'wishlist');
         return onSnapshot(query(wishlistRef, where('user_id', '==', user.uid)), snapshot => {
             const wishlistProductsData = snapshot.docs.map(doc => doc.data().product_id);
@@ -49,8 +52,13 @@ const Category = ({ product, onClose, addToCart }) => {
     };
 
     const handleAddToWishlist = async (productId) => {
+        const user = auth.currentUser;
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+
         try {
-            const user = auth.currentUser;
             const wishlistRef = collection(db, 'wishlist');
             const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', productId), where('user_id', '==', user.uid)));
 

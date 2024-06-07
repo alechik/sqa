@@ -70,6 +70,10 @@
     background-color: #9c27b0;
 }
 
+.orders__item--en-revisión::before {
+    background-color: #747474;
+}
+
 .orders__item:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -130,6 +134,10 @@
 
 .devuelto {
     background-color: #9c27b0;
+}
+
+.en-revisión{
+    background-color: #747474;
 }
 
 @keyframes fadeIn {

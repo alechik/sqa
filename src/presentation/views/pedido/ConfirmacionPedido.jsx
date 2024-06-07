@@ -82,7 +82,7 @@ export default function ConfirmarPedido() {
       <h1>Buscando Delivery</h1>
       {order && (
         <div className="order-details">
-          <h2>Pedido #{order.id}</h2>
+          <h2>Pedido #{orderId}</h2>
           <p><strong>Estado:</strong> {order.status}</p>
           <p><strong>Dirección de Entrega:</strong> {order.deliveryAddress || 'N/A'}</p>
           <p><strong>Total:</strong> ${order?.totalPrice?.toFixed(2) || 'N/A'}</p>

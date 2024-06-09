@@ -1,4 +1,4 @@
-import  { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import Fuse from 'fuse.js';
 import { db } from '../../infraestructure/firebase-connection';
@@ -6,20 +6,21 @@ import { collection, getDocs } from 'firebase/firestore';
 import './Search.css';
 import ProductPopup from './ofertas/ProductPopup'; // Asegúrate de que la ruta del import es correcta.
 import { useNavigate } from 'react-router-dom';
+import { useSearchedProducts } from '../../infraestructure/api/searchedproducts.jsx'; // Verifica la ruta
 
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const searchContainerRef = useRef(null);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { searchedProducts, setSearchedProducts } = useSearchedProducts();
 
     useEffect(() => {
         // Listener para clicks fuera del componente
         const handleClickOutside = (event) => {
             if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-                setSearchResults([]);
+                setSearchedProducts([]);
             }
         };
 
@@ -27,21 +28,19 @@ export default function Search() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [setSearchedProducts]);
 
     useEffect(() => {
         const fetchSearchResults = async () => {
             if (searchTerm.trim() === '') {
-                setSearchResults([]);
+                setSearchedProducts([]);
+                console.log("Cleared results because search term was empty.");
                 return;
             }
-
+            console.log("Fetching data for term: ", searchTerm);
             setLoading(true);
             const productsSnapshot = await getDocs(collection(db, "products"));
-            //const categoriesSnapshot = await getDocs(collection(db, "product_categories"));
-
             const products = productsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-            //const categories = categoriesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
             const fuseOptions = {
                 includeScore: true,
@@ -51,50 +50,46 @@ export default function Search() {
 
             const fuse = new Fuse(products, fuseOptions);
             const results = fuse.search(searchTerm.toLowerCase());
-            sessionStorage.setItem("searchedProducts",JSON.stringify(results))
-            setSearchResults(results.map(result => result.item));
+            console.log("Search results:", results.map(r => r.item));
+            setSearchedProducts(results.map(result => result.item));
             setLoading(false);
         };
 
-        const delayDebounce = setTimeout(() => {
-            fetchSearchResults();
-        }, 300);
-
-        return () => clearTimeout(delayDebounce);
-    }, [searchTerm]);
+        fetchSearchResults();
+    }, [searchTerm, setSearchedProducts]);
 
     const handleResultClick = async (result) => {
         setSelectedProduct(result);
-        setSearchResults([]);
+        setSearchedProducts([]); // Limpia los resultados de búsqueda al seleccionar un producto
     };
 
     const handleClosePopup = () => {
         setSelectedProduct(null);
     };
 
-    const handlePage=(event)=>{
+    const handlePage = (event) => {
         if (event.key === 'Enter' && searchTerm.trim() !== '') {
             navigate(`/search`);
         }
-    }
+    };
 
     return (
         <section className="search" ref={searchContainerRef}>
             <div className="search__container">
-                <input 
+                <input
                     onKeyDown={handlePage}
-                    className="search__input" 
-                    type="text" 
-                    placeholder="Search"
+                    className="search__input"
+                    type="text"
+                    placeholder="Buscar Producto"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 {loading && <div className="loader-container">Loading...</div>}
-                {searchResults.length > 0 && (
-                    <ul className="search__results">
-                        {searchResults.map((result) => (
-                            <li 
-                                key={result.id} 
+                {searchedProducts.length > 0 && (
+                    <ul className={`search__results ${searchedProducts.length > 0 ? 'show' : ''}`}>
+                        {searchedProducts.map((result) => (
+                            <li
+                                key={result.id}
                                 className="result-item"
                                 onClick={() => handleResultClick(result)}
                             >
@@ -108,7 +103,6 @@ export default function Search() {
                 <ProductPopup
                     product={selectedProduct}
                     onClose={handleClosePopup}
-                    // addtoCart={addtoCart} // Implementa esta función según sea necesario
                 />,
                 document.body
             )}

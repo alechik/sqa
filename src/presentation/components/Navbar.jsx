@@ -11,6 +11,7 @@ import defaultAvatar from '../assets/usuario.png';
 import bellIcon from '../assets/notificacion.png';
 import wishlistIcon from '../assets/wishlist.png';
 import categoriesIcon from '../assets/categories.png';
+import {SearchedProductsProvider} from "../../infraestructure/api/searchedproducts.jsx";
 
 export default function Navbar({ cartItems = [] }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
@@ -75,7 +76,7 @@ export default function Navbar({ cartItems = [] }) {
                     <span className="store-name">Saltillo</span>
                 </Link>
             </div>
-            <Search />
+                <Search />
             <ul className="navegacion">
                 {userProfile ? (
                     <>

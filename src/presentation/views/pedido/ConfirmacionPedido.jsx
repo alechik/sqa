@@ -50,7 +50,7 @@ export default function ConfirmarPedido() {
         <div className="product-info">
           <p>{product.name}</p>
           <p>Cantidad: {product.quantity}</p>
-          <p>Precio: ${product.unitPrice.toFixed(2)}</p>
+          <p>Precio: ${parseFloat(product.unitPrice).toFixed(2)}</p>
         </div>
       </div>
     ));
@@ -63,7 +63,7 @@ export default function ConfirmarPedido() {
   if (isLoading) {
     return (
       <div className="loading loading-container">
-        <TailSpin color="#00BFFF" height={50} width={50} />
+        <TailSpin color="#CD5454" height={50} width={50} />
         <p>Por favor, espera mientras obtenemos los detalles del pedido...</p>
       </div>
     );

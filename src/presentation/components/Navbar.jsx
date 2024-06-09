@@ -3,20 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import "./navbar.css";
+import './navbar.css';
 import tuImagen from '../assets/iconoW.png';
 import shoppingCartIcon from '../assets/shopping-cart.png';
 import logoutIcon from '../assets/logout.png';
 import defaultAvatar from '../assets/usuario.png';
-import bagIcon from '../assets/bag.png';
 import bellIcon from '../assets/notificacion.png';
-import categoryIcon from '../assets/category.png';
-import wishlistIcon from '../assets/wishlist.png'
-import categoriesIcon from '../assets/categories.png'
+import wishlistIcon from '../assets/wishlist.png';
+import categoriesIcon from '../assets/categories.png';
 
 export default function Navbar({ cartItems = [] }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const auth = getAuth();
 
@@ -38,8 +37,34 @@ export default function Navbar({ cartItems = [] }) {
     };
 
     const handleLogoClick = () => {
-        navigate('/');
-        window.location.reload();
+        setShowModal(true);
+        document.body.style.overflow = 'hidden'; // Evita el desplazamiento de la página principal
+    };
+
+
+    const handleCloseModal = () => {
+        const modal = document.querySelector('.modal-contentt');
+        if (modal) {
+            modal.classList.add('hide');
+            setTimeout(() => {
+                setShowModal(false);
+                document.body.style.overflow = 'auto'; // Restaura el desplazamiento de la página
+            }, 300);
+        }
+    };
+
+    const handleModalOptionClick = (option) => {
+        switch (option) {
+            case 'wishlist':
+                navigate('/wishlist');
+                break;
+            case 'logout':
+                logout();
+                break;
+            default:
+                break;
+        }
+        handleCloseModal();
     };
 
     return (
@@ -55,21 +80,14 @@ export default function Navbar({ cartItems = [] }) {
                 {userProfile ? (
                     <>
                         <li>
-                        <div className='wishlist'>
-                                <Link to='/Category' className="wishlist-link">
+                            <div className='wishlist'>
+                                <Link to='/Category' className="wishlist-link" title='Categorias'>
                                     <img src={categoriesIcon} alt="wishlist" />
                                 </Link>
                             </div>
-                            {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
-                                <div className='wishlist'>
-                                    <Link to='/wishlist' className='wishlist-link'>
-                                        <img src={wishlistIcon} alt='Wishlist' />
-                                    </Link>
-                                </div>
-                            )}
                             {userProfile.userTypeId === '2' && (
                                 <div className='notifications'>
-                                    <Link to='/notifications' className='notification-link'>
+                                    <Link to='/notifications' className='notification-link' title='Notificaciones' >
                                         <img src={bellIcon} alt='Notificaciones' />
                                         <span>3</span>
                                     </Link>
@@ -77,16 +95,13 @@ export default function Navbar({ cartItems = [] }) {
                             )}
                             <div className='cart'>
                                 <Link to='/cart' className="cart-link">
-                                    <img src={shoppingCartIcon} alt="Carrito" />
+                                    <img src={shoppingCartIcon} alt="Carrito" title='Carrito' />
                                     <span>{totalItems}</span>
                                 </Link>
                             </div>
                             <Link to={userProfile.userTypeId === '1' ? "/admin/AdminInfo" : "/perfil"} className="perfil-link">
                                 <img src={userProfile.avatar || defaultAvatar} alt="Perfil" className="navbar-avatar" />
                             </Link>
-                            <button onClick={logout} className="logout-button" title="Cerrar Sesión">
-                                <img src={logoutIcon} alt="Cerrar Sesión" />
-                            </button>
                         </li>
                     </>
                 ) : (
@@ -95,6 +110,29 @@ export default function Navbar({ cartItems = [] }) {
                     </li>
                 )}
             </ul>
+
+            {/* Modal */}
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-contentt">
+                        <span className="close" onClick={handleCloseModal}>
+                            &times;
+                        </span>
+                        <div className="modal-options">
+                            {(userProfile?.userTypeId === '1' || userProfile?.userTypeId === '3') && (
+                                <div className="modal-option" onClick={() => handleModalOptionClick('wishlist')}>
+                                    <img src={wishlistIcon} alt="Wishlist" />
+                                    <span>Lista de Deseos</span>
+                                </div>
+                            )}
+                            <div className="modal-option" onClick={() => handleModalOptionClick('logout')}>
+                                <img src={logoutIcon} alt="Logout" />
+                                <span>Cerrar Sesión</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }

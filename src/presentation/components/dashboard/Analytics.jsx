@@ -11,7 +11,7 @@ export default function Analytics({topProducts}){
         <header>
             <span className='followers'>Productos mas vendidos</span>
         </header>
-        <BarChart classname='chart' width={500} height={210} data={data}>
+        <BarChart className='chart' width={500} height={210} data={data}>
             <CartesianGrid strokeDasharray="10 10" />
             <XAxis dataKey="name" />
             <Tooltip />

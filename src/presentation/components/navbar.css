@@ -55,8 +55,8 @@
     }
 
     &__input {
-        width: 80%;
-        padding: 12px 60px;
+        width: 100%;
+        padding: 12px 80px;
         color: rgb(0, 0, 0);
         background-color: transparent;
         transition: transform 250ms ease-in-out;
@@ -261,72 +261,6 @@
     border-radius: 10px;
 }
 
-@media (max-width: 768px) {
-    .nav {
-        flex-direction: column;
-        align-items: center;
-        padding: 0.5rem 0;
-    }
-
-    .navbar-avatar {
-        border-radius: 10px;
-    }
-
-    .nombre-sitio {
-        padding: 0;
-        margin-bottom: 1rem;
-    }
-
-    .search {
-        width: calc(100% - 20px);
-        max-width: 300px;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-
-    .search__input {
-        width: 100%;
-        padding: 12px 16px;
-        box-sizing: border-box;
-        margin: 0 auto;
-        border-radius: 50px;
-        border: 1px solid #000000;
-    }
-
-    .navegacion {
-        flex-direction: row;
-        justify-content: center;
-        padding: 0;
-        margin-top: 1rem;
-    }
-
-    .navegacion li {
-        margin: 0 10px;
-    }
-
-    .navegacion li:last-child {
-        margin-right: 0;
-    }
-
-    .cart,
-    .logout-button {
-        margin: 0;
-    }
-
-    .perfil-link,
-    .cart,
-    .logout-button {
-        padding: 8px;
-    }
-
-    .perfil-link,
-    .cart img,
-    .logout-button img {
-        width: 30px;
-        height: 30px;
-    }
-}
-
 .notifications {
     display: inline-flex;
     align-items: center;
@@ -392,25 +326,10 @@
     background-color: #f2f2f2;
 }
 
-@import url('https://fonts.googleapis.com/css?family=Raleway:400,700,900');
-
 .links {
     padding: 10px;
 }
 
-.nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background-color: rgba(252, 245, 235, 0.582);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 5000;
-}
 
 .logo-container {
     display: flex;
@@ -503,10 +422,107 @@
     border-radius: 50%;
 }
 
+/* Estilos para el modal */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 9999;
+    top: 12px;
+    width: 290px;
+    height: 345px;
+    overflow: auto;
+}
+
+.modal-contentt {
+    background-color: #ffffff;
+    padding: 30px;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 250px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.modal-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.modal-option:hover {
+    background-color: #f1f1f1;
+}
+
+.modal-option img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.modal-option span {
+    font-size: 16px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}
+
+.modal-contentt.hide {
+    animation: slideOut 0.3s ease-out;
+}
+
+/* Estilos específicos para dispositivos móviles */
 @media (max-width: 768px) {
     .nav {
         flex-direction: column;
         align-items: center;
+        padding: 0.5rem 0;
     }
 
     .logo-container {
@@ -522,11 +538,45 @@
     .navegacion {
         flex-direction: row;
         justify-content: center;
+        margin-top: 1rem;
     }
 
     .navegacion li {
-        margin: 0 5px;
+        margin: 0 10px;
+    }
+
+    .modal {
+        top: 10%;
+        width: 95%;
+        height: auto;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-contentt {
+        width: 100%;
+        max-width: none;
+        /* Permite que el modal se expanda al máximo ancho disponible */
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .modal-option {
+        padding: 15px;
+        /* Mayor área de clic para facilitar la interacción */
+    }
+
+    .modal-option span {
+        font-size: 18px;
+        /* Texto más grande para mejor legibilidad */
+    }
+
+    .close {
+        top: 5px;
+        right: 10px;
+        font-size: 35px;
+        /* Botón de cierre más grande y fácil de tocar */
     }
 }
-
-

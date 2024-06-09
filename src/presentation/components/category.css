@@ -2,63 +2,65 @@
     display: grid;
     gap: 1rem;
     grid-auto-flow: dense;
-    grid-auto-rows: 22rem ;
-    grid-template-columns: repeat(auto-fill,minmax(35rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
     list-style: none;
     padding: 0;
     margin-bottom: 20px;
     overflow: hidden;
 }
+
 .card-container-category {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 20px;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Alinea el contenido desde arriba */
     background: #f0f0f0;
-    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
+    transition: transform 0.5s ease;
+    overflow: hidden;
+    /* Asegura que el contenido no sobresalga */
 }
 
-.category-list div {
-    float: left;
-    margin: 3px;
-}
-.card-content-category{
-    padding: 16px;
-}
-.card-category{
-    background: #f0f0f0;
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 20px;
-}
 .card-container-category:hover {
-    transition: 0.5s;
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }
-.card-container-category img{
-    height: 200px;
-    width: 100%;
-}
-.category-list div a {
-    text-decoration: none;
-    background: #292c33;
-    color: white;
-    padding: 5px 20px;; /* Reduciendo el padding para hacer los botones más pequeños */
-    display: block;
-    margin: 3px;
-    border-left: 4px solid #f26739;
-    text-transform: capitalize;
-    transition: all .7s;
+
+.card-container-category img {
+    height: 150px;
     width: 100%;
 }
 
-.category-list div a:hover {
-    background: #C8102E;
-    border-left: 4px solid #111;
+.card-content-category {
+    padding: 15px ;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Permite que el contenido llene el espacio disponible */
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Limita el texto a dos líneas */
+    -webkit-box-orient: vertical;
+}
+
+.card-content-category:hover .ellipsis {
+    -webkit-line-clamp: none;
+    /* Muestra todo el texto al hacer hover */
+}
+
+.card-category {
+    background: #f0f0f0;
+    width: 100%;
+    border-radius: 8px;
+    margin: 20px;
+    /* Espacio interno dentro del contenedor de la categoría */
 }
 
 .card-container {
@@ -70,12 +72,13 @@
 
 .card {
     width: calc(33.33% - 20px);
+    /* Calcula el ancho para 3 tarjetas por fila con espacio */
     margin-bottom: 20px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
@@ -84,10 +87,25 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.card h3 {
+.card h3,
+.card p {
     margin-bottom: 10px;
 }
 
-.card p {
-    margin-bottom: 10px;
+.category-list div a {
+    text-decoration: none;
+    background: #292c33;
+    color: white;
+    padding: 5px 20px;
+    display: block;
+    margin: 3px;
+    border-left: 4px solid #f26739;
+    text-transform: capitalize;
+    transition: all .7s;
+    width: 100%;
+}
+
+.category-list div a:hover {
+    background: #C8102E;
+    border-left: 4px solid #111;
 }

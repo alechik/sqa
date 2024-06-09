@@ -1,3 +1,4 @@
+
 body {
     height: 100%;
     margin: 0;
@@ -18,55 +19,53 @@ main {
 
 }
 
+
 .footer {
     background-color: #522b46;
+    /* Fondo oscuro para contraste */
     color: #fff;
-    padding: 20px 40px;
-    /* Ajuste del padding para más espacio */
+    padding: 15px 30px;
+    /* Reducción del padding para un diseño más compacto */
     font-family: 'Open Sans', sans-serif;
-    transition: background-color 0.3s;
-    /* Transición suave del color de fondo */
 }
 
 .footer a {
     color: #fff;
     text-decoration: none;
-    transition: color 0.3s;
-    /* Transición suave del color */
+    transition: color 0.3s, transform 0.3s;
+    /* Transiciones suaves */
 }
 
 .footer-top {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    padding-bottom: 20px;
     position: relative;
-    /* Para el detalle visual */
 }
 
 .footer-top::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 20px;
-    right: 20px;
+    left: 0;
+    right: 0;
     height: 1px;
     background: linear-gradient(to right, #522b46, #fff, #522b46);
+    /* Línea decorativa más sutil */
 }
 
 .footer-contact p,
-.footer-social a,
-.footer-nav a {
+.footer-social a {
     margin: 5px 0;
+    /* Reducción de los márgenes para un diseño más compacto */
 }
 
-.footer-social a img,
-.footer-nav a img {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
-    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-    /* Preparación para animaciones */
+.footer-social a img {
+    width: 20px;
+    /* Reducción del tamaño de los íconos */
+    height: 20px;
+    margin-right: 8px;
+    /* Espacio entre ícono y enlace */
 }
 
 .footer-bottom {
@@ -74,24 +73,23 @@ main {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    margin-top: 20px;
 }
 
-.footer-legal a {
-    margin: 10px 10px;
-}
-
-.footer-brand,
-.footer-copy {
-    flex: 1;
-    text-align: center;
-    margin: 10px 0;
+.footer-legal a,
+.footer-brand a {
+    margin: 5px;
+    /* Margen más pequeño */
 }
 
 .footer-brand img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
+    width: 50px;
+    /* Logotipo más pequeño */
+    height: 50px;
+}
+
+.footer-copy {
+    text-align: center;
+    width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -104,17 +102,19 @@ main {
 
     .footer-social a img,
     .footer-nav a img {
-        margin: 0 4px;
+        margin: 0 2px;
+        /* Menor margen para móviles */
     }
 
-    .footer-legal a {
-        margin: 0 10px;
+    .footer-legal a,
+    .footer-brand a {
+        margin: 3px 0;
+        /* Margen aún más reducido para móviles */
     }
 
     .footer-brand,
     .footer-copy {
         text-align: center;
-        width: 100%;
     }
 }
 
@@ -127,13 +127,13 @@ main {
 .footer-social a:hover img,
 .footer-social a:focus img {
     transform: scale(1.1);
-    /* Efecto de crecimiento */
+    /* Efecto de escala */
     filter: brightness(1.2);
     /* Aclarar el ícono */
 }
 
 .footer-legal a:hover {
     text-decoration: underline;
+    /* Subrayado al pasar el mouse */
     text-decoration-color: #c7a2c7;
-    /* Estilo de subrayado al pasar el mouse */
 }

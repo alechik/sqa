@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         return (
             <AuthContext.Provider value={{ currentUser }}>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <TailSpin color="#00BFFF" height={80} width={80} />
+                    <TailSpin color="#CD5454" height={80} width={80} />
                 </div>
             </AuthContext.Provider>
         );

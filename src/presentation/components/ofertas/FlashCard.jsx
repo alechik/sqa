@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import ProductPopup from "./ProductPopup";
 import './flashdeals.css'
-import {fetchRatingsForProduct} from "../../../infraestructure/api/product_rating.js";
+import { fetchRatingsForProduct } from "../../../infraestructure/api/product_rating.js";
 
 const NextArrow = (props) => {
     const { onClick } = props;
@@ -111,7 +111,7 @@ const FlashCard = ({ productItems, productos, addtoCart }) => {
                                 </div>
                                 <div className="price">
                                     <h4>{producto.unitary_price}.00</h4>
-                                    <button onClick={(e) => {addtoCart(producto); }}>
+                                    <button onClick={(e) => { addtoCart(producto); }}>
                                         <i className="fas fa-plus"></i>
                                     </button>
                                 </div>

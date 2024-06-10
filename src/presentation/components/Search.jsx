@@ -80,7 +80,7 @@ export default function Search() {
                     onKeyDown={handlePage}
                     className="search__input"
                     type="text"
-                    placeholder="Buscar Producto"
+                    placeholder="Buscar"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />

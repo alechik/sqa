@@ -98,12 +98,12 @@ function OrderDetails() {
     return (
     <div className='order-card'>
         <h1>Detalles del Pedido</h1>
-        <p><span className="detail-label">Order ID:</span>{order.id}</p>
-        <p><span className="detail-label">Date:</span>{order.date}</p>
-        <p><span className="detail-label">Status:</span>{order.status}</p>
-        <p><span className="detail-label">Total Price:</span>${order.totalPrice?.toFixed(2)}</p>
-        <p><span className="detail-label">Delivery Address:</span>{order.deliveryAddress}</p>
-        <p><span className="detail-label">Payment Method:</span>{order.paymentMethod}</p>
+        <p><span className="detail-label">ID Orden:</span>{order.id}</p>
+        <p><span className="detail-label">Fecha:</span>{order.date}</p>
+        <p><span className="detail-label">Estado:</span>{order.status}</p>
+        <p><span className="detail-label">Precio Total:</span>${order.totalPrice?.toFixed(2)}</p>
+        <p><span className="detail-label">Direccion:</span>{order.deliveryAddress}</p>
+        <p><span className="detail-label">Metodo de Pago:</span>{order.paymentMethod}</p>
         <button onClick={goToTracking} className="track-button">Seguimiento del Pedido</button>
 
         <h2>Productos Ordenados:</h2>

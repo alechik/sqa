@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { auth, db } from "../../infraestructure/firebase--config.js";
 import { useNavigate } from 'react-router-dom';
-import './category.css'; // Importa el archivo CSS con los estilos de categoría
-import tiendaimage from '../assets/tienda.jpg';
+import './category.css';
+import ProductPopup from './ofertas/ProductPopup.jsx';
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [products, setProducts] = useState([]);
     const [wishlistProducts, setWishlistProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,6 +51,10 @@ const Category = () => {
         const productsSnapshot = await getDocs(q);
         const productsData = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setProducts(productsData);
+
+        // Desplazar la página hacia abajo
+        const productPopup = document.querySelector('.product-popupp');
+        productPopup.scrollIntoView({ behavior: 'smooth' });
     };
 
     const handleAddToWishlist = async (productId) => {
@@ -97,45 +103,64 @@ const Category = () => {
         }
     };
 
+    const handleProductClick = (product) => {
+        setSelectedProduct(product);
+        setShowPopup(true);
+    };
+
     return (
         <div>
-            <div className="category-list" id="djanrs">
-                {categories.map(category => (
-                    <div className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
-                        <img src={tiendaimage} alt="" />
-                        <div className="card-category">
-                            <div className="card-content-category">
-                                <h3>{category.name}</h3>
-                                <p className="ellipsis">{category.description}</p>
+            <div className="containerCat">
+                <div className="categorypopup">
+                    <div className="category-list" id="djanrs">
+                        {categories.map(category => (
+                            <div className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
+                                <img src={category.picture} alt="" />
+                                <div className="card-category">
+                                    <div className="card-content-category">
+                                        <h3>{category.name}</h3>
+                                        <p className="ellipsis">{category.description}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-            <div className="product-popup">
-                {selectedCategory && (
-                    <h2>Productos de la categoría: {categories.find(cat => cat.id === selectedCategory)?.name}</h2>
-                )}
-                <div className="card-container">
-                    {products.map(product => (
-                        <div className="card" key={product.id}>
-                            <img
-                                src={product.pictures || 'src/presentation/assets/flash/flash-1.png'}
-                                alt={product.product_name}
-                                style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px', marginBottom: '20px' }}
-                            />
-                            <h3>{product.product_name}</h3>
-                            <p><strong>Descripción:</strong> {product.description}</p>
-                            <p><strong>Categoría:</strong> {product.category}</p>
-                            <p><strong>Stock:</strong> {product.stock}</p>
-                            <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
-                            <p><strong>Precio:</strong> ${product.unitary_price}.00</p>
-                            <button className="add-to-cart" onClick={() => handleAddToWishlist(product.id)}>
-                                {wishlistProducts.includes(product.id) ? 'Eliminar de la lista de deseos' : 'Agregar a la lista de deseos'}
-                            </button>
-                        </div>
-                    ))}
                 </div>
+                <div className="product-popupp">
+                    {selectedCategory && (
+                        <h2>Productos de la categoría: {categories.find(cat => cat.id === selectedCategory)?.name}</h2>
+                    )}
+                    <div className="card-container">
+                        {products.map(product => (
+                            <div
+                                className="card"
+                                key={product.id}
+                                onClick={() => handleProductClick(product)}
+                            >
+                                <img
+                                    src={product.pictures || 'src/presentation/assets/flash/flash-1.png'}
+                                    alt={product.product_name}
+                                    style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px', marginBottom: '20px' }}
+                                />
+                                <h3>{product.product_name}</h3>
+                                <p className='ellipsis'><strong>Descripción:</strong> {product.description}</p>
+                                <p><strong>Categoría:</strong> {product.category}</p>
+                                <p><strong>Stock:</strong> {product.stock}</p>
+                                <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
+                                <p><strong>Precio:</strong> ${product.unitary_price}.00</p>
+                                <button className="add-to-cart" onClick={() => handleAddToWishlist(product.id)}>
+                                    {wishlistProducts.includes(product.id) ? 'Eliminar de la lista de deseos' : 'Agregar a la lista de deseos'}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                {showPopup && (
+                    <ProductPopup
+                        product={selectedProduct}
+                        onClose={() => setShowPopup(false)}
+                    />
+                )}
             </div>
         </div>
     );

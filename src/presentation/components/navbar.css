@@ -2,7 +2,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
     background-color: rgba(252, 245, 235, 0.582);
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -10,6 +9,7 @@
     top: 0;
     width: 100%;
     z-index: 5000;
+    border-radius: 20px;
 }
 
 .logo-container {
@@ -516,40 +516,63 @@
 .modal-contentt.hide {
     animation: slideOut 0.3s ease-out;
 }
-
 /* Estilos específicos para dispositivos móviles */
 @media (max-width: 768px) {
     .nav {
+        display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 0.5rem 0;
+        padding: 1rem 0;
+        /* Espacio uniforme alrededor */
     }
 
     .logo-container {
         margin-bottom: 1rem;
+        /* Espacio claro bajo el logo */
     }
 
     .search {
-        width: 100%;
-        max-width: 300px;
-        margin: 10px 0;
+        width: 80%;
+        /* Aprovecha todo el ancho disponible */
+        margin: 0rem 0;
+        /* Espaciado uniforme */
+        width: 40%;
+        left: 10px;
     }
 
     .navegacion {
+        display: flex;
         flex-direction: row;
+        /* Alineación horizontal */
         justify-content: center;
-        margin-top: 1rem;
+        /* Centrado horizontal */
+        list-style-type: none;
+        /* Elimina los estilos de lista predeterminados */
+        padding: 0;
+        /* Elimina el padding predeterminado */
+        margin-top: 0.5rem;
+        /* Espaciado uniforme desde la parte superior */
     }
 
     .navegacion li {
-        margin: 0 10px;
+        margin: 0 15px;
+        /* Espaciado uniforme entre elementos */
     }
 
     .modal {
+        position: fixed;
         top: 10%;
-        width: 95%;
+        /* Posicionado ligeramente desde la parte superior */
+        left: 0;
+        /* Alineado a la izquierda */
+        right: 0;
+        /* Alineado a la derecha */
+        margin: auto;
+        /* Centrado horizontal */
+        width: 90%;
+        /* Aprovecha el 90% del ancho */
         height: auto;
-        padding: 0;
+        /* Altura automática basada en el contenido */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -557,26 +580,36 @@
 
     .modal-contentt {
         width: 100%;
-        max-width: none;
-        /* Permite que el modal se expanda al máximo ancho disponible */
-        border-radius: 15px;
+        /* Usa todo el ancho disponible */
+        background: #fff;
+        /* Fondo blanco para el contenido */
+        border-radius: 10px;
+        /* Bordes redondeados */
         padding: 20px;
+        /* Padding interno */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Sombra suave para profundidad */
     }
 
     .modal-option {
         padding: 15px;
-        /* Mayor área de clic para facilitar la interacción */
+        /* Padding cómodo */
+        border-bottom: 1px solid #eee;
+        /* Separador sutil */
     }
 
     .modal-option span {
-        font-size: 18px;
-        /* Texto más grande para mejor legibilidad */
+        font-size: 16px;
+        /* Tamaño adecuado para legibilidad */
     }
 
     .close {
-        top: 5px;
+        position: absolute;
+        top: 10px;
         right: 10px;
-        font-size: 35px;
-        /* Botón de cierre más grande y fácil de tocar */
+        font-size: 25px;
+        /* Tamaño grande para facilidad de uso */
+        cursor: pointer;
+        /* Indica interactividad */
     }
 }

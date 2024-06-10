@@ -64,7 +64,7 @@ function Footer() {
                     </a>
                 </div>
                 <div className="footer-copy">
-                    <p>© {new Date().getFullYear()} Chambis Developer - Todos los derechos reservados</p>
+                    <p className='derecho'>© {new Date().getFullYear()} Chambis Developer - Todos los derechos reservados</p>
                 </div>
             </div>
         </footer>

@@ -27,6 +27,8 @@ main {
     padding: 15px 30px;
     /* Reducción del padding para un diseño más compacto */
     font-family: 'Open Sans', sans-serif;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
 .footer a {
@@ -78,7 +80,7 @@ main {
 .footer-legal a,
 .footer-brand a {
     margin: 5px;
-    /* Margen más pequeño */
+    font-size: 15px;
 }
 
 .footer-brand img {
@@ -90,6 +92,10 @@ main {
 .footer-copy {
     text-align: center;
     width: 100%;
+}
+
+.derecho{
+    font-size: 12px;
 }
 
 @media (max-width: 768px) {

@@ -70,7 +70,7 @@ function Carousel() {
                             <img className='imgs' src={item.picture} alt={`category ${item.name}`} />
                             <div className="category-info">
                                 <h3>{item.name}</h3>
-                                <p>{item.description}</p>
+                                <p className='DescripcionC'>{item.description}</p>
                             </div>
                         </div>
                     ))

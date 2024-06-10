@@ -4,7 +4,7 @@
     position: relative;
     /* Asegúrate de que la barra de búsqueda no esté tomando el 100% del ancho de la pantalla debido a su contenedor */
     /* Ajusta los valores de anchura, márgenes y posicionamiento según sea necesario */
-    width: auto;
+
     max-width: 600px; /* Ajusta al ancho máximo deseado */
     margin: auto;
 }
@@ -21,12 +21,18 @@
     z-index: 10; /* Coloca la lista sobre otros elementos */
     max-height: 300px; /* Altura máxima antes de mostrar el scroll */
     overflow-y: auto; /* Habilita scroll si la lista es más larga que la altura máxima */
-    width: 100%; /* Ajusta el ancho al de la barra de búsqueda, resta el padding si es necesario */
+    width: 365px; /* Ajusta el ancho al de la barra de búsqueda, resta el padding si es necesario */
     box-sizing: border-box; /* Asegúrate de que el padding no afecte el ancho total */
     margin-top: 2px; /* Pequeño espacio entre el input y la lista de resultados */
     overflow-x: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.9s ease, transform 0.3s ease;
 }
-
+.search__results.show {
+    opacity: 1;
+    transform: translateY(0);
+}
 /* Estilos para cada ítem de resultado */
 .result-item {
     padding: 10px 10px; /* Añade padding a cada resultado */

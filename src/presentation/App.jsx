@@ -30,6 +30,7 @@ import CrudCategoria from "./views/user/admin/CrudCategoria";
 import NotificationsPage from './views/user/worker/Notificaciones/notificationspage';
 import Category from "./components/category";
 import DeliveryDetailsPage from './views/user/worker/delivery';
+import {SearchedProductsProvider} from "../infraestructure/api/searchedproducts.jsx";
 
 function App() {
     const { currentUser } = useAuth();
@@ -87,35 +88,36 @@ function App() {
     return (
         <AuthProvider>
             <OrderProvider user={currentUser}>
-            <Router>
-                <Navbar cartItems={cartItems} />
-                <main>
-                    <Routes>
-                        <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
-                        <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/registrarse" element={<Register />} />
-                        <Route path="/search" element={<SearchesPage />} />
-
-                        <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
-                        <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
-                        <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />
-                        <Route path="/notifications" element={<PrivateRoute> <NotificationsPage/> </PrivateRoute>}/>
-                        <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
-                        <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
-                        <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
-                        <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
-                        <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
-                        <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                        <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} /></PrivateRoute>} />
-                        <Route path="/admin/crud-products-excel" element={<CrudProductExcel />} />
-                        <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />
-                        <Route path="/orders/:orderId" element={<OrderDetails />} />
-                        <Route path="/Category" element={<Category />} />
-                    </Routes>
-                </main>
-                <Footer />
-            </Router>
+                <SearchedProductsProvider>
+                    <Router>
+                        <Navbar cartItems={cartItems} />
+                        <main>
+                            <Routes>
+                                <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
+                                <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/registrarse" element={<Register />} />
+                                <Route path="/search" element={<SearchesPage />} />
+                                <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
+                                <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
+                                <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />
+                                <Route path="/notifications" element={<PrivateRoute> <NotificationsPage /> </PrivateRoute>} />
+                                <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
+                                <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
+                                <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
+                                <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
+                                <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
+                                <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                                <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} /></PrivateRoute>} />
+                                <Route path="/admin/crud-products-excel" element={<CrudProductExcel />} />
+                                <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />
+                                <Route path="/orders/:orderId" element={<OrderDetails />} />
+                                <Route path="/Category" element={<Category />} />
+                            </Routes>
+                        </main>
+                        <Footer />
+                    </Router>
+                </SearchedProductsProvider>
             </OrderProvider>
         </AuthProvider>
     );

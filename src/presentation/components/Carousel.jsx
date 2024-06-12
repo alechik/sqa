@@ -66,8 +66,8 @@ function Carousel() {
         <div className="cascade-slider_container" id="cascade-slider">
             <div className="cascade-slider_slides" ref={listRef}>
                 {
-                    categories.map((item, index) => (
-                        <Link key={item.id} to={`/Category/${item.id}`}>
+                    categories.map((item) => (
+                        <Link key={item.id} to={`/Category`}>
                             <div className="cascade-slider_item">
                                 <img className='imgs' src={item.picture} alt={`category ${item.name}`} />
                                 <div className="category-info">

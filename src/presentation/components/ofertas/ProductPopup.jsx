@@ -12,7 +12,6 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     const [categoryName, setCategoryName] = useState('');
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
-    const [isInWishlist, setIsInWishlist] = useState(false);
     const [selectedRating, setSelectedRating] = useState(null);
     const navigate = useNavigate();
 
@@ -51,21 +50,9 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
             }
         };
 
-        checkIfInWishlist();
         checkUserRating();
     }, [product.id, user]);
 
-    const checkIfInWishlist = async () => {
-        try {
-            if (user) {
-                const wishlistRef = collection(db, 'wishlist');
-                const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', product.id), where('user_id', '==', user.uid)));
-                setIsInWishlist(!querySnapshot.empty);
-            }
-        } catch (error) {
-            console.error('Error checking wishlist:', error);
-        }
-    };
 
     const addRating = async (productId, rating) => {
         try {
@@ -99,30 +86,6 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
         }
     };
 
-    const handleWishlistButtonClick = async () => {
-        if (!user) {
-            toast.error('Solo los usuarios registrados pueden agregar a la lista de deseos. Por favor, inicia sesión.');
-            navigate('/login');
-            return;
-        }
-        try {
-            const wishlistRef = collection(db, 'wishlist');
-            if (isInWishlist) {
-                const querySnapshot = await getDocs(query(wishlistRef, where('product_id', '==', product.id), where('user_id', '==', user.uid)));
-                querySnapshot.forEach(async (doc) => {
-                    await deleteDoc(doc.ref);
-                });
-            } else {
-                await addDoc(wishlistRef, {
-                    product_id: product.id,
-                    user_id: user.uid
-                });
-            }
-            setIsInWishlist(!isInWishlist);
-        } catch (error) {
-            console.error('Error adding/removing product to/from wishlist:', error);
-        }
-    };
 
     const handleRatingChange = async (currentRating) => {
         if (selectedRating === currentRating) {
@@ -167,7 +130,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         </div>
                     </div>
                     <div className="product-right">
-                        <button className="close-button" onClick={onClose}><i className="fas fa-times"></i></button>
+                        <button className="close-buttonn" onClick={onClose}><i className="fas fa-times"></i></button>
                         <h2>{product.product_name}</h2>
                         <p><strong>Descripción:</strong> {product.description}</p>
                         <p><strong>Categoría:</strong> {categoryName}</p>
@@ -175,9 +138,6 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
                         <p><strong>Precio:</strong> ${product.unitary_price}.00</p>
                         <div className="buttons-container">
-                            <button className="add-to-cart" onClick={handleWishlistButtonClick}>
-                                {isInWishlist ? 'Eliminar de la lista de deseos' : 'Agregar a la lista de deseos'}
-                            </button>
                             <a href={`https://wa.me/600032422?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
                                 <i className="fab fa-whatsapp"></i> Preguntar
                             </a>

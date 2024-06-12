@@ -3,7 +3,7 @@ import './carousel.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../infraestructure/firebase-connection.js';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Carousel() {
     const listRef = useRef();
@@ -67,7 +67,7 @@ function Carousel() {
             <div className="cascade-slider_slides" ref={listRef}>
                 {
                     categories.map((item, index) => (
-                        <Link to={`/Category/`}>
+                        <Link key={item.id} to={`/Category/${item.id}`}>
                             <div className="cascade-slider_item">
                                 <img className='imgs' src={item.picture} alt={`category ${item.name}`} />
                                 <div className="category-info">

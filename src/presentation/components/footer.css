@@ -143,3 +143,26 @@ main {
     /* Subrayado al pasar el mouse */
     text-decoration-color: #c7a2c7;
 }
+
+.scroll-top-button {
+    bottom: 10px;
+    right: 10px;
+    width: 50%;
+    height: 35px;
+    background-color: #FCF5EB;
+    color: rgb(59, 59, 59);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.scroll-top-button:hover {
+    background-color: rgba(151, 0, 0, 0.438);
+    color: white;
+    transform: scale(1.1);
+}
+
+.scroll-top-button:focus {
+    outline: none;
+}

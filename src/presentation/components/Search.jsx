@@ -34,7 +34,6 @@ export default function Search() {
         const fetchSearchResults = async () => {
             if (searchTerm.trim() === '') {
                 setSearchedProducts([]);
-                console.log("Cleared results because search term was empty.");
                 return;
             }
             console.log("Fetching data for term: ", searchTerm);

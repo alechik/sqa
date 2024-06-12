@@ -22,7 +22,7 @@ export default function Home({ productos, addtoCart }) {
 
     const loadData = async () => {
         try {
-            await Promise.allSettled([
+            await Promise.all([
                 fetchRecentProducts(),
                 fetchTopRatedProducts(),
                 fetchBestSellingProducts()
@@ -40,7 +40,7 @@ export default function Home({ productos, addtoCart }) {
     };
 
     const fetchTopRatedProducts = async () => {
-        const productsWithRatings = await Promise.allSettled(
+        const productsWithRatings = await Promise.all(
             productos.map(async product => ({
                 ...product,
                 averageRating: await fetchRatingsForProduct(product.id) || 0
@@ -48,8 +48,7 @@ export default function Home({ productos, addtoCart }) {
         );
         setTopRatedProducts(
             productsWithRatings
-                .filter(result => result.status === 'fulfilled')
-                .map(result => result.value)
+                .filter(result => result)
                 .sort((a, b) => b.averageRating - a.averageRating)
                 .slice(0, 10)
         );
@@ -70,11 +69,9 @@ export default function Home({ productos, addtoCart }) {
     }
     if (error) return <div>Error: {error}</div>;
 
-
     return (
         <div className='container'>
             <Carousel />
-
             <FlashDeals productItems={recentProducts} productos={recentProducts} addtoCart={addtoCart} titulo="Recién Añadidos" />
             <FlashDeals productItems={topRatedProducts} productos={topRatedProducts} addtoCart={addtoCart} titulo="Mejor Puntuados" />
             <FlashDeals productItems={bestSellingProducts} productos={bestSellingProducts} addtoCart={addtoCart} titulo="Más Vendidos" />
@@ -90,7 +87,6 @@ export default function Home({ productos, addtoCart }) {
                         <p>Tu pedido en la puerta, rápido y seguro</p>
                     </div>
                 </div>
-
                 <div className="square colegio">
                     <span className='span'></span>
                     <span className='span'></span>
@@ -101,7 +97,6 @@ export default function Home({ productos, addtoCart }) {
                         <p>Innovando el comercio digital con apoyo sólido.</p>
                     </div>
                 </div>
-
                 <div className="square colegio">
                     <span className='span'></span>
                     <span className='span'></span>

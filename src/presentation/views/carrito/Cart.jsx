@@ -39,8 +39,8 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                         {cartItems.length === 0 && <h1 className='no-items'>No hay productos en el carrito</h1>}
                         {cartItems.map((item) => (
                             <div key={item.id} className='cart-list d_flex'>
-                                <div className="img">
-                                    <img src={item.pictures} alt={item.product_name} />
+                                <div className="imgg">
+                                    <img className="imgg" src={item.pictures} alt={item.product_name} />
                                 </div>
                                 <div className="cart-details">
                                     <div className="cart-flex">

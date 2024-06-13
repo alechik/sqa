@@ -7,9 +7,9 @@ const SearchedProductCard = ({ product, onAddToCart }) => {
         <div className="searched-product-card">
             <div className="product-image-container">
                 <img
-                    src={product.pictures || 'placeholder-image-url'} // Reemplaza 'placeholder-image-url' con una URL de imagen de respaldo
+                    src={product.pictures || 'placeholder-image-url'}
                     alt={product.product_name}
-                    className="product-image"
+                    className="product-imagene"
                 />
             </div>
             <div className="product-info">

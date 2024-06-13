@@ -58,7 +58,7 @@
     padding: 10px 0;
 }
 
-.product-image {
+.product-imagees {
     width: 50px;
     height: 50px;
     margin-right: 10px;
@@ -108,7 +108,7 @@
         align-items: flex-start;
     }
 
-    .product-image {
+    .product-imagees {
         width: 80px;
         height: 80px;
     }

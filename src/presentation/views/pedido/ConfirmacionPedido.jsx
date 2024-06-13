@@ -46,7 +46,7 @@ export default function ConfirmarPedido() {
   const renderProductList = (products) => {
     return products.map((product, index) => (
       <div key={index} className="product-summary">
-        <img src={product.image} alt={product.name} className="product-image" />
+        <img src={product.image} alt={product.name} className="product-imagees" />
         <div className="product-info">
           <p>{product.name}</p>
           <p>Cantidad: {product.quantity}</p>

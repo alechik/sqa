@@ -253,7 +253,7 @@ export default function Compra({ cartItems }) {
                 <h2>Resumen del Pedido</h2>
                 {cartItems.map(item => (
                     <div key={item.id} className="cart-item">
-                        <img src={item.pictures} alt={item.id} className="product-image" />
+                        <img src={item.pictures} alt={item.id} className="product-imagenn" />
                         <div>
                             <h4>{item.product_name}</h4>
                             <p>Cantidad: {item.qty}</p>

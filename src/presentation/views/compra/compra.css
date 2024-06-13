@@ -57,17 +57,17 @@
     border-bottom: 2px solid #e0e0e0;
 }
 
-.product-image {
+.product-imagenn {
     width: 100px;
     height: 100px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
     /* Circular para destacar */
     margin-right: 20px;
     transition: transform 0.3s ease;
 }
 
-.product-image:hover {
+.product-imagen:hover {
     transform: scale(1.1);
     /* Aumenta tamaño al hacer hover */
 }

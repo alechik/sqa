@@ -12,15 +12,15 @@ export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [popupVisible, setPopupVisible] = useState(true);
     const searchContainerRef = useRef(null);
     const navigate = useNavigate();
     const { searchedProducts, setSearchedProducts } = useSearchedProducts();
 
     useEffect(() => {
-        // Listener para clicks fuera del componente
         const handleClickOutside = (event) => {
             if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-                setSearchedProducts([]);
+                setPopupVisible(false);
             }
         };
 
@@ -28,7 +28,7 @@ export default function Search() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [setSearchedProducts]);
+    }, []);
 
     useEffect(() => {
         const fetchSearchResults = async () => {
@@ -52,6 +52,7 @@ export default function Search() {
             console.log("Search results:", results.map(r => r.item));
             setSearchedProducts(results.map(result => result.item));
             setLoading(false);
+            setPopupVisible(true); // Mostrar popup con resultados
         };
 
         fetchSearchResults();
@@ -59,7 +60,7 @@ export default function Search() {
 
     const handleResultClick = async (result) => {
         setSelectedProduct(result);
-        setSearchedProducts([]); // Limpia los resultados de búsqueda al seleccionar un producto
+        setPopupVisible(false); // Ocultar popup al seleccionar un producto
     };
 
     const handleClosePopup = () => {
@@ -82,15 +83,17 @@ export default function Search() {
                     placeholder="Buscar"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onBlur={() => setPopupVisible(false)} // Ocultar popup al perder el foco
+                    onFocus={() => setPopupVisible(true)} // Mostrar popup al ganar el foco
                 />
                 {loading && <div className="loader-container">Loading...</div>}
-                {searchedProducts.length > 0 && (
+                {popupVisible && searchedProducts.length > 0 && (
                     <ul className={`search__results ${searchedProducts.length > 0 ? 'show' : ''}`}>
                         {searchedProducts.map((result) => (
                             <li
                                 key={result.id}
                                 className="result-item"
-                                onClick={() => handleResultClick(result)}
+                                onMouseDown={() => handleResultClick(result)}
                             >
                                 {result.product_name || result.name}
                             </li>

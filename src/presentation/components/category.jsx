@@ -147,7 +147,7 @@ const Category = () => {
                                 <p><strong>Categoría:</strong> {product.category}</p>
                                 <p><strong>Stock:</strong> {product.stock}</p>
                                 <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
-                                <p><strong>Precio:</strong> ${product.unitary_price}.00</p>
+                                <p><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
                                 <button className="add-to-cart" onClick={() => handleAddToWishlist(product.id)}>
                                     {wishlistProducts.includes(product.id) ? 'Eliminar de la lista de deseos' : 'Agregar a la lista de deseos'}
                                 </button>

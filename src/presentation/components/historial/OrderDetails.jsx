@@ -113,8 +113,8 @@ function OrderDetails() {
                     <div className="product-name">{product.product_name}</div>
                     <div className="product-detailss">
                         <span className="product-quantity">Cantidad: {product.quantity}</span>
-                        <span className="product-unit-price">Precio Unitario: ${parseFloat(product.unitPrice).toFixed(2)}</span>
-                        <span className="product-total">Total: ${parseFloat(product.unitPrice * product.quantity).toFixed(2)}</span>
+                        <span className="product-unit-price">Precio Unitario: Bs{parseFloat(product.unitPrice).toFixed(2)}</span>
+                        <span className="product-total">Total: Bs{parseFloat(product.unitPrice * product.quantity).toFixed(2)}</span>
                     </div>
                 </div>
                 <div className="action-buttons">

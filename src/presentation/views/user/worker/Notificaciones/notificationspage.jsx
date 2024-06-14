@@ -120,8 +120,8 @@ function NotificationsPage() {
                                 <li key={order.id} className="order-item">
                                     <div className="order-details">
                                         <p className="order-id"><strong>Order ID:</strong> {order.id}</p>
-                                        <p className="order-total"><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</p>
-                                        <p className="order-time"><strong>Tiempo Ordenado:</strong> {new Date(order.createdAt.seconds * 1000).toLocaleString()}</p>
+                                        <p className="order-total"><strong>Total:</strong> Bs {order.totalPrice.toFixed(2)}</p>
+                                        <p className="order-time"><strong>Tiempo Ordenado:</strong> {order.createdAt}</p>
                                         <p className="order-address"><strong>Delivery Address:</strong> {order.deliveryAddress}</p>
                                         <button className="accept-button" onClick={() => handleAccept(order.id)}>Aceptar orden</button>
                                     </div>
@@ -138,7 +138,7 @@ function NotificationsPage() {
                                 <li key={request.id} className="return-item">
                                     <div className="return-details">
                                         <p className="return-id"><strong>Orden ID:</strong> {request.id}</p>
-                                        <p className="return-total"><strong>Total:</strong> ${request.totalPrice.toFixed(2)}</p>
+                                        <p className="return-total"><strong>Total:</strong> Bs{request.totalPrice.toFixed(2)}</p>
                                         <p className="return-time"><strong>Requested At:</strong> {new Date(request.requestedAt).toLocaleString()}</p>
                                         <p className="return-email"><strong>Email:</strong> {request.userEmail}</p>
                                         <p className="return-address"><strong>Direccion:</strong> {request.deliveryAddress}</p>

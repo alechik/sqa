@@ -136,7 +136,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         <p><strong>Categoría:</strong> {categoryName}</p>
                         <p><strong>Stock:</strong> {product.stock}</p>
                         <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
-                        <p><strong>Precio:</strong> ${product.unitary_price}.00</p>
+                        <p><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
                         <div className="buttons-container">
                             <a href={`https://wa.me/600032422?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
                                 <i className="fab fa-whatsapp"></i> Preguntar

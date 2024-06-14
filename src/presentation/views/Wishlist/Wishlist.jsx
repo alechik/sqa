@@ -98,7 +98,7 @@ export default function Wishlist({ addtoCart }) {
                                     <h3>{item.product.product_name}</h3>
                                     <p>{item.product.description}</p>
                                     <div className="price-and-add">
-                                        <p className="product-price">Precio: ${parseFloat(item.product.unitary_price).toFixed(2)}</p>
+                                        <p className="product-price">Precio: Bs {parseFloat(item.product.unitary_price).toFixed(2)}</p>
                                         <button onClick={() => addtoCart(item.product)} className="add-to-cart-button">
                                             <FontAwesomeIcon icon={faCartPlus} /> Añadir al carrito
                                         </button>

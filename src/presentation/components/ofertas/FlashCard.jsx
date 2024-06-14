@@ -5,8 +5,10 @@ import './flashdeals.css';
 import { fetchRatingsForProduct } from "../../../infraestructure/api/product_rating";
 import { auth, db } from "../../../infraestructure/firebase--config";
 import { collection, query, where, getDocs, addDoc, deleteDoc } from "firebase/firestore";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const NextArrow = ({ onClick }) => (
     <div className="control-btn" onClick={onClick}>
@@ -110,9 +112,9 @@ const FlashCard = ({ productItems, addtoCart }) => {
                             <div className="product-details">
                                 <h3 style={{ fontSize: '16px', minHeight: '52px', maxHeight: '52px' }}>{product.description}</h3>
                                 <div className="price">
-                                    <h4>${product.unitary_price}.00</h4>
+                                    <h4>Bs {product.unitary_price}.00</h4>
                                     <button onClick={(e) => { e.stopPropagation(); addtoCart(product); }}>
-                                        <i className="fas fa-plus"></i>
+                                        <FontAwesomeIcon icon={faCartPlus} />
                                     </button>
                                 </div>
                                 <div className="rate">

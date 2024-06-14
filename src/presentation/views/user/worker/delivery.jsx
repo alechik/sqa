@@ -76,7 +76,7 @@ function DeliveryDetailsPage() {
             <h1 className="delivery-details-header">Detalles del Pedido</h1>
             <div className="delivery-details-content">
                 <p className="delivery-order-id"><strong>ID del Pedido:</strong> {order.id}</p>
-                <p className="delivery-order-total"><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</p>
+                <p className="delivery-order-total"><strong>Total:</strong> Bs {order.totalPrice.toFixed(2)}</p>
                 <p className="delivery-address"><strong>Dirección del Cliente:</strong> {order.deliveryAddress}</p>
                 <button className="delivery-button google-maps-button" onClick={() => openGoogleMaps(order.deliveryAddress)}>
                     <img src={googleMapsIcon} alt="Google Maps" className="delivery-button-icon" /> Ir a Google Maps

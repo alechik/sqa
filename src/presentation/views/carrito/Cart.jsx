@@ -47,8 +47,8 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                                         <div className="cart-info">
                                             <h3>{item.product_name}</h3>
                                             <div className="price-info">
-                                                <h4>${parseFloat(item.unitary_price).toFixed(2)} x {item.qty}</h4>
-                                                <span>${(parseFloat(item.unitary_price) * item.qty).toFixed(2)}</span>
+                                                <h4>Bs {parseFloat(item.unitary_price).toFixed(2)} x {item.qty}</h4>
+                                                <span>Bs {(parseFloat(item.unitary_price) * item.qty).toFixed(2)}</span>
                                             </div>
                                         </div>
 
@@ -77,7 +77,7 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                         <h3>Detalle del pedido</h3>
                         <div className="d_flex">
                             <h4>Precio total:</h4>
-                            <h3>${cartItems.reduce((total, item) => total + item.unitary_price * item.qty, 0).toFixed(2)}</h3>
+                            <h3>Bs {cartItems.reduce((total, item) => total + item.unitary_price * item.qty, 0).toFixed(2)}</h3>
                         </div>
                         <div className="botoncompra">
                             <button onClick={handleProceedToCheckout}>Pagar Productos</button >

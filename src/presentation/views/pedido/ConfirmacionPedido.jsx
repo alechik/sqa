@@ -50,7 +50,7 @@ export default function ConfirmarPedido() {
         <div className="product-info">
           <p>{product.name}</p>
           <p>Cantidad: {product.quantity}</p>
-          <p>Precio: ${parseFloat(product.unitPrice).toFixed(2)}</p>
+          <p>Precio: Bs {parseFloat(product.unitPrice).toFixed(2)}</p>
         </div>
       </div>
     ));
@@ -82,10 +82,10 @@ export default function ConfirmarPedido() {
       <h1>Buscando Delivery</h1>
       {order && (
         <div className="order-details">
-          <h2>Pedido #{orderId}</h2>
+          <h2>Pedido: #{orderId}</h2>
           <p><strong>Estado:</strong> {order.status}</p>
           <p><strong>Dirección de Entrega:</strong> {order.deliveryAddress || 'N/A'}</p>
-          <p><strong>Total:</strong> ${order?.totalPrice?.toFixed(2) || 'N/A'}</p>
+          <p><strong>Total:</strong> Bs {order?.totalPrice?.toFixed(2) || 'N/A'}</p>
           <div className="product-list">
             {renderProductList(order.products)}
           </div>

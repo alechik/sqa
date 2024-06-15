@@ -18,6 +18,15 @@ import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as XLSX from 'xlsx';
 
+/**
+ * Utilidad para determinar el estado del producto basado en el stock.
+ * @param {number} stock - Cantidad actual del stock del producto.
+ * @returns {string} Estado del producto.
+ */
+function determineProductState(stock) {
+    return stock > 0 ? "disponible" : "No disponible";
+}
+
 export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
     let productsSnapshot;
@@ -89,7 +98,7 @@ export async function createProduct(productData, file) {
     const imageUrl = file ? await uploadImage(file) : null;
 
     // Determina el estado del producto basado en el stock
-    const productState = productData.stock >= 1 ? "disponible" : "No disponible";
+    const productState = determineProductState(productData.stock);
 
     const productDataForFirestore = {
         description: productData.description,

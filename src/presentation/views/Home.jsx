@@ -63,7 +63,6 @@ export default function Home({ productos, addtoCart }) {
     const fetchBestSellingProducts = async () => {
         try {
             const ordersCollectionRef = collection(db, 'orders');
-            const productsCollectionRef = collection(db, 'products');
         
             const ordersSnapshot = await getDocs(ordersCollectionRef);
             const productSales = {};

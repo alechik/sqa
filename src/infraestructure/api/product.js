@@ -20,10 +20,18 @@ import * as XLSX from 'xlsx';
 
 export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
-    const productsSnapshot = await getDocs(productsCollectionRef);
+    let productsSnapshot;
+    try {
+        productsSnapshot = await getDocs(productsCollectionRef);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        throw new Error("Failed to fetch products from Firestore");
+    }
+
     const products = [];
     productsSnapshot.forEach((doc) => {
         const data = doc.data();
+
         const product = new Product(
             doc.id,
             data.description,
@@ -34,11 +42,13 @@ export async function getProducts() {
             data.stock,
             data.gramaje,
             data.unitary_price,
-            data.state,
-            data.ppp !== undefined ? data.ppp : null // Asegúrate de incluir el campo PPP, si existe
+            data.state, 
+            data.ppp
         );
+
         products.push(product);
     });
+
     return products;
 }
 

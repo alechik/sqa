@@ -134,7 +134,7 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                         <h2>{product.product_name}</h2>
                         <p><strong>Descripción:</strong> {product.description}</p>
                         <p><strong>Categoría:</strong> {categoryName}</p>
-                        <p><strong>Stock:</strong> {product.stock}</p>
+                        <p><strong>Estado:</strong> {product.state}</p>
                         <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
                         <p><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
                         <div className="buttons-container">

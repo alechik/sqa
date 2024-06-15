@@ -140,6 +140,17 @@
     background-color: #ad0c27;
 }
 
+.imgCategory{
+    border-radius: 6px;
+}
+
+.tituloCat{
+    font-size: 2rem;
+    margin: 10px;
+    margin-bottom: 20px;
+
+}
+
 /* Estilos responsivos */
 @media (max-width: 768px) {
 

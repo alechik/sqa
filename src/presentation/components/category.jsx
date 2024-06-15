@@ -109,51 +109,49 @@ const Category = () => {
     };
 
     return (
-        <div>
-            <div className="containerCat">
-                <div className="categorypopup">
-                    <div className="category-list" id="djanrs">
-                        {categories.map(category => (
-                            <div className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
-                                <img src={category.picture} alt="" />
-                                <div className="card-category">
-                                    <div className="card-content-category">
-                                        <h3>{category.name}</h3>
-                                        <p className="ellipsis">{category.description}</p>
-                                    </div>
+        <div className="containerCat">
+            <div className="categorypopup">
+            <h2 className='tituloCat'>Categorias</h2>
+                <div className="category-list" id="djanrs">
+                    {categories.map(category => (
+                        <div className='card-container-category' key={category.id} onClick={() => handleCategoryClick(category.id)}>
+                            <img src={category.picture} alt="" />
+                            <div className="card-category">
+                                <div className="card-content-category">
+                                    <h3>{category.name}</h3>
+                                    <p className="ellipsis">{category.description}</p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
-                <div className="product-popupp">
-                    {selectedCategory && (
-                        <h2>Productos de la categoría: {categories.find(cat => cat.id === selectedCategory)?.name}</h2>
-                    )}
-                    <div className="card-container">
-                        {products.map(product => (
-                            <div
-                                className="card"
-                                key={product.id}
-                                onClick={() => handleProductClick(product)}
-                            >
-                                <img
-                                    src={product.pictures || 'src/presentation/assets/flash/flash-1.png'}
-                                    alt={product.product_name}
-                                    style={{ maxWidth: '100%', height: 'auto', maxHeight: '300px', marginBottom: '20px' }}
-                                />
+            </div>
+            <div className="product-popupp">
+                {selectedCategory && (
+                    <h2>Productos de la categoría: {categories.find(cat => cat.id === selectedCategory)?.name}</h2>
+                )}
+                <div className="card-container">
+                    {products.map(product => (
+                        <div
+                            className="card"
+                            key={product.id}
+                            onClick={() => handleProductClick(product)}
+                        >
+                            <img
+                                src={product.pictures || 'src/presentation/assets/flash/flash-1.png'}
+                                alt={product.product_name}
+                                className='imgCategory'
+                            />
+                            <div className="card-content">
                                 <h3>{product.product_name}</h3>
-                                <p className='ellipsis'><strong>Descripción:</strong> {product.description}</p>
-                                <p><strong>Categoría:</strong> {product.category}</p>
-                                <p><strong>Stock:</strong> {product.stock}</p>
-                                <p><strong>Unidad de medida:</strong> {product.gramaje}</p>
                                 <p><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
-                                <button className="add-to-cart" onClick={() => handleAddToWishlist(product.id)}>
+                                <p><strong>Estado:</strong> {product.state}</p>
+                                <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); handleAddToWishlist(product.id); }}>
                                     {wishlistProducts.includes(product.id) ? 'Eliminar de la lista de deseos' : 'Agregar a la lista de deseos'}
                                 </button>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
                 {showPopup && (
                     <ProductPopup

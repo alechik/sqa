@@ -41,25 +41,30 @@ export async function getProducts() {
     productsSnapshot.forEach((doc) => {
         const data = doc.data();
 
-        const product = new Product(
-            doc.id,
-            data.description,
-            data.pictures,
-            data.banner_pictures,
-            data.CategoryID,
-            data.product_name,
-            data.stock,
-            data.gramaje,
-            data.unitary_price,
-            data.state, 
-            data.ppp
-        );
+        const dateAdded = data.date_added ? data.date_added.toDate() : null;
 
-        products.push(product);
+        // Asegurarse de que el producto tiene 'date_added' antes de agregarlo
+            const product = new Product(
+                doc.id,
+                data.description,
+                data.pictures,
+                data.banner_pictures,
+                data.CategoryID,
+                data.product_name,
+                data.stock,
+                data.gramaje,
+                data.unitary_price,
+                dateAdded,
+                data.state,
+                data.ppp
+            );
+
+            products.push(product);
     });
 
     return products;
 }
+
 
 export async function getProductById(productId) {
     const productDocRef = doc(db, "products", productId);

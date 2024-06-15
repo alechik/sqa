@@ -4,6 +4,8 @@ import FlashDeals from "../components/ofertas/FlashDeals.jsx";
 import { fetchRatingsForProduct } from '../../infraestructure/api/product_rating.js';
 import { TailSpin } from 'react-loader-spinner';
 import './home.css';
+import { db } from '../../infraestructure/firebase--config.js';
+import { collection, getDocs, } from 'firebase/firestore';
 
 export default function Home({ productos, addtoCart }) {
     const [recentProducts, setRecentProducts] = useState([]);
@@ -34,10 +36,14 @@ export default function Home({ productos, addtoCart }) {
     };
 
     const fetchRecentProducts = async () => {
-        setRecentProducts([...productos].sort((a, b) =>
-            new Date(b.date_added) - new Date(a.date_added)
-        ).slice(0, 10));
-    };
+        setRecentProducts([...productos]
+            .filter(product => product.date_added)  
+            .sort((a, b) => 
+                new Date(b.date_added) - new Date(a.date_added)
+            )
+            .slice(0, 10)
+        );
+    };     
 
     const fetchTopRatedProducts = async () => {
         const productsWithRatings = await Promise.all(
@@ -55,10 +61,59 @@ export default function Home({ productos, addtoCart }) {
     };
 
     const fetchBestSellingProducts = async () => {
-        setBestSellingProducts([...productos].sort((a, b) =>
-            parseInt(b.quantitySold) - parseInt(a.quantitySold)
-        ).slice(0, 10));
+        try {
+            const ordersCollectionRef = collection(db, 'orders');
+            const productsCollectionRef = collection(db, 'products');
+        
+            const ordersSnapshot = await getDocs(ordersCollectionRef);
+            const productSales = {};
+    
+            // Acumular las ventas por producto
+            ordersSnapshot.forEach(orderDoc => {
+                const orderData = orderDoc.data();
+                orderData.products.forEach(product => {
+                    const productId = product.productId;
+                    const quantity = product.quantity;
+    
+                    if (productId && quantity != null) {  // Asegurarse de que productId y quantity son válidos
+                        if (!productSales[productId]) {
+                            productSales[productId] = 0;
+                        }
+                        productSales[productId] += quantity;
+                    }
+                });
+            });
+    
+            // Crear lista de productos con cantidades vendidas
+            const productList = Object.keys(productSales).map(productId => ({
+                productId,
+                quantitySold: productSales[productId]
+            }));
+    
+            // Ordenar por cantidad vendida
+            productList.sort((a, b) => b.quantitySold - a.quantitySold);
+            const top10Products = productList.slice(0, 10);
+    
+            // Usar productos ya cargados si es posible
+            const bestSellingProductsData = top10Products.map(product => {
+                const foundProduct = productos.find(p => p.id === product.productId);
+                if (foundProduct) {
+                    return { ...foundProduct, quantitySold: product.quantitySold };
+                }
+                return null;
+            }).filter(product => product !== null);
+    
+            // Establecer los productos más vendidos en el estado
+            setBestSellingProducts(bestSellingProductsData);
+        } catch (error) {
+            console.error("Error fetching best selling products:", error);
+            setError('Error loading best selling products data');
+        }
+        setLoading(false);
     };
+    
+    
+    
 
     if (loading) {
         return (

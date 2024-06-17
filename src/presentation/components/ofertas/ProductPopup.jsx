@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './productpopup.css';
 import { getProductCategoryById } from '../../../infraestructure/api/product_category';
 import { auth, db } from "../../../infraestructure/firebase--config.js";
-import { addDoc, collection, deleteDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ProductPopup = ({ product, onClose, addToCart }) => {
+export default function  ProductPopup({ product, onClose, addtoCart }) {
     const user = auth.currentUser;
     const [categoryName, setCategoryName] = useState('');
     const [rating, setRating] = useState(null);
@@ -149,6 +151,11 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
                                 <i className="fab fa-twitter"></i> Twitter
                             </a>
                         </div>
+                        <div className="carrito">
+                        <button onClick={() => addtoCart(product)} className="add-to-cart-button">
+                                            <FontAwesomeIcon icon={faCartPlus} /> Añadir al carrito
+                                        </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -157,4 +164,3 @@ const ProductPopup = ({ product, onClose, addToCart }) => {
     );
 };
 
-export default ProductPopup;

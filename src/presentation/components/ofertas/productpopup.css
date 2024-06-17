@@ -156,6 +156,28 @@
     outline: none;
 }
 
+.add-to-cart-button {
+    background-color: #c82d5c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.add-to-cart-button:hover {
+    background-color: #a71a1a;
+}
+
+.add-to-cart-button svg {
+    margin-right: 0.5rem;
+}
+
 /* Media Queries */
 @media (min-width: 768px) {
     .product-popup {

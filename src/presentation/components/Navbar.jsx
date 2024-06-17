@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from '../../infraestructure/firebase--config.js';
 import './navbar.css';
 import tuImagen from '../assets/iconoW.png';
 import shoppingCartIcon from '../assets/shopping-cart.png';
@@ -17,15 +19,28 @@ export default function Navbar({ cartItems = [] }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
+    const [reviewOrdersCount, setReviewOrdersCount] = useState(0);
     const navigate = useNavigate();
     const auth = getAuth();
     const modalRef = useRef();
 
-    useEffect(() => {
+   useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const profile = await getUserProfile(user.uid);
                 setUserProfile(profile);
+
+                if (profile.userTypeId === '2') {
+                    const ordersRef = collection(db, 'orders');
+                    const unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
+                        const pendingCount = snapshot.docs.filter(doc => doc.data().status === 'Pendiente').length;
+                        const reviewCount = snapshot.docs.filter(doc => doc.data().status === 'En revisión').length;
+                        setPendingOrdersCount(pendingCount);
+                        setReviewOrdersCount(reviewCount);
+                    });
+                    return () => unsubscribeOrders();
+                }
             } else {
                 setUserProfile(null);
             }
@@ -111,7 +126,7 @@ export default function Navbar({ cartItems = [] }) {
                                 <div className='notifications'>
                                     <Link to='/notifications' className='notification-link' title='Notificaciones' >
                                         <img src={bellIcon} alt='Notificaciones' />
-                                        <span>3</span>
+                                        <span className='notification-count'>{pendingOrdersCount + reviewOrdersCount}</span>
                                     </Link>
                                 </div>
                             )}

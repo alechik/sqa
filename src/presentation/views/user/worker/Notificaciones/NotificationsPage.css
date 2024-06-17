@@ -102,6 +102,11 @@
 .accept-button {
     background-color: #27ae60;
     color: #fff;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    width: 100%;
 }
 
 .accept-button:hover {

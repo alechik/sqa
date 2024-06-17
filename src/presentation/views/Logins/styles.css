@@ -333,7 +333,7 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
   
   .social-label {
     display: inline-block;
-    font-size: 13px;
+    font-size: 15px;
     margin-right: 15px; }
   
   .socials li {
@@ -343,10 +343,10 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
     .socials li a {
       text-decoration: none; }
       .socials li a i {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         color: #fff;
-        font-size: 14px;
+        font-size: 17px;
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -371,9 +371,6 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
   
   .zmdi-facebook {
     background: #3b5998; }
-  
-  .zmdi-twitter {
-    background: #1da0f2; }
   
   .zmdi-google {
     background: #e72734; }

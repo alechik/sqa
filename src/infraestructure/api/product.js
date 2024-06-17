@@ -83,7 +83,7 @@ export async function getProductById(productId) {
         productData.stock,
         productData.gramaje,
         productData.unitary_price,
-        productDoc.state
+        productData.state
     );
 }
 

@@ -32,6 +32,8 @@ import Category from "./components/category";
 import DeliveryDetailsPage from './views/user/worker/delivery';
 import {SearchedProductsProvider} from "../infraestructure/api/searchedproducts.jsx";
 
+import Login2 from "./views/Logins/Login2.jsx"
+
 function App() {
     const { currentUser } = useAuth();
     const [productos, setProductos] = useState([]);
@@ -96,6 +98,7 @@ function App() {
                                 <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
                                 <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
                                 <Route path="/login" element={<Login />} />
+                                <Route path="/login2" element={<Login2 />} />
                                 <Route path="/registrarse" element={<Register />} />
                                 <Route path="/search" element={<SearchesPage />} />
                                 <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />

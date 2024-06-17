@@ -20,15 +20,20 @@ class Product {
         this.CategoryID = CategoryID;
         this.product_name = product_name;
         this.stock = stock;
-        this.date_added = date_added
         this.gramaje = gramaje;
         this.unitary_price = unitary_price;
-        this.state = state;
-        this.ppp = ppp; // Asignar el campo ppp
+        this.date_added = date_added;
+        this.state = state || this.updateStateBasedOnStock(stock); // Inicializa el estado basado en el stock si no se proporciona
+        this.ppp = ppp;
+    }
+
+    updateStateBasedOnStock(stock) {
+        return stock > 0 ? 'disponible' : 'No disponible';
     }
 
     toFirestore() {
-        this.updateStateBasedOnStock(); // Ensure state is updated based on current stock
+        this.state = this.updateStateBasedOnStock(this.stock);
+        
         return {
             description: this.description,
             pictures: this.pictures,
@@ -36,11 +41,13 @@ class Product {
             CategoryID: this.CategoryID,
             product_name: this.product_name,
             stock: this.stock,
-            date_added: this.date_added,
-            unitary_price: this.unitary_price,
             gramaje: this.gramaje,
-            state: this.state
+            unitary_price: this.unitary_price,
+            date_added: this.date_added,
+            state: this.state,
+            ppp: this.ppp
         };
     }
 }
+
 export { Product };

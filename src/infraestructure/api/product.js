@@ -18,29 +18,53 @@ import { storage } from "../firebase-connection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as XLSX from 'xlsx';
 
+/**
+ * Utilidad para determinar el estado del producto basado en el stock.
+ * @param {number} stock - Cantidad actual del stock del producto.
+ * @returns {string} Estado del producto.
+ */
+function determineProductState(stock) {
+    return stock > 0 ? "disponible" : "No disponible";
+}
+
 export async function getProducts() {
     const productsCollectionRef = collection(db, "products");
-    const productsSnapshot = await getDocs(productsCollectionRef);
+    let productsSnapshot;
+    try {
+        productsSnapshot = await getDocs(productsCollectionRef);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        throw new Error("Failed to fetch products from Firestore");
+    }
+
     const products = [];
     productsSnapshot.forEach((doc) => {
         const data = doc.data();
-        const product = new Product(
-            doc.id,
-            data.description,
-            data.pictures,
-            data.banner_pictures,
-            data.CategoryID,
-            data.product_name,
-            data.stock,
-            data.gramaje,
-            data.unitary_price,
-            data.state,
-            data.ppp !== undefined ? data.ppp : null // Asegúrate de incluir el campo PPP, si existe
-        );
-        products.push(product);
+
+        const dateAdded = data.date_added ? data.date_added.toDate() : null;
+
+        // Asegurarse de que el producto tiene 'date_added' antes de agregarlo
+            const product = new Product(
+                doc.id,
+                data.description,
+                data.pictures,
+                data.banner_pictures,
+                data.CategoryID,
+                data.product_name,
+                data.stock,
+                data.gramaje,
+                data.unitary_price,
+                dateAdded,
+                data.state,
+                data.ppp
+            );
+
+            products.push(product);
     });
+
     return products;
 }
+
 
 export async function getProductById(productId) {
     const productDocRef = doc(db, "products", productId);
@@ -59,7 +83,7 @@ export async function getProductById(productId) {
         productData.stock,
         productData.gramaje,
         productData.unitary_price,
-        productDoc.state
+        productData.state
     );
 }
 
@@ -79,7 +103,7 @@ export async function createProduct(productData, file) {
     const imageUrl = file ? await uploadImage(file) : null;
 
     // Determina el estado del producto basado en el stock
-    const productState = productData.stock >= 1 ? "disponible" : "No disponible";
+    const productState = determineProductState(productData.stock);
 
     const productDataForFirestore = {
         description: productData.description,

@@ -123,10 +123,10 @@
     text-decoration: none;
     position: relative; 
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem;
 }
 
-.navegacion a:not(.cart-link, .perfil-link, .wishlist-link)::after {
+.navegacion a:not(.cart-link, .perfil-link, .wishlist-link, .notification-link)::after {
     content: '';
     position: absolute;
     bottom: -0.5rem;
@@ -203,10 +203,7 @@
     background-color:rgba(255, 255, 255, 0);
 }
 
-.cart:hover,
-.logout-button:hover, .wishlist:hover {
-    background-color: #9b9b9b54;
-}
+
 
 .wishlist{
     display: inline-flex;
@@ -239,7 +236,8 @@
     width: 40px;
 }
 
-.cart span {
+.cart span,
+.notifications span {
     position: absolute;
     top: -5px;
     right: -5px;
@@ -261,42 +259,6 @@
     border-radius: 10px;
 }
 
-.notifications {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    transition: background-color 0.3s;
-    cursor: pointer;
-    margin-left: 20px;
-}
-
-.notifications img {
-    width: 30px;
-    height: 30px;
-}
-
-.notifications:hover {
-    background-color: rgba(155, 155, 155, 0.33);
-}
-
-.notifications span {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: #ff0000;
-    color: white;
-    font-size: 12px;
-    line-height: 18px;
-    z-index: 10;
-}
 
 .select-custom {
     appearance: none;
@@ -348,24 +310,13 @@
     height: 60px;
 }
 
-.store-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-left: 10px;
-}
 
-.navegacion {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
 
 
 .perfil-link,
 .cart-link,
-.wishlist-link {
+.wishlist-link,
+.notification-link {
     display: inline-block;
 }
 
@@ -385,6 +336,10 @@
     background-color: rgba(255, 255, 255, 0);
 }
 
+.notifications{
+    bottom: 6px;
+}
+
 .cart:hover,
 .logout-button:hover,
 .wishlist:hover,
@@ -398,22 +353,6 @@
 .notifications img {
     width: 30px;
     height: 30px;
-}
-
-.cart span,
-.notifications span {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background-color: #c82d5c;
-    color: #fff;
-    font-size: 0.6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .navbar-avatar {

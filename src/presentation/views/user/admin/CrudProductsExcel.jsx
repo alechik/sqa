@@ -3,12 +3,11 @@ import {
     readExcelFile,
     calculatePMP,
     calculatePPP,
-    getProductNameById,
     getProducts
 } from '../../../../infraestructure/api/product';
-import { addProfitPerLot, getAllProfitPerLot } from '../../../../infraestructure/api/profit_per_lot';
+import { addProfitPerLot } from '../../../../infraestructure/api/profit_per_lot';
 import "./crudproductexcel.css";
-import {collection, doc, writeBatch, getDoc, orderBy, query, getDocs} from "firebase/firestore";
+import { collection, doc, writeBatch } from "firebase/firestore";
 import { db } from "../../../../infraestructure/firebase--config.js";
 
 const CrudProductExcel = () => {
@@ -16,10 +15,8 @@ const CrudProductExcel = () => {
     const [file, setFile] = useState(null);
     const [products, setProducts] = useState([]);
     const [productsFromExcel, setProductsFromExcel] = useState([]);
-    const [profits, setProfits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [processed, setProcessed] = useState(false);
-
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -36,6 +33,21 @@ const CrudProductExcel = () => {
         fetchProducts();
     }, [processed]);
 
+    const validateExcelFormat = (products) => {
+        const requiredFields = ['product_name', 'unitary_price', 'stock', 'costo_lote'];
+        return products.every(product => requiredFields.every(field => field in product));
+    };
+
+    const validateProductData = (products) => {
+        return products.every(product => {
+            return product.product_name.length <= 60 &&
+                !isNaN(product.unitary_price) && product.unitary_price > 0 &&
+                !isNaN(product.stock) && product.stock > 0 &&
+                !isNaN(product.costo_lote) && product.costo_lote > 0 &&
+                (!product.description || product.description.length <= 2000);
+        });
+    };
+
     const handleFileChange = async (event) => {
         setLoading(true);
         const file = event.target.files[0];
@@ -45,8 +57,27 @@ const CrudProductExcel = () => {
             return;
         }
 
+        const validFileTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+        if (!validFileTypes.includes(file.type)) {
+            alert('Please upload a valid Excel file.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const productsFromExcel = await readExcelFile(file);
+            if (!validateExcelFormat(productsFromExcel)) {
+                alert('El formato del archivo no es correcto. Asegúrese de que el archivo tenga las columnas: product_name, unitary_price, stock, costo_lote.');
+                setLoading(false);
+                return;
+            }
+
+            if (!validateProductData(productsFromExcel)) {
+                alert('Los datos del archivo no son válidos. Asegúrese de que: \n- El nombre del producto no exceda los 60 caracteres \n- La descripción no exceda los 2000 caracteres \n- Los precios unitarios, stock y costo de lote sean números positivos mayores que 0.');
+                setLoading(false);
+                return;
+            }
+
             const processedProducts = productsFromExcel.map(product => ({
                 ...product,
                 gananciaLote: calculatePMP(product.unitary_price, product.stock, product.costo_lote),
@@ -62,6 +93,7 @@ const CrudProductExcel = () => {
         }
         setLoading(false);
     };
+
     const handleProcess = async () => {
         setLoading(true);
         const existingProducts = await getProducts();
@@ -90,7 +122,6 @@ const CrudProductExcel = () => {
                 product.id = newDocRef.id;  // Asignar el nuevo ID al producto
             }
 
-            console.log("PPP to be saved:", product.ppp);
             profitsToAdd.push({
                 cost: product.costo_lote,
                 quantity: product.quantity,
@@ -122,7 +153,7 @@ const CrudProductExcel = () => {
 
     return (
         <div className='crud-product-excel'>
-            <input type="file" onChange={handleFileChange} accept=".xlsx, .xls"/>
+            <input type="file" onChange={handleFileChange} accept=".xlsx, .xls" />
             {loading && <p>Cargando...</p>}
             {!loading && fileLoaded && productsFromExcel.length > 0 && (
                 <div>
@@ -141,20 +172,20 @@ const CrudProductExcel = () => {
                 <h3>Seguimiento de Productos</h3>
                 <table>
                     <thead>
-                    <tr>
-                        <th>Nombre del Producto</th>
-                        <th>Stock</th>
-                        <th>PPP</th>
-                    </tr>
+                        <tr>
+                            <th>Nombre del Producto</th>
+                            <th>Stock</th>
+                            <th>PPP</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {products.map((product) => (
-                        <tr key={product.id}>
-                            <td>{product.product_name}</td>
-                            <td>{product.stock}</td>
-                            <td>{product.ppp !== null ? product.ppp : 'N/A'}</td>  {/* Mostrar N/A si no tiene PPP */}
-                        </tr>
-                    ))}
+                        {products.map((product) => (
+                            <tr key={product.id}>
+                                <td>{product.product_name}</td>
+                                <td>{product.stock}</td>
+                                <td>{product.ppp !== null ? product.ppp : 'N/A'}</td>  {/* Mostrar N/A si no tiene PPP */}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

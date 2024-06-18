@@ -1,6 +1,7 @@
-import { db } from '../firebase-connection.js';
+import { db, storage } from '../firebase-connection.js';
 import { ProductCategory } from "../../domain/ProductCategory.js";
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export async function getProductCategories() {
     const productCategoryCollectionRef = collection(db, 'product_categories');
@@ -11,7 +12,8 @@ export async function getProductCategories() {
         const productCategory = new ProductCategory(
             doc.id,
             data.description,
-            data.name
+            data.name,
+            data.picture
         );
         productCategories.push(productCategory);
     });
@@ -34,7 +36,8 @@ export async function getProductCategoryById(productCategoryId) {
         return new ProductCategory(
             productCategoryDoc.id,
             productCategoryData.description,
-            productCategoryData.name
+            productCategoryData.name,
+            productCategoryData.picture
         );
     } catch (error) {
         console.error("Failed to fetch product category:", error);
@@ -42,12 +45,12 @@ export async function getProductCategoryById(productCategoryId) {
     }
 }
 
-
 export async function createProductCategory(productCategoryData) {
     const newProductCategory = new ProductCategory(
         null,
         productCategoryData.description,
-        productCategoryData.name
+        productCategoryData.name,
+        productCategoryData.picture
     );
 
     const productCategoryDataForFirestore = newProductCategory.toFirestore();

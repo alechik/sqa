@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Login.css';
+import './styles.css';
 import { TailSpin } from 'react-loader-spinner';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -10,13 +10,13 @@ import {
     signInWithRedirect,
     getRedirectResult
 } from 'firebase/auth';
+import { getUserProfile, createUser } from '../../../infraestructure/api/user';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { getUserProfile, createUser } from '../../../infraestructure/api/user';
+import 'material-icons/iconfont/material-icons.css';
+import inicioimagen from '../../assets/signin-image.jpg';
 
-function Login() {
+function Login2() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -93,52 +93,58 @@ function Login() {
         signInWithRedirect(auth, new FacebookAuthProvider());
     };
 
-
     return (
-        <section className="login-container">
+        <section className="sign-in">
             <ToastContainer />
-            <div className="login-box">
-                <form onSubmit={loginUser}>
-                    <h2 className='Inicio'>Iniciar sesión</h2>
-                    <div className={`input-box ${email ? 'active' : ''}`}>
-                        <span className="icon">
-                            <ion-icon name="mail"></ion-icon>
-                        </span>
-                        <input
-                            className='input'
-                            type="email"
-                            required
-                            value={email}
-                            onChange={handleEmailChange}
-                        />
-                        <label>Email</label>
+            <div className="containere">
+                <div className="signin-content">
+                    <div className="signin-image">
+                        <figure><img className='imgrl' src={inicioimagen} alt="Sign in" /></figure>
+                        <Link to="/registrarse" className="signup-image-link">¿Aún no tienes una cuenta? Registrarse</Link>
                     </div>
-                    <div className={`input-box ${password ? 'active' : ''}`}>
-                        <span className="icon">
-                            <ion-icon name="lock-closed"></ion-icon>
-                        </span>
-                        <input
-                            className='input'
-                            type="password"
-                            required
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                        <label>Contraseña</label>
+                    <div className="signin-form">
+                        <h2 className='form-title'>Iniciar sesión</h2>
+                        <form id="login-form" className='register-form' onSubmit={loginUser}>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="your_name"><i className="zmdi zmdi-email"></i></label>
+                                <input
+                                    id='your_name'
+                                    name="your_name"
+                                    type="email"
+                                    className='inputrl'
+                                    placeholder="Correo"
+                                    required
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="your_pass"><i className="zmdi zmdi-lock"></i></label>
+                                <input
+                                    type="password"
+                                    id="your_pass"
+                                    name="your_pass"
+                                    className='inputrl'
+                                    placeholder="Contraseña"
+                                    required
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                />
+                            </div>
+                            <div className="form-group form-button">
+                                <input type="submit" name="signin" id="signin" className="form-submit" value="Iniciar sesión" />
+                            </div>
+                        </form>
+
+                        <div className="social-login">
+                            <span className="social-label">O inicia sesión con</span>
+                            <ul className="socials">
+                                <li><a onClick={handleSignInWithFacebook}><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a onClick={handleSignInWithGoogle}><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <button type="submit" className="login-btn">Iniciar sesión</button>
-                    <button type="button" onClick={handleSignInWithGoogle} className="google-btn">
-                        <FontAwesomeIcon icon={faGoogle} className="google-icon" />
-                        <span className="btn-text">Google</span>
-                    </button>
-                    <button type="button" onClick={handleSignInWithFacebook} className="facebook-btn">
-                        <FontAwesomeIcon icon={faFacebookF} className="facebook-icon" />
-                        <span className="btn-text">Facebook</span>
-                    </button>
-                    <div className="register-link">
-                        <p>¿Aún no tienes una cuenta? <Link to="/registrarse">Registrarse</Link></p>
-                    </div>
-                </form>
+                </div>
             </div>
             {loading && <div className="spinner-container">
                 <TailSpin color="#CD5454" height={50} width={50} />
@@ -147,4 +153,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Login2;

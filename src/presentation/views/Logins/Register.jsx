@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css';
+import './styles.css';
 import { createUser } from "../../../infraestructure/api/user.js";
 import { ToastContainer, toast } from 'react-toastify';
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import registroimagen from '../../assets/signup-image.jpg';
 
 const CLIENT_USER_TYPE_ID = '3';
 
@@ -62,95 +63,123 @@ export default function Register() {
     };
 
     return (
-        <section className="register-container">
-            <div className="login-box">
-                <form onSubmit={handleSubmit}>
-                    <h2 className='h2r'>Registrarse</h2>
-                    <div className={`input-box ${firstName ? 'active' : ''}`}>
-                        <input
-                            className='input'
-                            type="text"
-                            autoComplete="nope"
-                            required
-                            value={firstName}
-                            onChange={handleFirstNameChange}
-                        />
-                        <label>Nombre</label>
+        <section className="signup">
+            <div className="containere">
+                <div className="signup-content">
+                    <div className="signup-form">
+                        <h2 className="form-title">Registrarse</h2>
+                        <form className="register-form" id="register-form" onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="name"><i className="zmdi zmdi-account material-icons-name"></i></label>
+                                <input
+                                    className='inputrl'
+                                    type="text"
+                                    autoComplete="nope"
+                                    name="name"
+                                    id="name"
+                                    placeholder="Nombre"
+                                    required
+                                    value={firstName}
+                                    onChange={handleFirstNameChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="lastname"><i className="zmdi zmdi-face"></i></label>
+                                <input
+                                    id="lastname"
+                                    placeholder="Apellido"
+                                    className='inputrl'
+                                    type="text"
+                                    name='lastname'
+                                    autoComplete='nope'
+                                    required
+                                    value={lastName}
+                                    onChange={handleLastNameChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="direccion"><i className="zmdi zmdi-pin"></i></label>
+                                <input
+                                    className='inputrl'
+                                    type="text"
+                                    autoComplete='nope'
+                                    id='direccion'
+                                    name='direccion'
+                                    placeholder="Direccion"
+                                    required
+                                    value={address}
+                                    onChange={handleAddressChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="numero"><i className="zmdi zmdi-phone"></i></label>
+                                <input
+                                    id='numero'
+                                    name='numero'
+                                    placeholder='Numero'
+                                    className='inputrl'
+                                    type="number"
+                                    autoComplete='nope'
+                                    required
+                                    value={numero}
+                                    onChange={handleNumberChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="email"><i className="zmdi zmdi-email"></i></label>
+                                <input
+                                    id="email"
+                                    placeholder="Email"
+                                    className='inputrl'
+                                    type="email"
+                                    name='email'
+                                    autoComplete='nope'
+                                    required
+                                    value={lastName}
+                                    onChange={handleEmailChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="contraseña"><i className="zmdi zmdi-lock"></i></label>
+                                <input
+                                    id='password'
+                                    placeholder='Contraseña'
+                                    name='pass'
+                                    className='inputrl'
+                                    type="password"
+                                    autoComplete='nope'
+                                    required
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className='labellr' htmlFor="contraseña"><i className="zmdi zmdi-lock-outline"></i></label>
+                                <input
+                                    id='confirmpassword'
+                                    placeholder='Confirmar Contraseña'
+                                    name='pass'
+                                    className='inputrl'
+                                    type="password"
+                                    autoComplete='nope'
+                                    required
+                                    value={confirmPassword}
+                                    onChange={handleConfirmPasswordChange}
+                                />
+                            </div>
+                            {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
+                            <div class="form-group form-button">
+                                <input type="submit" disabled={!isPasswordMatch} name="signup" id="signup" class="form-submit" value="Registrarse" />
+                            </div>
+                        </form>
                     </div>
-                    <div className={`input-box ${lastName ? 'active' : ''}`}>
-                        <input
-                            className='input' 
-                            type="text"
-                            autoComplete='nope'
-                            required
-                            value={lastName}
-                            onChange={handleLastNameChange}
-                        />
-                        <label>Apellido</label>
+                    <div class="signup-image">
+                        <figure><img className='imgrl' src={registroimagen} alt="sing up image" /></figure>
+                        <Link to="/login" className="signup-image-link">¿Ya tienes una cuenta? Iniciar sesión</Link>
                     </div>
-                    <div className={`input-box ${address ? 'active' : ''}`}>
-                        <input
-                           className='input'
-                            type="text"
-                            autoComplete='nope'
-                            required
-                            value={address}
-                            onChange={handleAddressChange}
-                        />
-                        <label>Dirección</label>
-                    </div>
-                    <div className={`input-box ${numero ? 'active' : ''}`}>
-                        <input
-                           className='input'
-                            type="number"
-                            autoComplete='nope'
-                            required
-                            value={numero}
-                            onChange={handleNumberChange}
-                        />
-                        <label>Numero</label>
-                    </div>
-                    <div className={`input-box ${email ? 'active' : ''}`}>
-                        <input
-                            className='input'   
-                            type="email"
-                            autoComplete='nope'
-                            required
-                            value={email}
-                            onChange={handleEmailChange}
-                        />
-                        <label>Email</label>
-                    </div>
-                    <div className={`input-box ${password ? 'active' : ''}`}>
-                        <input
-                            className='input'
-                            type="password"
-                            autoComplete='nope'
-                            required
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                        <label>Contraseña</label>
-                    </div>
-                    <div className={`input-box ${confirmPassword ? 'active' : ''}`}>
-                        <input
-                            className='input'
-                            type="password"
-                            autoComplete='nope'
-                            required
-                            value={confirmPassword}
-                            onChange={handleConfirmPasswordChange}
-                        />
-                        <label>Confirmar Contraseña</label>
-                    </div>
-                    {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
-                    <button type="submit" disabled={!isPasswordMatch}>Registrarse</button>
-                    <div className="register-link">
-                        <p>¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link></p>
-                    </div>
-                </form>
+                </div>
             </div>
-            <ToastContainer/>
+            <ToastContainer />
         </section>
     );
 }

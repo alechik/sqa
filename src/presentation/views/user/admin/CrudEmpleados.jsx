@@ -36,7 +36,7 @@ export default function CrudUsuarios() {
         <div className='crud-usuarios'>
             <div className="crud-options">
                 <Link to='/admin/add-empleado'>
-                    <button>Crear Usuario (Administrador/Trabajador)</button>
+                    <button>Crear Usuario (Admin/Trabajador)</button>
                 </Link>
             </div>
             <div className="table-container">
@@ -52,18 +52,24 @@ export default function CrudUsuarios() {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(user => (
-                            <tr key={user.id}>
-                                <td>{user.names}</td>
-                                <td>{user.email}</td>
-                                <td>{user.ci}</td>
-                                <td>{user.gender}</td>
-                                <td>{user.typeName}</td>
-                                <td>
-                                    <button onClick={() => handleDeleteUser(user.id)}>Eliminar</button>
-                                </td>
+                        {users.length > 0 ? (
+                            users.map(user => (
+                                <tr key={user.id}>
+                                    <td>{user.names}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.ci}</td>
+                                    <td>{user.gender}</td>
+                                    <td>{user.typeName}</td>
+                                    <td>
+                                        <button onClick={() => handleDeleteUser(user.id)}>✖</button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6">No se encontraron usuarios.</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>

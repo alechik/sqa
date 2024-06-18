@@ -38,17 +38,17 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                     <div className="cart-details">
                         {cartItems.length === 0 && <h1 className='no-items'>No hay productos en el carrito</h1>}
                         {cartItems.map((item) => (
-                            <div key={item.id} className='cart-list product d_flex'>
-                                <div className="img">
-                                    <img src={item.pictures} alt={item.product_name} />
+                            <div key={item.id} className='cart-list d_flex'>
+                                <div className="imgg">
+                                    <img className="imgg" src={item.pictures} alt={item.product_name} />
                                 </div>
                                 <div className="cart-details">
                                     <div className="cart-flex">
                                         <div className="cart-info">
                                             <h3>{item.product_name}</h3>
                                             <div className="price-info">
-                                                <h4>${parseFloat(item.unitary_price).toFixed(2)} x {item.qty}</h4>
-                                                <span>${(parseFloat(item.unitary_price) * item.qty).toFixed(2)}</span>
+                                                <h4>Bs {parseFloat(item.unitary_price).toFixed(2)} x {item.qty}</h4>
+                                                <span>Bs {(parseFloat(item.unitary_price) * item.qty).toFixed(2)}</span>
                                             </div>
                                         </div>
 
@@ -77,7 +77,7 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
                         <h3>Detalle del pedido</h3>
                         <div className="d_flex">
                             <h4>Precio total:</h4>
-                            <h3>${cartItems.reduce((total, item) => total + item.unitary_price * item.qty, 0).toFixed(2)}</h3>
+                            <h3>Bs {cartItems.reduce((total, item) => total + item.unitary_price * item.qty, 0).toFixed(2)}</h3>
                         </div>
                         <div className="botoncompra">
                             <button onClick={handleProceedToCheckout}>Pagar Productos</button >

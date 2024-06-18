@@ -5,7 +5,7 @@
     padding: 20px;
 }
 
-.section-title {
+.section-titles {
     grid-column: 1 / -1;  /* Span across all columns */
     color: #333;
     font-size: 24px;

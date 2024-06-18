@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getOrderById } from '../../../infraestructure/api/orders';
+import { getOrderById } from '../../../infraestructure/api/orders'; 
+import { getProductById } from '../../../infraestructure/api/product'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TailSpin } from 'react-loader-spinner';
@@ -18,8 +19,21 @@ export default function ConfirmarPedido() {
       try {
         setIsLoading(true);
         const orderData = await getOrderById(orderId);
-        setOrder(orderData);
-        // Check if order status is "En camino" and redirect
+        if (!orderData) {
+          throw new Error("El pedido no fue encontrado");
+        }
+        const productsWithDetails = await Promise.all(
+          orderData.products.map(async product => {
+            try {
+              const productDetails = await getProductById(product.productId);
+              return { ...product, ...productDetails };
+            } catch (error) {
+              console.error("Error al obtener detalles del producto:", error);
+              return { ...product, error: error.message }; // Mantiene la información básica y añade un mensaje de error
+            }
+          })
+        );
+        setOrder({ ...orderData, products: productsWithDetails });
         if (orderData.status === "En Camino") {
           navigate(`/seguimientopedido/${orderId}`);
         }
@@ -33,24 +47,18 @@ export default function ConfirmarPedido() {
     };
 
     loadOrder();
-
-    // Polling: Refresh order data every 10 seconds
-    const intervalId = setInterval(() => {
-      loadOrder();
-    }, 10000);
-
-    // Cleanup function to clear interval when component unmounts
+    const intervalId = setInterval(loadOrder, 10000);
     return () => clearInterval(intervalId);
   }, [orderId, navigate]);
 
   const renderProductList = (products) => {
     return products.map((product, index) => (
       <div key={index} className="product-summary">
-        <img src={product.image} alt={product.name} className="product-image" />
+        <img src={product.pictures || '/default-product-image.png'} alt={product.product_name} className="product-image" />
         <div className="product-info">
-          <p>{product.name}</p>
+          <p>{product.product_name}</p>
           <p>Cantidad: {product.quantity}</p>
-          <p>Precio: ${parseFloat(product.unitPrice).toFixed(2)}</p>
+          <p>Precio: Bs {parseFloat(product.unitPrice).toFixed(2)}</p>
         </div>
       </div>
     ));
@@ -62,7 +70,7 @@ export default function ConfirmarPedido() {
 
   if (isLoading) {
     return (
-      <div className="loading loading-container">
+      <div className="loading-container">
         <TailSpin color="#CD5454" height={50} width={50} />
         <p>Por favor, espera mientras obtenemos los detalles del pedido...</p>
       </div>
@@ -71,7 +79,7 @@ export default function ConfirmarPedido() {
 
   if (error) {
     return (
-      <div className="error error-container">
+      <div className="error-container">
         Ha ocurrido un error: {error}
       </div>
     );
@@ -82,10 +90,10 @@ export default function ConfirmarPedido() {
       <h1>Buscando Delivery</h1>
       {order && (
         <div className="order-details">
-          <h2>Pedido #{order.id}</h2>
+          <h2>Pedido: #{orderId}</h2>
           <p><strong>Estado:</strong> {order.status}</p>
           <p><strong>Dirección de Entrega:</strong> {order.deliveryAddress || 'N/A'}</p>
-          <p><strong>Total:</strong> ${order?.totalPrice?.toFixed(2) || 'N/A'}</p>
+          <p><strong>Total:</strong> Bs {order.totalPrice ? order.totalPrice.toFixed(2) : 'N/A'}</p>
           <div className="product-list">
             {renderProductList(order.products)}
           </div>

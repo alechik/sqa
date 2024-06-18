@@ -10,7 +10,6 @@ export async function getAllOrders() {
     const ordersSnapshot = await getDocs(ordersCollectionRef);
     return ordersSnapshot.docs.map(doc => Order.fromFirestore(doc));
   } catch (error) {
-    console.error("Failed to fetch all orders:", error);
     throw new Error('Unable to fetch orders.');
   }
 }
@@ -25,11 +24,6 @@ export async function getOrdersRecord() {
       createdAt: doc.data().createdAt ? format(doc.data().createdAt.toDate(), "PPpp") : 'Date not available'
     }));
 
-    // Log de datos crudos directamente de Firestore
-    console.log("Datos crudos de Firestore:", ordersSnapshot.docs.map(doc => doc.data()));
-
-    // Log de los datos procesados con fechas formateadas
-    console.log("Datos procesados:", orders);
 
     return orders;
   } catch (error) {

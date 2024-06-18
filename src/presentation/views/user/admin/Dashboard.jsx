@@ -61,10 +61,7 @@ export default function Dashboard(){
 
                 setTopProducts(validTopProductsData);
 
-                console.log("Los productos más vendidos son:");
                 validTopProductsData.forEach(productData => {
-                    console.log(`- ${productData.productName}: ${productData.quantitySold} unidades vendidas`);
-                    console.log(productData);
                 });
             } catch (error) {
                 console.error("Error al obtener los documentos:", error);
@@ -76,7 +73,7 @@ export default function Dashboard(){
     
     return (
         <div className='content'>
-            <span className="section-title">Dashboard de Ventas</span>
+            <span className="section-titles">Dashboard de Ventas</span>
             <div className="analytics">
                 <Analytics topProducts={topProducts} />
             </div>

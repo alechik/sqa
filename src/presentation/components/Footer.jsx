@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../infraestructure/firebase--config';
 import tuImagen from '../assets/iconoWI.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 function Footer() {
 
@@ -30,14 +32,18 @@ function Footer() {
     }, []);
 
     const scrollToTop = (event) => {
-        // Prevenir el comportamiento predeterminado del enlace
         event.preventDefault();
-        // Animación suave hacia la parte superior de la página
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
     };
+
+    const reloadHomePage = (event) => {
+        event.preventDefault();
+        window.location.href = '/';
+    };
+
 
     return (
         <footer className="footer">
@@ -59,12 +65,15 @@ function Footer() {
                     <Link to="/privacidad">Política de Privacidad</Link>
                 </div>
                 <div className="footer-brand">
-                    <a href="/" onClick={scrollToTop} className="nombre-sitio">
+                    <a href="/" onClick={reloadHomePage} className="nombre-sitio">
                         <img src={tuImagen} alt="logo" />
                     </a>
+                    <button onClick={scrollToTop} className="scroll-top-button">
+                        <FontAwesomeIcon icon={faArrowUp} />
+                    </button>
                 </div>
                 <div className="footer-copy">
-                    <p>© {new Date().getFullYear()} Chambis Developer - Todos los derechos reservados</p>
+                    <p className='derecho'>© {new Date().getFullYear()} Chambis Developer - Todos los derechos reservados</p>
                 </div>
             </div>
         </footer>

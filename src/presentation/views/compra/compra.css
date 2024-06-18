@@ -37,7 +37,9 @@
     background-color: #c74b4b;
     color: #ffffff;
     font-weight: bold;
-    padding: 0;
+    font-size: 17px;
+    padding: 7px;
+    border: none;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -57,17 +59,17 @@
     border-bottom: 2px solid #e0e0e0;
 }
 
-.product-image {
+.product-imagenn {
     width: 100px;
     height: 100px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
     /* Circular para destacar */
     margin-right: 20px;
     transition: transform 0.3s ease;
 }
 
-.product-image:hover {
+.product-imagen:hover {
     transform: scale(1.1);
     /* Aumenta tamaño al hacer hover */
 }
@@ -75,7 +77,8 @@
 .button-enabled,
 .button-disabled {
     width: 100%;
-    padding: 0px;
+    padding: 5px;
+    border: none;
     border-radius: 6px;
     font-size: 18px;
     transition: background-color 0.3s;

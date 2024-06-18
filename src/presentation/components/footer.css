@@ -26,7 +26,9 @@ main {
     color: #fff;
     padding: 15px 30px;
     /* Reducción del padding para un diseño más compacto */
-    font-family: 'Open Sans', sans-serif;
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
 .footer a {
@@ -78,7 +80,7 @@ main {
 .footer-legal a,
 .footer-brand a {
     margin: 5px;
-    /* Margen más pequeño */
+    font-size: 15px;
 }
 
 .footer-brand img {
@@ -90,6 +92,10 @@ main {
 .footer-copy {
     text-align: center;
     width: 100%;
+}
+
+.derecho{
+    font-size: 12px;
 }
 
 @media (max-width: 768px) {
@@ -136,4 +142,28 @@ main {
     text-decoration: underline;
     /* Subrayado al pasar el mouse */
     text-decoration-color: #c7a2c7;
+}
+
+.scroll-top-button {
+    bottom: 10px;
+    right: 10px;
+    width: 50%;
+    height: 35px;
+    background-color: #FCF5EB;
+    color: rgb(59, 59, 59);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+    border-radius: 50%;
+}
+
+.scroll-top-button:hover {
+    background-color: rgba(151, 0, 0, 0.438);
+    color: white;
+    transform: scale(1.1);
+}
+
+.scroll-top-button:focus {
+    outline: none;
 }

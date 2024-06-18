@@ -1,37 +1,39 @@
 /* ProductPopup.css */
 .product-popup-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    /* Fondo semitransparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 9999;
-    transition: visibility 0.3s, opacity 0.3s ease-in-out;
     visibility: hidden;
-        /* starts hidden */
     opacity: 0;
-        /* starts transparent */
-    /* Asegura que el popup esté en la parte superior */
+    overflow-y: auto;
+    /* Permite scroll en el overlay si es necesario */
+    transition: visibility 0.3s, opacity 0.3s ease-in-out;
 }
 
 .product-popup-overlay.active {
     visibility: visible;
-    /* becomes visible */
-    backdrop-filter: blur(1.5px);
     opacity: 1;
-    /* becomes opaque */
+    transition: visibility 0s, opacity 0.3s ease-in-out;
 }
+
 .product-popup {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    /* Sombra */
+    width: 90%;
+    /* Más pequeño para móviles */
+    max-height: 80vh;
+    /* Limita la altura y permite scroll dentro del popup */
+    overflow-y: auto;
+    /* Permite scroll dentro del popup si el contenido es muy largo */
 }
 
 .close-button {
@@ -53,13 +55,6 @@
 }
 
 .product-left img {
-    width: 100%;
-    /* full width of its parent */
-    height: 300px;
-    /* fixed height */
-    object-fit: contain;
-    /* it will maintain the aspect ratio and fit the content */
-    margin-bottom: 20px;
     border-radius: 5px;
 }
 
@@ -69,6 +64,7 @@
 
 .product-right h2 {
     color: black;
+    font-size: 28px;
 }
 
 .product-details h2 {
@@ -89,7 +85,7 @@
     cursor: pointer;
 }
 
-.product-details button:hover {
+.close-button :hover {
     background-color: #920000;
 }
 
@@ -160,15 +156,90 @@
     outline: none;
 }
 
-@media (max-width: 768px) {
-    .product-details-container {
-        flex-direction: column;
-    }
+.add-to-cart-button {
+    background-color: #c82d5c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
 
-    .product-left,
-    .product-right {
-        margin-right: 0;
-        margin-bottom: 20px;
+.add-to-cart-button:hover {
+    background-color: #a71a1a;
+}
+
+.add-to-cart-button svg {
+    margin-right: 0.5rem;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+    .product-popup {
+        width: 70%;
+        /* Ajusta el ancho para tablets */
+        max-height: 90vh;
+        /* Mayor altura visible sin necesidad de scroll */
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-popup {
+        width: 50%;
+        /* Ajusta el ancho para pantallas grandes */
+    }
+}
+
+.product-details-container {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .product-details-container {
+        flex-direction: row;
+        /* Cambia a layout horizontal en tablets y desktop */
+    }
+}
+
+/* Ajustes para botones y enlaces */
+.buttons-container a {
+    padding: 10px 15px;
+    font-size: 14px;
+    /* Más grande para fácil interacción en móviles */
+}
+
+@media (min-width: 768px) {
+    .buttons-container a {
+        padding: 12px 20px;
+        font-size: 16px;
+        /* Tamaño adecuado para tablets y desktop */
+    }
+}
+
+/* Asegura visibilidad completa y accesibilidad en dispositivos móviles */
+.product-right {
+    padding: 0 10px;
+}
+
+/* Ajustar texto para diferentes tamaños de pantalla */
+h2,
+.product-details p {
+    font-size: 14px;
+    /* Más pequeño para móviles */
+}
+
+@media (min-width: 768px) {
+
+    h2,
+    .product-details p {
+        font-size: 18px;
+        /* Aumenta el tamaño del texto en pantallas más grandes */
     }
 }
 

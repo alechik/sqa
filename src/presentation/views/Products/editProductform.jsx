@@ -184,7 +184,7 @@ function EditProductForm() {
                 </div>
 
 
-                <img src={product.pictures} alt="Product" className="product-image" />
+                <img src={product.pictures} alt="Product" className="product-imagess" />
 
                 <div className="form-field">
                     <label htmlFor="image">Imagen</label>

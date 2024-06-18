@@ -114,8 +114,8 @@
 
 .navbutton:hover,
 .navbutton:focus,
-.navbutton:hover .navlabel,
-.navbutton:focus .navlabel {
+.navbutton:hover,
+.navbutton:focus {
     background-color: var(--hover-color);
     /* Fondo más oscuro para el hover */
     color: var(--background-color);

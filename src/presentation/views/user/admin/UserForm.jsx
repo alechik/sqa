@@ -24,9 +24,7 @@ const UserForm = () => {
         const fetchUserTypes = async () => {
             try {
                 const types = await getUserTypes();
-              // Verifica los tipos obtenidos antes de filtrar
-                const filteredTypes = types.filter(type => type.id === ADMIN_ID || type.id === WORKER_ID);
-                 // Verifica los tipos después de filtrar
+                const filteredTypes = types.filter(type => type.userTypeId === `${ADMIN_ID}` || type.userTypeId === `${WORKER_ID}`);
                 setUserTypes(filteredTypes);
             } catch (error) {
                 console.error('Error al obtener los tipos de usuario:', error);
@@ -49,7 +47,7 @@ const UserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (![ADMIN_ID, WORKER_ID].includes(user.userTypeId)) {
+        if (![`${ADMIN_ID}`, `${WORKER_ID}`].includes(user.userTypeId)) {
             alert("Tipo de usuario no válido.");
             return;
         }
@@ -75,61 +73,60 @@ const UserForm = () => {
         }
     };
 
-
     return (
-    <form className="user-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-            <label className="form-label">
-                Nombres:
-                <input className="form-input" type="text" name="names" value={user.names} onChange={handleChange} required />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                Apellidos:
-                <input className="form-input" type="text" name="lastnames" value={user.lastnames} onChange={handleChange} required />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                Correo Electrónico:
-                <input className="form-input" type="email" name="email" value={user.email} onChange={handleChange} required />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                Contraseña:
-                <input className="form-input" type="password" name="password" value={user.password} onChange={handleChange} required />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                CI:
-                <input className="form-input" type="text" name="ci" value={user.ci} onChange={handleChange} required />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                Dirección:
-                <input className="form-input" type="text" name="address" value={user.address} onChange={handleChange} />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                Fecha de Nacimiento:
-                <input className="form-input" type="date" name="birthday_date" value={user.birthday_date} onChange={handleChange} />
-            </label>
-        </div>
-        <div className="form-group">
-            <label className="form-label">
-                Género:
-                <select className="form-select" name="gender" value={user.gender} onChange={handleChange} required>
-                    <option value="">Seleccionar</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                </select>
-            </label>
-        </div>
+        <form className="user-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+                <label className="form-label">
+                    Nombres:
+                    <input className="form-input" type="text" name="names" value={user.names} onChange={handleChange} required />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    Apellidos:
+                    <input className="form-input" type="text" name="lastnames" value={user.lastnames} onChange={handleChange} required />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    Correo Electrónico:
+                    <input className="form-input" type="email" name="email" value={user.email} onChange={handleChange} required />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    Contraseña:
+                    <input className="form-input" type="password" name="password" value={user.password} onChange={handleChange} required />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    CI:
+                    <input className="form-input" type="text" name="ci" value={user.ci} onChange={handleChange} required />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    Dirección:
+                    <input className="form-input" type="text" name="address" value={user.address} onChange={handleChange} />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    Fecha de Nacimiento:
+                    <input className="form-input" type="date" name="birthday_date" value={user.birthday_date} onChange={handleChange} />
+                </label>
+            </div>
+            <div className="form-group">
+                <label className="form-label">
+                    Género:
+                    <select className="form-select" name="gender" value={user.gender} onChange={handleChange} required>
+                        <option value="">Seleccionar</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </label>
+            </div>
             <div className="form-group">
                 <label className="form-label">
                     Tipo de Usuario:
@@ -137,24 +134,23 @@ const UserForm = () => {
                         <option value="">Seleccionar Tipo</option>
                         {userTypes.map((type) => (
                             <option key={type.userTypeId} value={type.userTypeId}>
-                                {type.name}
+                                {type.nombre}
                             </option>
                         ))}
                     </select>
                 </label>
             </div>
-        <div className="form-group">
-            <label className="form-label">
-                Imagen:
-                <input className="form-input" type="file" name="picture" onChange={handleChange} />
-            </label>
-        </div>
-        <div className="form-actions">
-            <button className="form-button" type="submit">Crear Usuario</button>
-        </div>
-    </form>
-);
-
+            <div className="form-group">
+                <label className="form-label">
+                    Imagen:
+                    <input className="form-input" type="file" name="picture" onChange={handleChange} />
+                </label>
+            </div>
+            <div className="form-actions">
+                <button className="form-button" type="submit">Crear Usuario</button>
+            </div>
+        </form>
+    );
 };
 
 export default UserForm;

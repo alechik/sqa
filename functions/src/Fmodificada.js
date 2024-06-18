@@ -71,6 +71,4 @@ exports.handleFullRefund = functions.firestore.document("orders/{orderId}").onUp
     await transporter.sendMail(mailOptions);
     console.log("Correo de devolución completa enviado con éxito.");
   }
-
-
 });

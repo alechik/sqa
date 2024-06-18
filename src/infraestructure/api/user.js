@@ -80,8 +80,12 @@ export async function createUser(userData) {
 export async function getUsers() {
     try {
         const usersCollectionRef = collection(db, "users");
-        const q = query(usersCollectionRef, where("user_type_id", "in", [ADMIN_ID, WORKER_ID]));
+        const q = query(usersCollectionRef, where("userTypeId", "in", [ADMIN_ID, WORKER_ID]));
         const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+            console.log("No se encontraron usuarios.");
+            return [];
+        }
         return querySnapshot.docs.map(doc => {
             const userData = doc.data();
             return {
@@ -90,8 +94,8 @@ export async function getUsers() {
                 email: userData.email,
                 ci: userData.ci,
                 gender: userData.gender,
-                user_type_id: userData.user_type_id,
-                typeName: userData.user_type_id === ADMIN_ID ? "Administrador" : "Trabajador"
+                userTypeId: userData.userTypeId,
+                typeName: userData.userTypeId === ADMIN_ID ? "Administrador" : "Trabajador"
             };
         });
     } catch (error) {
@@ -146,9 +150,14 @@ export async function updateEmailAndPassword(userId, newEmail, newPassword) {
 
 // Funciones para manejar tipos de usuario
 export async function getUserTypes() {
+    try {
     const userTypesRef = collection(db, "user_types");
     const querySnapshot = await getDocs(userTypesRef);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error){
+        console.error("Error al obtener los tipos de usuario:", error);
+        throw new Error("Error al obtener los tipos de usuario desde Firestore");
+    }
 }
 
 export async function getUserTypeById(id) {

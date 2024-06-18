@@ -34,7 +34,6 @@ export default function Search() {
         const fetchSearchResults = async () => {
             if (searchTerm.trim() === '') {
                 setSearchedProducts([]);
-                console.log("Cleared results because search term was empty.");
                 return;
             }
             console.log("Fetching data for term: ", searchTerm);
@@ -81,7 +80,7 @@ export default function Search() {
                     onKeyDown={handlePage}
                     className="search__input"
                     type="text"
-                    placeholder="Buscar Producto"
+                    placeholder="Buscar"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onBlur={() => setPopupVisible(false)} // Ocultar popup al perder el foco

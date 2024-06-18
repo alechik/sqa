@@ -1,5 +1,5 @@
 class User {
-    constructor(id, address, birthday_date, ci, email, gender, lastnames, names, user_type_id, picture, numero) {
+    constructor(id, address, birthday_date, ci, email, gender, lastnames, names, userTypeId, picture, numero) {
         this.id = id;
         this.address = address;
         this.birthday_date = birthday_date;
@@ -9,7 +9,7 @@ class User {
         this.gender = gender;
         this.lastnames = lastnames;
         this.names = names;
-        this.user_type_id = user_type_id;
+        this.userTypeId = userTypeId;
         this.picture = picture;
     }
 
@@ -23,7 +23,7 @@ class User {
             numero: this.numero,
             lastnames: this.lastnames,
             names: this.names,
-            user_type_id: this.user_type_id,
+            userTypeId: this.userTypeId,
             picture: this.picture
         };
     }

@@ -7,9 +7,9 @@ const SearchedProductCard = ({ product, onAddToCart }) => {
         <div className="searched-product-card">
             <div className="product-image-container">
                 <img
-                    src={product.pictures || 'placeholder-image-url'} // Reemplaza 'placeholder-image-url' con una URL de imagen de respaldo
+                    src={product.pictures || 'placeholder-image-url'}
                     alt={product.product_name}
-                    className="product-image"
+                    className="product-imagene"
                 />
             </div>
             <div className="product-info">
@@ -18,7 +18,7 @@ const SearchedProductCard = ({ product, onAddToCart }) => {
                 <p className="product-category"><strong>Categoría:</strong> {product.category}</p>
                 <p className="product-stock"><strong>Stock:</strong> {product.stock}</p>
                 <p className="product-measurement-unit"><strong>Unidad de medida:</strong> {product.gramaje}</p>
-                <p className="product-price"><strong>Precio:</strong> ${product.unitary_price}.00</p>
+                <p className="product-price"><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
                 <div className="product-actions">
                     <button className="add-to-cart" onClick={() => onAddToCart(product)}>Añadir al carrito</button>
                     <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">

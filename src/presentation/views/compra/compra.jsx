@@ -253,16 +253,16 @@ export default function Compra({ cartItems }) {
                 <h2>Resumen del Pedido</h2>
                 {cartItems.map(item => (
                     <div key={item.id} className="cart-item">
-                        <img src={item.pictures} alt={item.id} className="product-image" />
+                        <img src={item.pictures} alt={item.id} className="product-imagenn" />
                         <div>
                             <h4>{item.product_name}</h4>
                             <p>Cantidad: {item.qty}</p>
-                            <p>Precio: ${parseFloat(item.unitary_price).toFixed(2)}</p>
-                            <p>Subtotal: ${parseFloat(item.qty * item.unitary_price).toFixed(2)}</p>
+                            <p>Precio: Bs {parseFloat(item.unitary_price).toFixed(2)}</p>
+                            <p>Subtotal: Bs {parseFloat(item.qty * item.unitary_price).toFixed(2)}</p>
                         </div>
                     </div>
                 ))}
-                <h3>Total a pagar: ${totalPrice.toFixed(2)}</h3>
+                <h3>Total a pagar: Bs {totalPrice.toFixed(2)}</h3>
                 <button onClick={handlePaymentProceed} className={isDataComplete ? "button-enabled" : "button-disabled"} disabled={!isDataComplete}>
                     Proceder al Pago
                 </button>

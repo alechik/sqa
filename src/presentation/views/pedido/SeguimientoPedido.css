@@ -69,20 +69,13 @@
     /* Permite que los detalles del producto se ajusten bajo la imagen en pantallas pequeñas */
 }
 
-.product-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 20px;
-}
-
 .product-details {
     text-align: left;
     flex-grow: 1;
     /* Permite que los detalles del producto ocupen el espacio restante */
 }
 
-.product-name {
+.product-namen {
     font-size: 16px;
     font-weight: bold;
 }
@@ -102,7 +95,7 @@
         align-items: flex-start;
     }
 
-    .product-image {
+    .product-imagess {
         margin-bottom: 10px;
         /* Espacio entre la imagen y los detalles del producto en móvil */
     }

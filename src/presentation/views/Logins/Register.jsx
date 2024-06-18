@@ -8,6 +8,7 @@ import registroimagen from '../../assets/signup-image.jpg';
 
 const CLIENT_USER_TYPE_ID = '3';
 
+
 export default function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');

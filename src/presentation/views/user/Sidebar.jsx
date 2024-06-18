@@ -5,6 +5,7 @@ import PeopleIcon from "./admin/icons/people-outline.svg";
 import Create from "./admin/icons/create-outline.svg";
 import Stats from "./admin/icons/stats-chart-outline.svg";
 import Admin from "./admin/icons/person-circle-outline.svg";
+import Category from "./admin/icons/category.svg";
 import AdminInfo from "../user/admin/AdminInfo.jsx";
 
 export default function Sidebar({ activepage }) {
@@ -23,7 +24,14 @@ export default function Sidebar({ activepage }) {
           <div className='navicon' style={{ backgroundColor: 'transparent' }}>
             <img src={Create} alt="Create" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
           </div>
-          <div className='navlabel'>Crud Productos</div>
+          <div className='navlabel'>Productos</div>
+        </Link>
+
+        <Link to='/admin/categoria' className={activepage === 'categoria' ? 'navbutton selected' : 'navbutton'}>
+          <div className='navicon' style={{ backgroundColor: 'transparent' }}>
+            <img src={Category} alt="Category" style={{ width: '25px', height: '25px', filter: 'invert(100%)' }} />
+          </div>
+          <div className='navlabel'>Categoria</div>
         </Link>
 
         <Link to='/admin/dashboard' className={activepage === 'dashboard' ? 'navbutton selected' : 'navbutton'}>

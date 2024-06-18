@@ -36,10 +36,10 @@
     /* Permite scroll dentro del popup si el contenido es muy largo */
 }
 
-.close-button {
+.close-buttonn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: auto;
+    right: 340px;
     background-color: transparent;
     border: none;
     cursor: pointer;

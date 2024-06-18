@@ -21,12 +21,6 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
     const auth = getAuth();
     const modalRef = useRef();
 
-    const clearCart = () => {
-        setCartItems([]);
-        localStorage.removeItem('cartItems');
-
-    };
-
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {

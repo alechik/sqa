@@ -32,10 +32,24 @@ import Category from "./components/category";
 import DeliveryDetailsPage from './views/user/worker/delivery';
 import {SearchedProductsProvider} from "../infraestructure/api/searchedproducts.jsx";
 
+const saveCartToLocalStorage = (cartItems) => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+};
+
+const loadCartFromLocalStorage = () => {
+    const savedCart = localStorage.getItem('cartItems');
+    return savedCart ? JSON.parse(savedCart) : [];
+};
+
+
 function App() {
     const { currentUser } = useAuth();
     const [productos, setProductos] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+
+    useEffect(() => {
+        setCartItems(loadCartFromLocalStorage());
+    }, []);
 
     useEffect(() => {
         getProducts()
@@ -48,18 +62,22 @@ function App() {
 
     const addtoCart = (product) => {
         const index = cartItems.findIndex(item => item.id === product.id);
+
         if (index !== -1) {
             if (cartItems[index].qty < product.stock) {
                 const newItems = [...cartItems];
                 newItems[index] = { ...newItems[index], qty: newItems[index].qty + 1 };
                 setCartItems(newItems);
+                saveCartToLocalStorage(newItems);
                 toast.success(`Cantidad actualizada: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
             } else {
                 toast.error(`No se puede añadir más de ${product.stock} unidades de ${product.product_name}.`);
             }
         } else {
             if (product.stock > 0) {
-                setCartItems([...cartItems, { ...product, qty: 1 }]);
+                const newItems = [...cartItems, { ...product, qty: 1 }];
+                setCartItems(newItems);
+                saveCartToLocalStorage(newItems);
                 toast.success(`${product.product_name} añadido al carrito.`);
             } else {
                 toast.error(`${product.product_name} no tiene unidades disponibles.`);
@@ -69,19 +87,23 @@ function App() {
 
     const decreaseQty = (product) => {
         const index = cartItems.findIndex(item => item.id === product.id);
+
         if (index !== -1 && cartItems[index].qty > 1) {
             const newItems = [...cartItems];
             newItems[index].qty -= 1;
             setCartItems(newItems);
+            saveCartToLocalStorage(newItems);
             toast.info(`Cantidad disminuida: ${product.product_name} ahora tiene ${newItems[index].qty} unidades.`);
-        } else {
+        } else if (index !== -1) {
             removeCartItem(product);
         }
     };
 
+
     const removeCartItem = (product) => {
         const newItems = cartItems.filter(item => item.id !== product.id);
         setCartItems(newItems);
+        saveCartToLocalStorage(newItems);
         toast.error(`${product.product_name} eliminado del carrito.`);
     };
 

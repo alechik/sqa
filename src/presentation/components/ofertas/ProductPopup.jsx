@@ -152,9 +152,9 @@ export default function  ProductPopup({ product, onClose, addtoCart }) {
                             </a>
                         </div>
                         <div className="carrito">
-                        <button onClick={() => addtoCart(product)} className="add-to-cart-button">
-                                            <FontAwesomeIcon icon={faCartPlus} /> Añadir al carrito
-                                        </button>
+                            <button onClick={() => addtoCart(product)} className="add-to-cart-button">
+                                <FontAwesomeIcon icon={faCartPlus} /> Añadir al carrito
+                            </button>
                         </div>
                     </div>
                 </div>

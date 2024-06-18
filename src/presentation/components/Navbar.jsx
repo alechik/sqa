@@ -15,7 +15,7 @@ import wishlistIcon from '../assets/wishlist.png';
 import categoriesIcon from '../assets/categories.png';
 import {SearchedProductsProvider} from "../../infraestructure/api/searchedproducts.jsx";
 
-export default function Navbar({ cartItems = [] }) {
+export default function Navbar({ cartItems = [] , setCartItems}) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -24,6 +24,12 @@ export default function Navbar({ cartItems = [] }) {
     const navigate = useNavigate();
     const auth = getAuth();
     const modalRef = useRef();
+
+    const clearCart = () => {
+        setCartItems([]);
+        localStorage.removeItem('cartItems');
+
+    };
 
    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -49,9 +55,15 @@ export default function Navbar({ cartItems = [] }) {
     }, [auth]);
 
     const logout = () => {
-        signOut(auth);
-        navigate('/login');
+        // Cerrar sesión del usuario
+        signOut(auth).then(() => {
+            // Vaciar el carrito de compras
+            clearCart();
+            // Navegar a la página de inicio de sesión
+            navigate('/login');
+        })
     };
+
 
     const handleLogoClick = (event) => {
         event.preventDefault();

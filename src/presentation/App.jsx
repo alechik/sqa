@@ -112,7 +112,7 @@ function App() {
             <OrderProvider user={currentUser}>
                 <SearchedProductsProvider>
                     <Router>
-                        <Navbar cartItems={cartItems} />
+                        <Navbar cartItems={cartItems} setCartItems={setCartItems}/>
                         <main>
                             <Routes>
                                 <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />

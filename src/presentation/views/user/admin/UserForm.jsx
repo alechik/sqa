@@ -47,10 +47,41 @@ const UserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validación adicional antes de enviar el formulario
+        if (user.names.length > 20) {
+            alert('El nombre no debe exceder los 20 caracteres.');
+            return;
+        }
+        if (user.lastnames.length > 20) {
+            alert('El apellido no debe exceder los 20 caracteres.');
+            return;
+        }
+        if (user.email.length > 20) {
+            alert('El correo electrónico no debe exceder los 20 caracteres.');
+            return;
+        }
+        if (user.password.length > 20) {
+            alert('La contraseña no debe exceder los 20 caracteres.');
+            return;
+        }
+        if (user.ci.length > 9) {
+            alert('El CI no debe exceder los 9 caracteres.');
+            return;
+        }
+        if (user.address.length > 50) {
+            alert('La dirección no debe exceder los 50 caracteres.');
+            return;
+        }
         if (![`${ADMIN_ID}`, `${WORKER_ID}`].includes(user.userTypeId)) {
             alert("Tipo de usuario no válido.");
             return;
         }
+        if (file && !file.type.startsWith("image/")) {
+            alert("Solo se pueden subir imágenes.");
+            return;
+        }
+
         let pictureURL = "";
         if (file) {
             const fileRef = ref(storage, `profile_pictures/${file.name}`);
@@ -78,43 +109,43 @@ const UserForm = () => {
             <div className="form-group">
                 <label className="form-label">
                     Nombres:
-                    <input className="form-input" type="text" name="names" value={user.names} onChange={handleChange} required />
+                    <input className="form-input" type="text" name="names" value={user.names} onChange={handleChange} maxLength="20" required />
                 </label>
             </div>
             <div className="form-group">
                 <label className="form-label">
                     Apellidos:
-                    <input className="form-input" type="text" name="lastnames" value={user.lastnames} onChange={handleChange} required />
+                    <input className="form-input" type="text" name="lastnames" value={user.lastnames} onChange={handleChange} maxLength="20" required />
                 </label>
             </div>
             <div className="form-group">
                 <label className="form-label">
                     Correo Electrónico:
-                    <input className="form-input" type="email" name="email" value={user.email} onChange={handleChange} required />
+                    <input className="form-input" type="email" name="email" value={user.email} onChange={handleChange} maxLength="20" required />
                 </label>
             </div>
             <div className="form-group">
                 <label className="form-label">
                     Contraseña:
-                    <input className="form-input" type="password" name="password" value={user.password} onChange={handleChange} required />
+                    <input className="form-input" type="password" name="password" value={user.password} onChange={handleChange} maxLength="20" required />
                 </label>
             </div>
             <div className="form-group">
                 <label className="form-label">
                     CI:
-                    <input className="form-input" type="text" name="ci" value={user.ci} onChange={handleChange} required />
+                    <input className="form-input" type="text" name="ci" value={user.ci} onChange={handleChange} maxLength="9" required />
                 </label>
             </div>
             <div className="form-group">
                 <label className="form-label">
                     Dirección:
-                    <input className="form-input" type="text" name="address" value={user.address} onChange={handleChange} />
+                    <input className="form-input" type="text" name="address" value={user.address} onChange={handleChange} maxLength="50" required />
                 </label>
             </div>
             <div className="form-group">
                 <label className="form-label">
                     Fecha de Nacimiento:
-                    <input className="form-input" type="date" name="birthday_date" value={user.birthday_date} onChange={handleChange} />
+                    <input className="form-input" type="date" name="birthday_date" value={user.birthday_date} onChange={handleChange} required />
                 </label>
             </div>
             <div className="form-group">
@@ -143,7 +174,7 @@ const UserForm = () => {
             <div className="form-group">
                 <label className="form-label">
                     Imagen:
-                    <input className="form-input" type="file" name="picture" onChange={handleChange} />
+                    <input className="form-input" type="file" name="picture" accept="image/*" onChange={handleChange} required />
                 </label>
             </div>
             <div className="form-actions">

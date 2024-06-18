@@ -10,9 +10,10 @@ import AddProductForm from "../../Products/addProductform.jsx";
 import EditProductForm from '../../Products/editProductform.jsx';
 import UserForm from "./UserForm.jsx";
 import CrudCategoria from "./CrudCategoria.jsx";
+import CategoriaTable from "./CategoriaTable.jsx";
 
 // eslint-disable-next-line react/prop-types
-export default function AdminSideBar({productos}) {
+export default function AdminSideBar({productos, categorys}) {
     const {activepage} = useParams()
 
         return (
@@ -30,6 +31,7 @@ export default function AdminSideBar({productos}) {
                         {activepage === 'AdminInfo' && <AdminInfo/>}
                         {activepage === 'add-empleado' && <UserForm/>  }
                         {activepage === 'addcategory' && <CrudCategoria/>  }
+                        {activepage === 'categoria' && <CategoriaTable productos={productos} categorys={categorys} />  }
                     </div>
                 </div>
             </div>

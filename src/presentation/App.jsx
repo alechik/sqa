@@ -31,6 +31,7 @@ import NotificationsPage from './views/user/worker/Notificaciones/notificationsp
 import Category from "./components/category";
 import DeliveryDetailsPage from './views/user/worker/delivery';
 import {SearchedProductsProvider} from "../infraestructure/api/searchedproducts.jsx";
+import {getProductCategories} from "../infraestructure/api/product_category.js";
 
 const saveCartToLocalStorage = (cartItems) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -46,6 +47,7 @@ function App() {
     const { currentUser } = useAuth();
     const [productos, setProductos] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [categorys, setCategorys] = useState([])
 
     useEffect(() => {
         setCartItems(loadCartFromLocalStorage());
@@ -58,6 +60,13 @@ function App() {
                 console.error('Error fetching products:', error);
                 toast.error("Error al cargar productos.");
             });
+    }, []);
+
+    useEffect(() => {
+        getProductCategories().then(categorys => setCategorys(categorys))
+            .catch(error => {
+                console.error('categorias no encontradas', error)
+            })
     }, []);
 
     const addtoCart = (product) => {
@@ -130,7 +139,7 @@ function App() {
                                 <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
                                 <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                                 <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                                <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} /></PrivateRoute>} />
+                                <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} categorys = {categorys}/></PrivateRoute>} />
                                 <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
                                 <Route path="/admin/crud-products-excel" element={<PrivateRoute><CrudProductExcel /></PrivateRoute>} />
                                 <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />

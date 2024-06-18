@@ -94,7 +94,7 @@ export default function Wishlist({ addtoCart }) {
                         {wishlist.map((item) => (
                             <div key={item.id} className="wishlist-card">
                                 <img src={item.product.pictures} alt={item.product.product_name} className="product-imagess" />
-                                <div className="product-details">
+                                <div className="product-detailss">
                                     <h3>{item.product.product_name}</h3>
                                     <p>{item.product.description}</p>
                                     <div className="price-and-add">

@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 const CLIENT_USER_TYPE_ID = '3';
 
+
 export default function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');

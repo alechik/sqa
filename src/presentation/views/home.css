@@ -45,8 +45,8 @@ html {
     display: flex;
     justify-content: space-between;
     position: relative;
-    margin-inline:20vh;
     margin-bottom: 100px;
+    padding: 20px;
 }
 
 .square {
@@ -166,6 +166,8 @@ html {
         /* Elimina los márgenes laterales */
         align-items: center;
         /* Centra los elementos horizontalmente */
+        width:90%;
+        height: 50%;
     }
 
     .square {

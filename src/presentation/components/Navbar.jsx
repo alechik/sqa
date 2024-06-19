@@ -25,6 +25,26 @@ export default function Navbar({ cartItems, setCartItems }) {
     const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
     const [reviewOrdersCount, setReviewOrdersCount] = useState(0);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const navbar = document.querySelector('.nav');
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollPosition > 100) {  // Ajusta este valor según tus necesidades
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+
     const clearCart = () => {
         setCartItems([]);
         localStorage.removeItem('cartItems');

@@ -7,20 +7,18 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
+    box-sizing: border-box; 
     width: 100%;
     z-index: 5000;
     border-radius: 20px;
+    padding: 0px 17px;
+    transition: top 0.3s;
 }
 
 .logo-container {
     display: flex;
     align-items: center;
-}
-
-.logo-container  {
-    margin-left: 20px;
-    width: 60px;
-    height: 60px;
+    margin-left: 10px;
 }
 
 .store-name {
@@ -110,7 +108,7 @@
     justify-content: center;
     position: relative;
     padding: 0.3rem;
-    margin: 0 50px 0 0.5rem;
+    margin: 0 20px 0 0.5rem;
 }
 
 .cart ,
@@ -248,6 +246,7 @@
 .logo-container {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .logo-link {
@@ -258,19 +257,10 @@
 }
 
 .logo-image {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
 }
 
-
-
-
-.perfil-link,
-.cart-link,
-.wishlist-link,
-.notification-link {
-    display: inline-block;
-}
 
 .cart,
 .logout-button,
@@ -297,6 +287,18 @@
 .wishlist:hover,
 .notifications:hover {
     background-color: #9b9b9b54;
+}
+
+.cart-link img {
+    width: 30px; /* Tamaño ajustado para los iconos del carrito */
+    height: 30px;
+}
+
+.cart-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
 }
 
 .cart img,
@@ -409,28 +411,65 @@
 .modal-contentt.hide {
     animation: slideOut 0.3s ease-out;
 }
+
+@media (max-width: 1024px) {
+    .nav {
+        width: 100%;
+        margin: 0 auto; /* Centra la navbar dentro del viewport */
+        box-sizing: border-box; /* Incluye el padding y border en el ancho del elemento */
+    }
+
+    .logo-container, .cart-container, .profile-container {
+        justify-content: center; /* Asegura que los elementos estén centrados */
+    }
+
+    .search-input {
+        width: 90%; /* Ajusta el ancho del buscador para que se adapte al espacio disponible */
+        margin: 0 auto; /* Centra el buscador dentro de la navbar */
+        display: block; /* Asegura que el input tome su propio espacio */
+    }
+
+    /* Ajustes para los iconos para asegurar que no estén demasiado apretados */
+
+    /* Reducir el tamaño del logo si es necesario para evitar la sobrecarga visual */
+    .logo-link img {
+        width: 40px;
+        height: 40px;
+    }
+}
 /* Estilos específicos para dispositivos móviles */
-@media (max-width: 768px) {
+@media (max-width: 768px ) {
     .nav {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 1rem 0;
+        padding: 0;
+        top: -40px;
         /* Espacio uniforme alrededor */
     }
 
+    .logo-container, .cart-container {
+        width: 100%; /* Aprovecha todo el ancho disponible */
+        justify-content: center; /* Centra los elementos horizontalmente */
+    }
+
+    .nav.visible{
+        top: 0;
+    }
+
+    .store-name{
+        display: none;
+    }
+
     .logo-container {
-        margin-bottom: 1rem;
+        margin-bottom: 5px;
         /* Espacio claro bajo el logo */
     }
 
     .search {
-        width: 80%;
+        width: 70%;
         /* Aprovecha todo el ancho disponible */
         margin: 0rem 0;
-        /* Espaciado uniforme */
-        width: 40%;
-        left: 10px;
     }
 
     .navegacion {
@@ -447,14 +486,10 @@
         /* Espaciado uniforme desde la parte superior */
     }
 
-    .navegacion li {
-        margin: 0 15px;
-        /* Espaciado uniforme entre elementos */
-    }
 
     .modal {
         position: fixed;
-        top: 10%;
+        top: 20%;
         /* Posicionado ligeramente desde la parte superior */
         left: 0;
         /* Alineado a la izquierda */
@@ -485,9 +520,9 @@
     }
 
     .modal-option {
-        padding: 15px;
+        padding: 12px;
+        width: 80%;
         /* Padding cómodo */
-        border-bottom: 1px solid #eee;
         /* Separador sutil */
     }
 
@@ -506,3 +541,4 @@
         /* Indica interactividad */
     }
 }
+

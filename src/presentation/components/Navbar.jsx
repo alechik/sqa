@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../infraestructure/firebase--config.js';
 import './navbar.css';
 import tuImagen from '../assets/iconoW.png';
@@ -13,36 +14,53 @@ import bellIcon from '../assets/notificacion.png';
 import wishlistIcon from '../assets/wishlist.png';
 import categoriesIcon from '../assets/categories.png';
 
-export default function Navbar({ cartItems = [] , setCartItems}) {
+export default function Navbar({ cartItems, setCartItems }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const auth = getAuth();
     const modalRef = useRef();
+    const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
+    const [reviewOrdersCount, setReviewOrdersCount] = useState(0);
+
+    const clearCart = () => {
+        setCartItems([]);
+        localStorage.removeItem('cartItems');
+    };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const profile = await getUserProfile(user.uid);
                 setUserProfile(profile);
+
+                if (profile.userTypeId === '2') {
+                    const ordersRef = collection(db, 'orders');
+                    const unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
+                        const pendingCount = snapshot.docs.filter(doc => doc.data().status === 'Pendiente').length;
+                        const reviewCount = snapshot.docs.filter(doc => doc.data().status === 'En revisión').length;
+                        setPendingOrdersCount(pendingCount);
+                        setReviewOrdersCount(reviewCount);
+                    });
+                    return () => unsubscribeOrders();
+                }
             } else {
                 setUserProfile(null);
+                handleCloseModal();
             }
         });
         return () => unsubscribe();
     }, [auth]);
 
     const logout = () => {
-        // Cerrar sesión del usuario
         signOut(auth).then(() => {
-            // Vaciar el carrito de compras
             clearCart();
-            // Navegar a la página de inicio de sesión
             navigate('/login');
-        })
+        }).finally(() => {
+            handleCloseModal();  // Asegurarse de que la modal y el overflow se manejen correctamente al salir
+        });
     };
-
 
     const handleProfileClick = () => {
         setShowModal(true);
@@ -50,8 +68,14 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
     };
 
     const handleCloseModal = () => {
-        setShowModal(false);
-        document.body.style.overflow = 'auto';
+        const modal = document.querySelector('.modal-contentt');
+        if (modal) {
+            modal.classList.add('hide');
+            setTimeout(() => {
+                setShowModal(false);
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
     };
 
     useEffect(() => {
@@ -61,16 +85,12 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
             }
         };
 
-        if (showModal) {
-            document.addEventListener('mousedown', handleClickOutside);
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-
+        // Agregar y remover el listener de eventos
+        document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [showModal]);
+    }, []);
 
     return (
         <nav className="nav">
@@ -94,7 +114,7 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
                                 <div className='notifications'>
                                     <Link to='/notifications' className='notification-link' title='Notificaciones'>
                                         <img src={bellIcon} alt='Notificaciones' />
-                                        <span className='notification-count'>{0}</span>
+                                        <span className='notification-count'>{pendingOrdersCount + reviewOrdersCount}</span>
                                     </Link>
                                 </div>
                             )}

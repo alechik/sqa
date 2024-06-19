@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../../infraestructure/firebase--config';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { TailSpin } from 'react-loader-spinner';
 
 export const AuthContext = createContext({ currentUser: null }); // Proporciona un valor inicial coherente
@@ -12,8 +13,15 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, user => {
-            setCurrentUser(user);
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userRef = doc(getFirestore(), "users", user.uid);
+                const userProfile = await getDoc(userRef);
+                const userType = userProfile.exists() ? userProfile.data().userTypeId : null;
+                setCurrentUser({ ...user, userType });
+            } else {
+                setCurrentUser(null);
+            }
             setLoading(false);
         });
 

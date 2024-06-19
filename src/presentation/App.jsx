@@ -132,16 +132,16 @@ function App() {
                                 <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
                                 <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
                                 <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />
-                                <Route path="/notifications" element={<PrivateRoute> <NotificationsPage /> </PrivateRoute>} />
+                                <Route path="/notifications" element={<PrivateRoute allowedTypes={['1','2']}> <NotificationsPage /> </PrivateRoute>} />
                                 <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />
                                 <Route path="/seguimientopedido/:orderId" element={<PrivateRoute><SeguimientoPedido /></PrivateRoute>} />
                                 <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                                 <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
                                 <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
                                 <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                                <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} categorys = {categorys}/></PrivateRoute>} />
+                                <Route path="/admin/:activepage" element={<PrivateRoute allowedTypes={['1']}><AdminProfile productos={productos} categorys = {categorys}/></PrivateRoute>} />
                                 <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
-                                <Route path="/admin/crud-products-excel" element={<PrivateRoute><CrudProductExcel /></PrivateRoute>} />
+                                <Route path="/admin/crud-products-excel" element={<PrivateRoute allowedTypes={['1']}><CrudProductExcel /></PrivateRoute>} />
                                 <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />
                                 <Route path="/Category" element={<Category />} />
                             </Routes>

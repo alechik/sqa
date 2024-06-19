@@ -1,19 +1,20 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate,useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 
-const PrivateRoute = ({ children }) => {
-    const { currentUser, loading, error } = useAuth();
+const PrivateRoute = ({ children, allowedTypes }) => {
+    const { currentUser } = useAuth();
+    const location = useLocation();
 
-    if (loading) {
-        return <div>Cargando...</div>;  // Opcionalmente, podrías usar un componente de carga
+    if (!currentUser) {
+        // No hay usuario logueado
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    } else if (allowedTypes && !allowedTypes.includes(currentUser.userType)) {
+        // Usuario no tiene permisos adecuados
+        return <Navigate to="/" replace />;
     }
 
-    if (error) {
-        return <div>Error: {error.message}</div>;  // Muestra mensajes de error relacionados con la autenticación
-    }
-
-    return currentUser ? children : <Navigate to="/login" replace />;
+    return children;
 };
 
 export default PrivateRoute;

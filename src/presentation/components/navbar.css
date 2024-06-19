@@ -10,6 +10,7 @@
     width: 100%;
     z-index: 5000;
     border-radius: 20px;
+    transition: top 0.3s;
 }
 
 .logo-container {
@@ -416,7 +417,16 @@
         flex-direction: column;
         align-items: center;
         padding: 1rem 0;
+        top: -90px;
         /* Espacio uniforme alrededor */
+    }
+
+    .nav.visible{
+        top: 0;
+    }
+
+    .store-name{
+        display: none;
     }
 
     .logo-container {
@@ -428,9 +438,6 @@
         width: 80%;
         /* Aprovecha todo el ancho disponible */
         margin: 0rem 0;
-        /* Espaciado uniforme */
-        width: 40%;
-        left: 10px;
     }
 
     .navegacion {

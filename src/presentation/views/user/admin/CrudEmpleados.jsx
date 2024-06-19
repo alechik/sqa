@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getUsers, removeUser } from "../../../../infraestructure/api/user.js";
 import { useNavigate } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert'; // Importar el módulo
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Importar el estilo CSS
 import './crudUsuarios.css';
 
 export default function CrudUsuarios() {
@@ -30,6 +32,23 @@ export default function CrudUsuarios() {
             console.error('Error al eliminar el usuario:', error);
             alert('Error al eliminar el usuario. Por favor, revisa la consola para más detalles.');
         }
+    };
+
+    const confirmDelete = (userId, userName) => {
+        confirmAlert({
+            title: 'Confirmar eliminación',
+            message: `¿Estás seguro de que deseas eliminar el usuario "${userName}"?`,
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => handleDeleteUser(userId)
+                },
+                {
+                    label: 'No',
+                    onClick: () => {}
+                }
+            ]
+        });
     };
 
     return (
@@ -61,7 +80,7 @@ export default function CrudUsuarios() {
                                     <td>{user.gender}</td>
                                     <td>{user.typeName}</td>
                                     <td>
-                                        <button onClick={() => handleDeleteUser(user.id)}>✖</button>
+                                        <button onClick={() => confirmDelete(user.id, user.names)}>✖</button>
                                     </td>
                                 </tr>
                             ))

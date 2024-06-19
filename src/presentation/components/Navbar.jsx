@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -19,6 +19,7 @@ export default function Navbar({ cartItems, setCartItems }) {
     const [userProfile, setUserProfile] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const auth = getAuth();
     const modalRef = useRef();
     const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
@@ -28,6 +29,22 @@ export default function Navbar({ cartItems, setCartItems }) {
         setCartItems([]);
         localStorage.removeItem('cartItems');
     };
+
+    useEffect(() => {
+        // Cerrar el modal al cambiar la ubicación
+        const handleRouteChange = () => {
+            if (showModal) {
+                handleCloseModal();
+            }
+        };
+
+        // Escucha cambios en la ubicación
+        location.pathname;
+
+        return () => {
+            handleRouteChange();
+        };
+    }, [location, showModal]);  // Dependencias actualizadas
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -64,7 +81,6 @@ export default function Navbar({ cartItems, setCartItems }) {
 
     const handleProfileClick = () => {
         setShowModal(true);
-        document.body.style.overflow = 'hidden';
     };
 
     const handleCloseModal = () => {
@@ -73,7 +89,6 @@ export default function Navbar({ cartItems, setCartItems }) {
             modal.classList.add('hide');
             setTimeout(() => {
                 setShowModal(false);
-                document.body.style.overflow = 'auto';
             }, 300);
         }
     };
@@ -144,9 +159,9 @@ export default function Navbar({ cartItems, setCartItems }) {
                             &times;
                         </span>
                         <div className="modal-options">
-                            <div className="modal-option" onClick={() => navigate('/perfil')}>
+                        <div className="modal-option" onClick={() => navigate(userProfile.userTypeId === '1' ? '/Admin/AdminInfo' : '/perfil')}>
                                 <img src={defaultAvatar} alt="Perfil" />
-                                <span>Perfil</span>
+                                <span>{userProfile.userTypeId === '1' ? 'Perfil' : 'Perfil'}</span>
                             </div>
                             {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
                                 <div className="modal-option" onClick={() => navigate('/wishlist')}>

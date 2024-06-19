@@ -66,15 +66,14 @@ export async function createUser(userData) {
         throw new Error("No UID provided");
     }
 
-    const userRef = doc(db, "users", userData.uid); 
+    const userRef = doc(db, "users", userData.uid);
     await setDoc(userRef, {
         ...userData,
         userTypeId: userData.userTypeId || CLIENT_ID,
     });
     console.log("New user created with ID:", userRef.id);
-    return userRef.id; 
+    return userRef.id;
 }
-
 
 // Asumiendo que las constantes ADMIN_ID y WORKER_ID están correctamente definidas
 export async function getUsers() {

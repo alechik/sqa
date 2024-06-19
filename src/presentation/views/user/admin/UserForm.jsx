@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { db, storage } from "../../../../infraestructure/firebase--config.js";
-import { createUser as createFirebaseUser, getUserTypes, ADMIN_ID, WORKER_ID } from "../../../../infraestructure/api/user.js";
+import { db, storage, auth } from "../../../../infraestructure/firebase--config.js";
+import { createUser as createFirestoreUser, getUserTypes, ADMIN_ID, WORKER_ID } from "../../../../infraestructure/api/user.js";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import './userform.css';
@@ -89,17 +90,20 @@ const UserForm = () => {
             pictureURL = await getDownloadURL(snapshot.ref);
         }
 
-        const newUser = {
-            ...user,
-            picture: pictureURL
-        };
-
         try {
-            // Crear el usuario en Firebase Auth y Firestore
-            const userId = await createFirebaseUser(newUser);
-            await setDoc(doc(db, "users", userId), newUser);
+            const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);
+            const userId = userCredential.user.uid;
+
+            const newUser = {
+                ...user,
+                uid: userId,
+                picture: pictureURL
+            };
+
+            await createFirestoreUser(newUser);
             alert("Usuario creado con éxito");
         } catch (error) {
+            console.error('Error al crear el usuario:', error);
             alert("Error al crear el usuario: " + error.message);
         }
     };

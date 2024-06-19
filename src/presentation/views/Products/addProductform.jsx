@@ -56,8 +56,8 @@ function AddProductForm() {
             toast('El nombre del producto no debe exceder los 60 caracteres.');
             return;
         }
-        if (product.description.length > 2000) {
-            toast('La descripción no debe exceder los 2000 caracteres.');
+        if (product.description.length > 500) {
+            toast('La descripción no debe exceder los 500 caracteres.');
             return;
         }
         if (!product.image) {
@@ -115,7 +115,7 @@ function AddProductForm() {
                 name="description" 
                 placeholder="Descripción" 
                 onChange={handleChange} 
-                maxLength="2000" 
+                maxLength="500" 
                 value={product.description} 
                 required 
             />
@@ -131,8 +131,8 @@ function AddProductForm() {
                 placeholder="Precio Unitario" 
                 onChange={handleChange} 
                 value={product.unitary_price} 
-                min="1" 
-                max="999999" 
+                min="0.00" 
+                max="999999.99" 
                 required 
             />
             <input 

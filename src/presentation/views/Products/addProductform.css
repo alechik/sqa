@@ -4,7 +4,6 @@
     background: #f7f7f7;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     border-radius: 15px;
-    font-family: 'Open Sans', sans-serif;
     color: #333;
     margin: 30px auto;
 }
@@ -13,6 +12,14 @@
     color: black;
     margin: 10px;
 
+}
+
+.add-product-form h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    text-align: center;
 }
 
 .add-product-form input,
@@ -37,6 +44,7 @@
         background: url('data:image/svg+xml;utf8,<svg ...></svg>') no-repeat right;
         /* Icono de flecha personalizado */
         background-position-x: 95%;
+    background-color: white;
 }
 
 .add-product-form select::-ms-expand {

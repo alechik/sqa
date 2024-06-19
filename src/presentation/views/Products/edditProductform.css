@@ -53,14 +53,37 @@
     height: 120px;
 }
 
+
 .edit-product-form input[type="file"] {
-    padding: 0.5rem;
+    padding: 15px;
+    background-color: #f7f7f7;
     border: 1px dashed #ccc;
-    background: #fafafa;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.edit-product-form input[type="file"]:hover,
+.edit-product-form input[type="file"]:focus {
+    background-color: #e7e7e7;
+    border-color: #ff0000;
+}
+
+.edit-product-form input[type="file"]::file-selector-button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-product-form input[type="file"]::file-selector-button:hover {
+    background-color: #ccc;
 }
 
 .edit-product-form button {
-    background-color: #b30000;
+    background-color: #df1919;
     padding: 10px 15px;
     color: #fff;
     font-size: 1rem;

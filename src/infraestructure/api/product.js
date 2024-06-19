@@ -73,6 +73,7 @@ export async function getProductById(productId) {
         throw new Error("Product not found");
     }
     const productData = productDoc.data();
+    const dateAdded = productData.date_added?.toDate ? productData.date_added.toDate() : productData.date_added;
     return new Product(
         productDoc.id,
         productData.description,
@@ -83,6 +84,7 @@ export async function getProductById(productId) {
         productData.stock,
         productData.gramaje,
         productData.unitary_price,
+        dateAdded,
         productData.state
     );
 }

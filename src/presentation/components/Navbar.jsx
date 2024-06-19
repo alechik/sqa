@@ -165,9 +165,20 @@ export default function Navbar({ cartItems, setCartItems }) {
                         </li>
                     </>
                 ) : (
-                    <li className='links'>
-                        <Link to="/login">Iniciar sesión</Link>
-                    </li>
+                        <li className='links'>
+                            <div className='wishlist'>
+                                <Link to='/Category' className="wishlist-link" title='Categorias'>
+                                    <img src={categoriesIcon} alt="Categorias" />
+                                </Link>
+                            </div>
+                            <div className='cart'>
+                                <Link to='/cart' className="cart-link">
+                                    <img src={shoppingCartIcon} alt="Carrito" title='Carrito' />
+                                    <span>{totalItems}</span>
+                                </Link>
+                            </div>
+                            <Link className='Links' to="/login">Iniciar sesión</Link>
+                        </li>
                 )}
             </ul>
 

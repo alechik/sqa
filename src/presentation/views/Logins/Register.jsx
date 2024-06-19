@@ -168,12 +168,12 @@ export default function Register() {
                                 />
                             </div>
                             {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
-                            <div class="form-group form-button">
-                                <input type="submit" disabled={!isPasswordMatch} name="signup" id="signup" class="form-submit" value="Registrarse" />
+                            <div className="form-group form-button">
+                                <input type="submit" disabled={!isPasswordMatch} name="signup" id="signup" className="form-submit" value="Registrarse" />
                             </div>
                         </form>
                     </div>
-                    <div class="signup-image">
+                    <div className="signup-image">
                         <figure><img className='imgrl' src={registroimagen} alt="sing up image" /></figure>
                         <Link to="/login" className="signup-image-link">¿Ya tienes una cuenta? Iniciar sesión</Link>
                     </div>

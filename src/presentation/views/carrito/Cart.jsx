@@ -1,28 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import './cart.css';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-export default function Cart({ cartItems = [], updateCartItem, removeCartItem, decreaseQty }) {
+export default function Cart({ updateCartItem, removeCartItem, decreaseQty }) {
+    const [cartItems, setCartItems] = useState(() => {
+        // Intentamos cargar el carrito desde localStorage al iniciar el componente
+        const localData = localStorage.getItem('cartItems');
+        return localData ? JSON.parse(localData) : [];
+    });
     const navigate = useNavigate();
+    const auth = getAuth();
+    const [user, setUser] = useState(null);
+
+    // Observa los cambios en el estado de autenticación
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    // Guardar el carrito en localStorage cada vez que cambie
+    useEffect(() => {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }, [cartItems]);
 
     const handleIncrease = (item) => {
         const newItem = { ...item, qty: item.qty + 1 };
+        const newCartItems = cartItems.map(cartItem => cartItem.id === item.id ? newItem : cartItem);
+        setCartItems(newCartItems);
         updateCartItem(newItem);
     };
 
     const handleDecrease = (item) => {
-        decreaseQty(item)
+        if (item.qty > 1) {
+            const newItem = { ...item, qty: item.qty - 1 };
+            const newCartItems = cartItems.map(cartItem => cartItem.id === item.id ? newItem : cartItem);
+            setCartItems(newCartItems);
+            decreaseQty(newItem);
+        }
     };
 
-
     const handleRemove = (item) => {
+        const newCartItems = cartItems.filter(cartItem => cartItem.id !== item.id);
+        setCartItems(newCartItems);
         removeCartItem(item);
     };
 
     const handleProceedToCheckout = () => {
+        if (!user) {
+            // Si no hay usuario, redireccionamos al login y guardamos la ruta a la que querían acceder
+            navigate('/login', { state: { from: '/compra' } });
+            return;
+        }
         if (cartItems.length > 0) {
             navigate('/compra');
         } else {
@@ -90,7 +124,7 @@ export default function Cart({ cartItems = [], updateCartItem, removeCartItem, d
 }
 
 Cart.propTypes = {
-    cartItems: PropTypes.array.isRequired,
     updateCartItem: PropTypes.func.isRequired,
-    removeCartItem: PropTypes.func.isRequired
+    removeCartItem: PropTypes.func.isRequired,
+    decreaseQty: PropTypes.func.isRequired
 };

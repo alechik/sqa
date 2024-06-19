@@ -238,11 +238,6 @@
     background-color: #f2f2f2;
 }
 
-.links {
-    padding: 10px;
-}
-
-
 .logo-container {
     display: flex;
     align-items: center;
@@ -384,6 +379,11 @@
     font-size: 16px;
 }
 
+/*Link*/
+.Links{
+    top: -15px;
+}
+
 @keyframes slideIn {
     from {
         transform: translateY(-20px);
@@ -429,12 +429,10 @@
         display: block; /* Asegura que el input tome su propio espacio */
     }
 
-    /* Ajustes para los iconos para asegurar que no estén demasiado apretados */
-
     /* Reducir el tamaño del logo si es necesario para evitar la sobrecarga visual */
     .logo-link img {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
     }
 }
 /* Estilos específicos para dispositivos móviles */
@@ -444,7 +442,7 @@
         flex-direction: column;
         align-items: center;
         padding: 0;
-        top: -40px;
+        top: -45px;
         /* Espacio uniforme alrededor */
     }
 

@@ -1,7 +1,7 @@
 import './addProductform.css';
 import React, { useState, useEffect } from 'react';
-import { createProduct } from '../../../infraestructure/api/product'; // Asegúrate de que la ruta sea correcta
-import { storage, db } from '../../../infraestructure/firebase-connection';// Importa storage desde tu configuración de Firebase
+import { createProduct } from '../../../infraestructure/api/product';
+import { storage, db } from '../../../infraestructure/firebase-connection';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, getDocs } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,8 +15,10 @@ function AddProductForm() {
         category_id: '',
         gramaje: '',
         image: null,
+        costo_lote: '',  // Añadido campo costo_lote
     });
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -42,48 +44,60 @@ function AddProductForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         // Validación adicional antes de enviar el formulario
         if (product.unitary_price <= 0 || product.unitary_price > 999999) {
             toast('El precio unitario debe ser mayor a 0 y no mayor a 999999.');
+            setLoading(false);
             return;
         }
         if (product.stock <= 0 || product.stock > 9999) {
             toast('El stock debe ser mayor a 0 y no mayor a 9999.');
+            setLoading(false);
             return;
         }
         if (product.product_name.length > 60) {
             toast('El nombre del producto no debe exceder los 60 caracteres.');
+            setLoading(false);
             return;
         }
         if (product.description.length > 500) {
             toast('La descripción no debe exceder los 500 caracteres.');
+            setLoading(false);
             return;
         }
         if (!product.image) {
             toast('Por favor, selecciona una imagen para el producto.');
+            setLoading(false);
+            return;
+        }
+        if (product.costo_lote <= 0 || product.costo_lote > 9999999) {
+            toast('El costo de lote debe ser mayor a 0 y menor a 9999999.');
+            setLoading(false);
             return;
         }
 
-        const imageRef = ref(storage, `products/${product.image.name}`);
-        const uploadResult = await uploadBytes(imageRef, product.image);
-        const imageUrl = await getDownloadURL(uploadResult.ref);
-
-        const productData = {
-            ...product,
-            CategoryID: product.category_id,
-            unitary_price: Number(product.unitary_price),
-            stock: Number(product.stock),
-            gramaje: Number(product.gramaje),
-        };
-
         try {
-            await createProduct({
-                ...productData,
-                pictures: imageUrl, // Asegúrate de que este campo coincide con lo esperado en Firestore y la clase Product
-            }, product.image); // Considera si necesitas pasar realmente la imagen aquí, dado que ya has manejado la subida
+            // Subir la imagen a Firebase Storage
+            const imageRef = ref(storage, `products/${product.image.name}`);
+            const uploadResult = await uploadBytes(imageRef, product.image);
+            const imageUrl = await getDownloadURL(uploadResult.ref);
+
+            const productData = {
+                ...product,
+                CategoryID: product.category_id,
+                unitary_price: Number(product.unitary_price),
+                stock: Number(product.stock),
+                gramaje: product.gramaje,
+                costo_lote: Number(product.costo_lote), // Asegúrate de que costo_lote sea un número
+                pictures: imageUrl,
+            };
+
+            // Llamar a createProduct con los datos necesarios
+            await createProduct(productData);
+
             toast('Producto agregado con éxito');
-            // Opcional: resetear el estado del formulario aquí
             setProduct({
                 product_name: '',
                 description: '',
@@ -92,10 +106,13 @@ function AddProductForm() {
                 category_id: '',
                 gramaje: '',
                 image: null,
+                costo_lote: '',  // Restablecer campo costo_lote
             });
         } catch (error) {
             console.error('Error al agregar el producto:', error);
             toast('Error al agregar el producto. Por favor, revisa la consola para más detalles.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -163,7 +180,15 @@ function AddProductForm() {
                 onChange={handleChange} 
                 required 
             />
-            <button type="submit">Agregar Producto</button>
+            <input
+                type="number"
+                name="costo_lote"
+                placeholder="Costo de Lote"
+                onChange={handleChange}
+                value={product.costo_lote}
+                required
+            />
+            <button type="submit" disabled={loading}>{loading ? 'Cargando...' : 'Agregar Producto'}</button>
             <ToastContainer/>
         </form>
     );

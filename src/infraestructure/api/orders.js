@@ -264,6 +264,7 @@ export async function updateOrderAfterReturn(orderId, productId, quantity, retur
   }
 }
 
+/*
 export async function sellByProduct() {
   const ordersCollectionRef = collection(db, 'orders');
   try {
@@ -295,6 +296,43 @@ export async function sellByProduct() {
   } catch (error) {
     console.error("Error fetching product sales data:", error);
     throw new Error('Unable to fetch product sales data.');
+  }
+}
+*/
+export async function sellByProduct() {
+  const ordersCollectionRef = collection(db, 'orders');
+  try {
+      const ordersSnapshot = await getDocs(ordersCollectionRef);
+      const productCounts = {};
+
+      for (const orderDoc of ordersSnapshot.docs) {
+          const order = orderDoc.data();
+          for (const product of order.products) {
+              if (order.status !== "Devuelto" && order.status !== "Cancelado") {
+                  try {
+                      const productName = await getProductNameById(product.productId);
+                      if (!productCounts[productName]) {
+                          productCounts[productName] = { totalUnits: 0, totalSales: 0 };
+                      }
+                      productCounts[productName].totalUnits += product.quantity;
+                      productCounts[productName].totalSales += product.unitPrice * product.quantity;
+                  } catch (error) {
+                      console.error(`Error fetching product name for ID ${product.productId}:`, error);
+                  }
+              }
+          }
+      }
+
+      const sortedProducts = Object.keys(productCounts).map(key => ({
+          productName: key,
+          totalUnits: productCounts[key].totalUnits,
+          totalSales: productCounts[key].totalSales
+      })).sort((a, b) => b.totalUnits - a.totalUnits);
+
+      return sortedProducts;
+  } catch (error) {
+      console.error("Error fetching product sales data:", error);
+      throw new Error('Unable to fetch product sales data.');
   }
 }
 

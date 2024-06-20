@@ -8,6 +8,7 @@ import {
     addDoc,
     updateDoc,
     deleteDoc,
+    setDoc,
     writeBatch,
     query,
     where,
@@ -43,34 +44,53 @@ export async function getProducts() {
 
         const dateAdded = data.date_added ? data.date_added.toDate() : null;
 
-        // Asegurarse de que el producto tiene 'date_added' antes de agregarlo
-            const product = new Product(
-                doc.id,
-                data.description,
-                data.pictures,
-                data.banner_pictures,
-                data.CategoryID,
-                data.product_name,
-                data.stock,
-                data.gramaje,
-                data.unitary_price,
-                dateAdded,
-                data.state,
-                data.ppp
-            );
+        const product = new Product(
+            doc.id,
+            data.description,
+            data.pictures,
+            data.banner_pictures,
+            data.CategoryID,
+            data.product_name,
+            data.stock,
+            data.gramaje,
+            data.unitary_price,
+            dateAdded,
+            data.state,
+            data.ppp
+        );
 
-            products.push(product);
+        products.push(product);
     });
 
     return products;
 }
 
-
 export async function getProductById(productId) {
     const productDocRef = doc(db, "products", productId);
     const productDoc = await getDoc(productDocRef);
     if (!productDoc.exists()) {
-        throw new Error("Product not found");
+        const eliminatedProductDocRef = doc(db, "eliminated_products", productId);
+        const eliminatedProductDoc = await getDoc(eliminatedProductDocRef);
+
+        if (!eliminatedProductDoc.exists()) {
+            throw new Error("Product not found");
+        }
+
+        const eliminatedProductData = eliminatedProductDoc.data();
+        const dateAdded = eliminatedProductData.date_added?.toDate ? eliminatedProductData.date_added.toDate() : eliminatedProductData.date_added;
+        return new Product(
+            eliminatedProductDoc.id,
+            eliminatedProductData.description,
+            eliminatedProductData.pictures,
+            eliminatedProductData.banner_pictures,
+            eliminatedProductData.CategoryID,
+            eliminatedProductData.product_name,
+            eliminatedProductData.stock,
+            eliminatedProductData.gramaje,
+            eliminatedProductData.unitary_price,
+            dateAdded,
+            eliminatedProductData.state
+        );
     }
     const productData = productDoc.data();
     const dateAdded = productData.date_added?.toDate ? productData.date_added.toDate() : productData.date_added;
@@ -89,9 +109,6 @@ export async function getProductById(productId) {
     );
 }
 
-
-
-
 export async function uploadImage(file) {
     if (!file) {
         throw new Error("No file provided for upload.");
@@ -104,20 +121,19 @@ export async function uploadImage(file) {
 export async function createProduct(productData, file) {
     const imageUrl = file ? await uploadImage(file) : null;
 
-    // Determina el estado del producto basado en el stock
     const productState = determineProductState(productData.stock);
 
     const productDataForFirestore = {
         description: productData.description,
-        pictures: imageUrl, // Asume que solo hay una imagen
-        banner_pictures: imageUrl, // Puede ajustarse si manejas imágenes de banner diferentes
+        pictures: imageUrl,
+        banner_pictures: imageUrl,
         CategoryID: productData.CategoryID,
         product_name: productData.product_name,
         stock: productData.stock,
         date_added: serverTimestamp(),
         unitary_price: productData.unitary_price,
         gramaje: productData.gramaje,
-        state: productState // Usamos el valor determinado basado en el stock
+        state: productState
     };
 
     if (!productDataForFirestore.CategoryID) {
@@ -128,11 +144,6 @@ export async function createProduct(productData, file) {
     return productRef.id;
 }
 
-/**
- * Actualiza el stock de un producto en Firestore de manera segura mediante una transacción.
- * @param {string} productId - El ID del producto a actualizar.
- * @param {number} quantityPurchased - La cantidad del producto que se ha vendido.
- */
 export async function updateProductStock(productId, quantityPurchased) {
     const productRef = doc(db, "products", productId);
 
@@ -155,16 +166,24 @@ export async function updateProductStock(productId, quantityPurchased) {
         console.log("Stock actualizado correctamente.");
     } catch (error) {
         console.error("Error al actualizar el stock del producto:", error);
-        throw error; // Re-lanza el error para manejarlo más arriba si es necesario
+        throw error;
     }
 }
 
 export async function deleteProduct(productId) {
     const productDocRef = doc(db, "products", productId);
+    const productDoc = await getDoc(productDocRef);
+
+    if (!productDoc.exists()) {
+        throw new Error("Product not found");
+    }
+
+    const productData = productDoc.data();
+    const eliminatedProductDocRef = doc(db, "eliminated_products", productId);
+
+    await setDoc(eliminatedProductDocRef, productData);
     await deleteDoc(productDocRef);
 }
-
-
 
 export async function updateProduct(productId, updatedData) {
     const productDataForFirestore = Object.entries(updatedData).reduce((acc, [key, value]) => {
@@ -177,7 +196,6 @@ export async function updateProduct(productId, updatedData) {
     const productDocRef = doc(db, "products", productId);
     await updateDoc(productDocRef, productDataForFirestore);
 }
-
 
 export async function getCategories() {
     const categoriesCollectionRef = collection(db, "product_categories");
@@ -219,9 +237,9 @@ export const addProductsBatch = async (products) => {
 
     for (const product of products) {
         const newDocRef = doc(collection(db, "products"));
-        ids.push(newDocRef.id); // Guarda el ID generado
+        ids.push(newDocRef.id);
 
-        if (product.pictureUrl) { // Suponiendo que `pictureUrl` es la URL de la imagen en el Excel
+        if (product.pictureUrl) {
             const uploadPromise = fetch(product.pictureUrl)
                 .then(res => res.blob())
                 .then(blob => {
@@ -232,7 +250,7 @@ export const addProductsBatch = async (products) => {
                 .then(url => {
                     const productData = {
                         ...product,
-                        pictures: url, // Guarda la URL de Firebase
+                        pictures: url,
                         banner_pictures: url
                     };
                     batch.set(newDocRef, productData);
@@ -241,14 +259,13 @@ export const addProductsBatch = async (products) => {
                     console.error("Failed to upload image, saving product without image:", error);
                     const productData = {
                         ...product,
-                        pictures: null, // No image URL available
+                        pictures: null,
                         banner_pictures: null
                     };
                     batch.set(newDocRef, productData);
                 });
             uploadPromises.push(uploadPromise);
         } else {
-            // No hay URL de imagen, guardar el producto sin imágenes
             const productData = {
                 ...product,
                 pictures: null,
@@ -259,21 +276,28 @@ export const addProductsBatch = async (products) => {
     }
 
     await Promise.all(uploadPromises);
-    await batch.commit(); // Ejecuta todas las operaciones del batch
-    return ids; // Devuelve los IDs de los nuevos productos
+    await batch.commit();
+    return ids;
 };
-
 
 export async function getProductNameById(productId) {
     const productDocRef = doc(db, "products", productId);
     const productDoc = await getDoc(productDocRef);
 
     if (!productDoc.exists()) {
-        throw new Error("Product not found");
+        const eliminatedProductDocRef = doc(db, "eliminated_products", productId);
+        const eliminatedProductDoc = await getDoc(eliminatedProductDocRef);
+
+        if (!eliminatedProductDoc.exists()) {
+            throw new Error("Product not found");
+        }
+
+        const eliminatedProductData = eliminatedProductDoc.data();
+        return eliminatedProductData.product_name;
     }
 
     const productData = productDoc.data();
-    return productData.product_name;  // Devuelve solo el nombre del producto
+    return productData.product_name;
 }
 
 export async function getProductByName(productName) {
@@ -288,8 +312,8 @@ export async function addProductStock(productId, quantity) {
     const productSnap = await getDoc(productRef);
 
     if (productSnap.exists()) {
-        const currentStock = Number(productSnap.data().stock); // Convertir a número
-        const addQuantity = Number(quantity); // Asegurarse de que la cantidad también es un número
+        const currentStock = Number(productSnap.data().stock);
+        const addQuantity = Number(quantity);
         const newStock = currentStock + addQuantity;
 
         await updateDoc(productRef, {
@@ -300,11 +324,10 @@ export async function addProductStock(productId, quantity) {
         console.error('Product not found');
         throw new Error('Product not found');
     }
-
 }
 
 export const calculatePPP = (costoLote, stock) => {
-    return stock !== 0 ? costoLote / stock : 0; // Asegurarse de no dividir por cero
+    return stock !== 0 ? costoLote / stock : 0;
 };
 
 export default {

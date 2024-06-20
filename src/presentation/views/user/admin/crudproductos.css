@@ -68,7 +68,6 @@
 
 /* Añade efectos visuales adicionales para los íconos SVG dentro de los botones */
 .crud-productos button svg {
-    margin-right: 5px; /* Espacio entre el ícono y el texto */
     fill: white; /* Color del ícono */
     width: 14px; /* Ancho del ícono reducido */
     height: 14px; /* Altura del ícono reducido */

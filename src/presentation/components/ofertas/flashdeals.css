@@ -124,6 +124,7 @@
     border-radius: 50%;
     transform: 0.5s;
     z-index: 5;
+    border: none;
 }
 .control-btn .prev {
     left: -20px;
@@ -139,7 +140,7 @@
 }
 .control-btn .prev:hover,
 .control-btn .next:hover {
-    background: #e94560;
+    background: #b8253e;
     color: white;
     cursor: pointer;
 }

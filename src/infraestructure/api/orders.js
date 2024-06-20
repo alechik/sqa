@@ -310,14 +310,19 @@ export async function sellByProduct() {
           for (const product of order.products) {
               if (order.status !== "Devuelto" && order.status !== "Cancelado") {
                   try {
-                      const productName = await getProductNameById(product.productId);
+                      let productName = "Producto Desconocido"; // Nombre predeterminado para productos no encontrados
+                      const fetchedProductName = await getProductNameById(product.productId);
+                      if (fetchedProductName) {
+                          productName = fetchedProductName;
+                      }
+
                       if (!productCounts[productName]) {
                           productCounts[productName] = { totalUnits: 0, totalSales: 0 };
                       }
                       productCounts[productName].totalUnits += product.quantity;
                       productCounts[productName].totalSales += product.unitPrice * product.quantity;
                   } catch (error) {
-                      console.error(`Error fetching product name for ID ${product.productId}:`, error);
+                      // Puedes comentar la línea anterior si no quieres ver errores en consola.
                   }
               }
           }

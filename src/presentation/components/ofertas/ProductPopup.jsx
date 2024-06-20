@@ -162,5 +162,5 @@ export default function  ProductPopup({ product, onClose, addtoCart }) {
             <ToastContainer />
         </div>
     );
-};
+}
 

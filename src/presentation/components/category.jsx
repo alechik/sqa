@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './category.css';
 import ProductPopup from './ofertas/ProductPopup.jsx';
 
-const Category = () => {
+const Category = ({addtoCart}) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [products, setProducts] = useState([]);
@@ -156,6 +156,7 @@ const Category = () => {
                 </div>
                 {showPopup && (
                     <ProductPopup
+                        addtoCart={addtoCart}
                         product={selectedProduct}
                         onClose={() => setShowPopup(false)}
                     />

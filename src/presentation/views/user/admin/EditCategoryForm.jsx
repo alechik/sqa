@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {getProductCategoryById, updateProductCategory} from '../../../../infraestructure/api/product_category.js';
-import {storage} from '../../../../infraestructure/firebase-connection.js'; // Importa storage desde tu configuración de Firebase
-import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getProductCategoryById, updateProductCategory } from '../../../../infraestructure/api/product_category.js';
+import { storage } from '../../../../infraestructure/firebase-connection.js'; // Importa storage desde tu configuración de Firebase
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import '../../Products/edditProductform.css';
 
 function EditCategoryForm() {
     const [category, setCategory] = useState({
         description: '',
-        name : '',
+        name: '',
         picture: '',
         imageFile: null // Para el archivo de imagen cargado
     });
@@ -16,11 +16,9 @@ function EditCategoryForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
-
         const fetchCategoryData = async () => {
             try {
                 const data = await getProductCategoryById(categoryId);
-
                 setCategory({
                     name: data.name || '',
                     description: data.description || '',
@@ -31,16 +29,12 @@ function EditCategoryForm() {
             }
         };
 
-
-
-
         fetchCategoryData();
-
     }, [categoryId]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        if (name === 'image' && files) {
+        if (name === 'picture' && files) {
             const file = files[0];
             setCategory(prev => ({ ...prev, imageFile: file, picture: URL.createObjectURL(file) }));
         } else {
@@ -53,13 +47,13 @@ function EditCategoryForm() {
 
         let updatedData = { ...category };
 
-        if (category.picture instanceof File) {
+        if (category.imageFile) {
             try {
-                const imageRef = ref(storage, `category_images/${category.picture.name}`);
-                const uploadResult = await uploadBytes(imageRef, category.picture);
+                const imageRef = ref(storage, `category_images/${category.imageFile.name}`);
+                const uploadResult = await uploadBytes(imageRef, category.imageFile);
                 const imageUrl = await getDownloadURL(uploadResult.ref);
                 updatedData.picture = imageUrl;
-                delete updatedData.image;
+                delete updatedData.imageFile;
             } catch (error) {
                 console.error("Error uploading new image:", error);
                 return;
@@ -77,26 +71,19 @@ function EditCategoryForm() {
         }
     };
 
-    if (!category) {
-        return <div>Cargando...</div>;
-    }
-
-
-
-
-
     return (
         <div className="edit-product-form">
-            <h2>Editar Categoria</h2>
+            <h2>Editar Categoría</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-field">
-                    <label htmlFor="name">Nombre del Producto</label>
+                    <label htmlFor="name">Nombre de la Categoría</label>
                     <input
                         id="name"
                         type="text"
                         name="name"
-                        value={category.name || ''}
+                        value={category.name}
                         onChange={handleChange}
+                        maxLength={20}
                         required
                     />
                 </div>
@@ -106,28 +93,22 @@ function EditCategoryForm() {
                     <textarea
                         id="description"
                         name="description"
-                        value={category.description || ''}
+                        value={category.description}
                         onChange={handleChange}
+                        maxLength={250}
                         required
-                        maxLength={350}
                     />
                 </div>
 
-
-
-
-
-
-
-                <img src={category.picture} alt="Categoria" className="product-imagess" />
+                <img src={category.picture} alt="Categoría" className="product-imagess" />
 
                 <div className="form-field">
-                    <label htmlFor="image">Imagen</label>
+                    <label htmlFor="picture">Imagen</label>
                     <input
                         type="file"
-                        name="image"
-                        onChange={handleChange}
+                        name="picture"
                         accept="image/*"
+                        onChange={handleChange}
                         required
                     />
                     {category.picture && (
@@ -141,7 +122,6 @@ function EditCategoryForm() {
             </form>
         </div>
     );
-
 }
 
 export default EditCategoryForm;

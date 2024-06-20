@@ -132,7 +132,12 @@ function AddProductForm() {
                 onChange={handleChange} 
                 value={product.unitary_price} 
                 min="0.00" 
-                max="999999.99" 
+                max="999999.99"
+                onInput={(e) => {
+                    if (e.target.value.length > 5) {
+                        e.target.value = e.target.value.slice(0, 5);
+                    }
+                }}
                 required 
             />
             <input 
@@ -140,7 +145,12 @@ function AddProductForm() {
                 name="stock" 
                 placeholder="Stock" 
                 onChange={handleChange} 
-                value={product.stock} 
+                value={product.stock}
+                onInput={(e) => {
+                    if (e.target.value.length > 4) {
+                        e.target.value = e.target.value.slice(0, 4);
+                    }
+                }}
                 min="1" 
                 max="9999" 
                 required 

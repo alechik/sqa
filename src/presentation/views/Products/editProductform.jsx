@@ -155,8 +155,11 @@ function EditProductForm() {
                         value={product.unitary_price || ''}
                         onChange={handleChange}
                         required
-                        min="0.00" // No negative numbers, minimum 0.01
-                        max="999999.99" // Maximum reasonable price
+                        onInput={(e) => {
+                            if (e.target.value.length > 5) {
+                                e.target.value = e.target.value.slice(0, 5);
+                            }
+                        }}
                     />
                 </div>
                 <div className="form-field">
@@ -167,6 +170,11 @@ function EditProductForm() {
                         name="stock"
                         value={product.stock || ''}
                         onChange={handleChange}
+                        onInput={(e) => {
+                            if (e.target.value.length > 4) {
+                                e.target.value = e.target.value.slice(0, 4);
+                            }
+                        }}
                         required
                         min="0" // No negative numbers
                         max="9999" // Maximum reasonable stock

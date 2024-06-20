@@ -118,22 +118,23 @@ export async function uploadImage(file) {
     return getDownloadURL(uploadResult.ref);
 }
 
-export async function createProduct(productData, file) {
-    const imageUrl = file ? await uploadImage(file) : null;
-
+export async function createProduct(productData) {
     const productState = determineProductState(productData.stock);
 
     const productDataForFirestore = {
         description: productData.description,
-        pictures: imageUrl,
-        banner_pictures: imageUrl,
+        pictures: productData.pictures,  // Asegúrate de que aquí solo estás pasando la URL de la imagen
+        banner_pictures: productData.pictures,
         CategoryID: productData.CategoryID,
         product_name: productData.product_name,
         stock: productData.stock,
         date_added: serverTimestamp(),
         unitary_price: productData.unitary_price,
         gramaje: productData.gramaje,
-        state: productState
+        state: productState,
+        costo_lote: productData.costo_lote,
+        ppp: calculatePPP(productData.costo_lote, productData.stock),  // Calcular PPP
+        gananciaLote: calculatePMP(productData.unitary_price, productData.stock, productData.costo_lote)  // Calcular gananciaLote
     };
 
     if (!productDataForFirestore.CategoryID) {
@@ -143,6 +144,7 @@ export async function createProduct(productData, file) {
     const productRef = await addDoc(collection(db, "products"), productDataForFirestore);
     return productRef.id;
 }
+
 
 export async function updateProductStock(productId, quantityPurchased) {
     const productRef = doc(db, "products", productId);

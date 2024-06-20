@@ -32,6 +32,7 @@ import Category from "./components/category";
 import DeliveryDetailsPage from './views/user/worker/delivery';
 import {SearchedProductsProvider} from "../infraestructure/api/searchedproducts.jsx";
 import {getProductCategories} from "../infraestructure/api/product_category.js";
+import EditCategoryForm from "./views/user/admin/EditCategoryForm.jsx";
 
 const saveCartToLocalStorage = (cartItems) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -138,6 +139,7 @@ function App() {
                                 <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                                 <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
                                 <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
+                                <Route path="/admin/edit-category/:categoryId" element={<PrivateRoute><EditCategoryForm/></PrivateRoute>} />
                                 <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                                 <Route path="/admin/:activepage" element={<PrivateRoute><AdminProfile productos={productos} categorys = {categorys}/></PrivateRoute>} />
                                 <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />

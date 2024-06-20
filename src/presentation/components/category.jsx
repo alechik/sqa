@@ -108,6 +108,7 @@ const Category = () => {
         setShowPopup(true);
     };
 
+    console.log(categories)
     return (
         <div className="containerCat">
             <div className="categorypopup">

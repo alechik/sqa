@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import './crudproductos.css'
+import './categoriatable.css'
+
 import { Link } from "react-router-dom";
 import { deleteProduct } from "../../../../infraestructure/api/product.js";
 import { useNavigate } from 'react-router-dom';
@@ -9,25 +10,33 @@ export default function CategoriaTable({ productos , categorys}) {
     const [categorysList, setCategoryList] = useState(categorys)
     const navigate = useNavigate();
 
-    const handleDeleteProduct = async (productId) => {
+    const truncateText = (text, maxLength) => {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength) + '...';
+        }
+        return text;
+    };
+
+
+    const handleDeleteProduct = async (categoryId) => {
         try {
-            await deleteProduct(productId);
+            await deleteProduct(categoryId);
             // Actualizar la lista de productos eliminando el producto con el ID dado
-            setProductList(productList.filter(product => product.id !== productId));
+            setCategoryList(categorysList.filter(category => category.id !== categoryId));
         } catch (error) {
             console.error('Error al eliminar el producto:', error);
             alert('Error al eliminar el producto. Por favor, revisa la consola para más detalles.');
         }
     };
 
-    const handleEditProduct = (productId) => {
+    const handleEditProduct = (categoryId) => {
         // Navega a la ruta de edición con el ID del producto
-        navigate(`/admin/edit-product/${productId}`);
+        navigate(`/admin/edit-category/${categoryId}`);
     };
 
     return (
         <div className='crud-productos'>
-            <div className="crud-options">
+            <div className="category-options">
                 <Link to="/admin/addcategory">
                     <button>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -37,31 +46,15 @@ export default function CategoriaTable({ productos , categorys}) {
                     </button>
                 </Link>
 
-                <Link to='/admin/add-product'>
-                    <button>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Añadir producto
-                    </button>
-                </Link>
-                <Link to="/admin/crud-products-excel">
-                    <button>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Añadir productos (Excel)</button>
-                </Link>
+
             </div>
             <div className="table-container">
                 <table>
-                    <thead>
-                    <tr>
-                        <th>Nombre producto</th>
-                        <th>Descripción</th>
-                        <th>Stock</th>
-                        <th>Unidad de medida</th>
-                        <th>Acciones</th>
+                    <thead className='category-header'>
+                    <tr className='category-header-row'>
+                        <th className='name-header'>Nombre producto</th>
+                        <th className='description-header'>Descripcion</th>
+                        <th className='action-header'>Acciones</th>
                     </tr>
                     </thead>
                 </table>
@@ -70,8 +63,8 @@ export default function CategoriaTable({ productos , categorys}) {
                         <tbody>
                         {categorysList.map((categoria) => (
                             <tr key={categoria.id}>
-                                <td>{categoria.description}</td>
-                                <td className="product_description">{categoria.name}</td>
+                                <td>{categoria.name}</td>
+                                <td>{truncateText(categoria.description, 100)}</td>
 
                                 <td id='acciones'>
                                     <button id='editar' onClick={() => handleEditProduct(categoria.id)}>

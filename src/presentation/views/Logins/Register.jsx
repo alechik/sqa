@@ -7,7 +7,9 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import registroimagen from '../../assets/signup-image.jpg';
 
 const CLIENT_USER_TYPE_ID = '3';
-
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const NAME_REGEX = /^[a-zA-Z ]+$/;
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');
@@ -17,6 +19,7 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+    const [formErrors, setFormErrors] = useState({});
     const navigate = useNavigate();
 
     const handleFirstNameChange = (event) => setFirstName(event.target.value);
@@ -26,37 +29,72 @@ export default function Register() {
     const handleConfirmPasswordChange = (event) => setConfirmPassword(event.target.value);
     const handleNumberChange = (event) => setNumber(event.target.value);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (password !== confirmPassword) {
-            setIsPasswordMatch(false);
-            return;
+    const validateForm = () => {
+        let errors = {};
+        let isValid = true;
+
+        if (!firstName.match(NAME_REGEX) || firstName.length < 2 || firstName.length > 50) {
+            errors.firstName = 'El nombre debe tener entre 2 y 50 caracteres y solo puede contener letras';
+            isValid = false;
         }
 
-        const auth = getAuth();
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+        if (!lastName.match(NAME_REGEX) || lastName.length < 2 || lastName.length > 50) {
+            errors.lastName = 'El apellido debe tener entre 2 y 50 caracteres y solo puede contener letras';
+            isValid = false;
+        }
 
-            // Ahora user.uid contiene el UID generado por Firebase Authentication
-            await createUser({
-                uid: user.uid,
-                email,
-                names: `${firstName} ${lastName}`,
-                numero,
-                address,
-                gender: '',
-                birthday_date: '',
-                ci: '',
-                avatar: '',
-                userTypeId: CLIENT_USER_TYPE_ID,
-            });
+        if (!email.match(EMAIL_REGEX)) {
+            errors.email = 'Ingrese un correo electrónico válido';
+            isValid = false;
+        }
 
-            toast.success("Registro exitoso!");
-            navigate('/');
-        } catch (error) {
-            console.error('Error al registrar usuario:', error.message);
-            toast.error(`Error al registrar usuario: ${error.message}`);
+        if (!password.match(PASSWORD_REGEX)) {
+            errors.password = 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial';
+            isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+            errors.confirmPassword = 'Las contraseñas no coinciden';
+            isValid = false;
+        }
+
+        if (numero.length !== 8 || isNaN(numero)) {
+            errors.numero = 'El número de teléfono debe tener 8 dígitos numéricos';
+            isValid = false;
+        }
+
+        setFormErrors(errors);
+        return isValid;
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (validateForm()) {
+            const auth = getAuth();
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Ahora user.uid contiene el UID generado por Firebase Authentication
+                await createUser({
+                    uid: user.uid,
+                    email,
+                    names: `${firstName} ${lastName}`,
+                    numero,
+                    address,
+                    gender: '',
+                    birthday_date: '',
+                    ci: '',
+                    avatar: '',
+                    userTypeId: CLIENT_USER_TYPE_ID,
+                });
+
+                toast.success("Registro exitoso!");
+                navigate('/');
+            } catch (error) {
+                console.error('Error al registrar usuario:', error.message);
+                toast.error(`Error al registrar usuario: ${error.message}`);
+            }
         }
     };
 
@@ -66,7 +104,7 @@ export default function Register() {
                 <div className="signup-content">
                     <div className="signup-form">
                         <h2 className="form-title">Registrarse</h2>
-                        <form className="register-form" id="register-form" onSubmit={handleSubmit}>
+                        <form className="register-form" id="register-form" onSubmit={handleSubmit} noValidate>
                             <div className="form-group">
                                 <label className='labellr' htmlFor="name"><i className="zmdi zmdi-account material-icons-name"></i></label>
                                 <input
@@ -79,7 +117,12 @@ export default function Register() {
                                     required
                                     value={firstName}
                                     onChange={handleFirstNameChange}
+                                    maxLength={50}
+                                    minLength={2}
+                                    pattern={NAME_REGEX}
+                                    title="El nombre solo puede contener letras"
                                 />
+                                {formErrors.firstName && <span className="error">{formErrors.firstName}</span>}
                             </div>
                             <div className="form-group">
                                 <label className='labellr' htmlFor="lastname"><i className="zmdi zmdi-face"></i></label>
@@ -93,7 +136,12 @@ export default function Register() {
                                     required
                                     value={lastName}
                                     onChange={handleLastNameChange}
+                                    maxLength={50}
+                                    minLength={2}
+                                    pattern={NAME_REGEX}
+                                    title="El apellido solo puede contener letras"
                                 />
+                                {formErrors.lastName && <span className="error">{formErrors.lastName}</span>}
                             </div>
                             <div className="form-group">
                                 <label className='labellr' htmlFor="numero"><i className="zmdi zmdi-phone"></i></label>
@@ -102,12 +150,17 @@ export default function Register() {
                                     name='numero'
                                     placeholder='Numero'
                                     className='inputrl'
-                                    type="number"
+                                    type="text"
                                     autoComplete='nope'
                                     required
                                     value={numero}
                                     onChange={handleNumberChange}
+                                    maxLength={8}
+                                    minLength={8}
+                                    pattern="[0-9]*"
+                                    title="El número de teléfono debe tener 8 dígitos numéricos"
                                 />
+                                {formErrors.numero && <span className="error">{formErrors.numero}</span>}
                             </div>
                             <div className="form-group">
                                 <label className='labellr' htmlFor="email"><i className="zmdi zmdi-email"></i></label>
@@ -119,9 +172,12 @@ export default function Register() {
                                     name='email'
                                     autoComplete='nope'
                                     required
-                                    value={lastName}
+                                    value={email}
                                     onChange={handleEmailChange}
+                                    pattern={EMAIL_REGEX}
+                                    title="Ingrese un correo electrónico válido"
                                 />
+                                {formErrors.email && <span className="error">{formErrors.email}</span>}
                             </div>
                             <div className="form-group">
                                 <label className='labellr' htmlFor="contraseña"><i className="zmdi zmdi-lock"></i></label>
@@ -135,7 +191,10 @@ export default function Register() {
                                     required
                                     value={password}
                                     onChange={handlePasswordChange}
+                                    pattern={PASSWORD_REGEX}
+                                    title="La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
                                 />
+                                {formErrors.password && <span className="error">{formErrors.password}</span>}
                             </div>
                             <div className="form-group">
                                 <label className='labellr' htmlFor="contraseña"><i className="zmdi zmdi-lock-outline"></i></label>
@@ -149,9 +208,12 @@ export default function Register() {
                                     required
                                     value={confirmPassword}
                                     onChange={handleConfirmPasswordChange}
+                                    pattern={PASSWORD_REGEX}
+                                    title="La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
                                 />
+                                {formErrors.confirmPassword && <span className="error">{formErrors.confirmPassword}</span>}
                             </div>
-                            {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
+                            {!isPasswordMatch && <p style={{ color: 'red' }}>Las contraseñas no coinciden</p>}
                             <div className="form-group form-button">
                                 <input type="submit" disabled={!isPasswordMatch} name="signup" id="signup" className="form-submit" value="Registrarse" />
                             </div>

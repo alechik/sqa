@@ -110,8 +110,21 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%); }
   
-  .signup {
-    margin-bottom: 150px; }
+    .signup-image-link {
+      font-size: 14px;
+      color: #222;
+      display: block;
+      text-align: center;
+      transition: font-size 0.3s ease;
+    }
+  
+    .signup-image-link:hover {
+      font-size: 15px;
+      color: #222;
+      display: block;
+      text-align: center;
+      transition: font-size 0.3s ease;
+    }
   
   .signup-content {
     padding: 75px 0; }

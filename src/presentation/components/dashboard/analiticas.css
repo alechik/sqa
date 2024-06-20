@@ -2,13 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #f9f9f9; /* Fondo claro */
+    background: #f9f9f9;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
-    max-width: 700px; /* Ancho máximo para evitar estiramientos */
-    margin: auto; /* Centrar en la pantalla */
-    transition: all 0.3s ease; /* Transición suave */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 100%; /* Usar ancho máximo del contenedor padre */
+    margin: auto;
+    transition: all 0.3s ease;
 }
 
 .header {
@@ -16,25 +16,45 @@
     text-align: center;
     padding: 20px 0;
     background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-    border-radius: 8px; /* Bordes redondeados */
-    color: white; /* Texto blanco */
+    border-radius: 8px;
+    color: white;
 }
 
 .title {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
-
 }
 
 .chart-container {
+    width: 100%;
     margin-top: 20px;
     padding: 20px;
-    background: white; /* Fondo blanco para resaltar */
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil */
-    transition: transform 0.3s ease; /* Transición suave */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
 }
 
 .chart-container:hover {
-    transform: scale(1.02); /* Efecto de agrandamiento al pasar el ratón */
+    transform: scale(1.02);
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 768px) {
+    .chart-container {
+        padding: 10px;
+    }
+
+    .analytics {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .chart {
+        width: 100%;
+        height: auto;
+    }
 }

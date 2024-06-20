@@ -1,30 +1,15 @@
 .content {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);  /* 12 column layout */
-    grid-gap: 20px;
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos estén uno debajo del otro */
+    gap: 20px; /* Espacio entre los elementos */
     padding: 20px;
 }
 
 .section-titles {
-    grid-column: 1 / -1;  /* Span across all columns */
     color: #333;
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
-}
-
-/* Analytics and GeneralSellInfo side by side */
-.analytics {
-    grid-column: 1 / 10; /* Takes 9 out of 12 columns */
-}
-
-.general-info {
-    grid-column: 10 / -1; /* Takes remaining 3 columns */
-}
-
-/* Full width components below */
-.full-width {
-    grid-column: 1 / -1; /* Span across all columns */
 }
 
 .row {
@@ -39,8 +24,7 @@
     transform: scale(0.99);
 }
 
-/* Ensures tables and other content in rows do not exceed the container width */
 .row > * {
     max-width: 100%;
-    overflow-x: auto; /* Allows horizontal scrolling if necessary */
+    overflow-x: auto; /* Permite el desplazamiento horizontal si es necesario */
 }

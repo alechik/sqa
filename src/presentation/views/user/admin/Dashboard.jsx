@@ -65,16 +65,16 @@ export default function Dashboard() {
     return (
         <div className='content'>
             <span className="section-titles">Dashboard de Ventas</span>
-            <div className="analytics">
+            <div className="row">
                 <Analytics topProducts={topProducts} />
             </div>
-            <div className="general-info">
+            <div className="row">
                 <GeneralSellInfo />
             </div>
-            <div className="full-width">
+            <div className="row">
                 <SellsReport />
             </div>
-            <div className="full-width">
+            <div className="row">
                 <SelledProductsList />
             </div>
         </div>

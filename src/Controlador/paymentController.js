@@ -2,6 +2,7 @@ import $ from 'jquery';
 import qs from 'qs';
 import { getNextPaymentNumber } from '../infraestructure/api/pagos';
 import { createOrder } from '../infraestructure/api/orders';
+import { getAuth } from 'firebase/auth';
 
 export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrderId, callbacks) => {
     if (!user.email || cartItems.length === 0) {
@@ -10,11 +11,15 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
     }
 
     try {
-        // Primero obtenemos el próximo número de pago antes de cualquier otra operación
-        const paymentNumber = await getNextPaymentNumber();
+        // Obtener el token de autenticación actual
+        const auth = getAuth();
+        const token = await auth.currentUser.getIdToken();
 
-        // Luego creamos la orden con este paymentNumber
-        const orderId = await createOrder(user, cartItems, paymentNumber); 
+        // Obtener el próximo número de pago
+        const paymentNumber = await getNextPaymentNumber(token);
+
+        // Crear la orden
+        const orderId = await createOrder(user, cartItems, paymentNumber, token);
         setOrderId(orderId);
 
         // Preparar datos para la solicitud de generación de QR
@@ -39,14 +44,16 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
             }))
         };
 
-        // Ahora generamos el QR con el mismo PedidoID
+        // Headers para la solicitud de generación de QR
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
             'TokenSecret': '9E7BC239DDC04F83B49FFDA5',
             'TokenService': '51247fae280c20410824977b0781453df59fad5b23bf2a0d14e884482f91e09078dbe5966e0b970ba696ec4caf9aa5661802935f86717c481f1670e63f35d5041c31d7cc6124be82afedc4fe926b806755efe678917468e31593a5f427c79cdf016b686fca0cb58eb145cf524f62088b57c6987b3bb3f30c2082b640d7c52907',
-            'CommerceId': 'd029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c'
+            'CommerceId': 'd029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c',
+            'Authorization': `Bearer ${token}` // Añadir el token de autenticación
         };
 
+        // Generar el QR
         const data = await $.ajax({
             url: 'https://serviciostigomoney.pagofacil.com.bo/api/servicio/generarqrv2',
             method: 'POST',
@@ -67,6 +74,10 @@ export const generateQRCodeAndOrder = async (user, cartItems, setQRImage, setOrd
             callbacks.onError('La respuesta del servidor no contiene "values" o es incorrecta.');
         }
     } catch (error) {
-        callbacks.onError('Error al generar el código QR y crear la orden: ' + error.message);
+        if (error.message.includes("permission")) {
+            callbacks.onError('Error de permisos: ' + error.message);
+        } else {
+            callbacks.onError('Error al generar el código QR y crear la orden: ' + error.message);
+        }
     }
 };

@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'material-icons/iconfont/material-icons.css';
 import inicioimagen from '../../assets/signin-image.jpg';
 
-function Login2() {
+function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -153,4 +153,4 @@ function Login2() {
     );
 }
 
-export default Login2;
+export default Login;

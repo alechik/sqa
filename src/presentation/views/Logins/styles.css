@@ -56,6 +56,26 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
     -o-appearance: radio !important;
     -ms-appearance: radio !important; }
 
+        .error {
+          color: #e74c3c;
+          font-size: 11px;
+          margin-top: 5px;
+          display: block;
+          opacity: 0;
+          /* Inicialmente transparente */
+          max-height: 0;
+          /* Inicialmente sin altura */
+          overflow: hidden;
+          transition: opacity 0.3s ease, max-height 0.3s ease;
+        }
+    
+        .error.active {
+          opacity: 1;
+          /* Hace visible el mensaje de error */
+          max-height: 30px;
+          /* Ajusta según el espacio que necesite el mensaje */
+        }
+
     .sign-in{
         margin-bottom: 50px;
     }
@@ -127,7 +147,9 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
     }
   
   .signup-content {
-    padding: 75px 0; }
+    padding: 75px 0; 
+    margin-bottom: 20px;
+  }
   
   .signup-form, .signup-image, .signin-form, .signin-image {
     width: 50%;
@@ -283,7 +305,7 @@ display-flex, .display-flex, .display-flex-center, .signup-content, .signin-cont
   .labellr {
     position: absolute;
     left: 0;
-    top: 50%;
+    top: 30%;
     transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     -webkit-transform: translateY(-50%);

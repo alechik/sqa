@@ -2,7 +2,7 @@
 import React from 'react';
 import './searchedproduct.css'; // Asegúrate de que el archivo CSS está correctamente vinculado
 
-const SearchedProductCard = ({ product, onAddToCart }) => {
+const SearchedProductCard = ({ product, addtoCart }) => {
     return (
         <div className="searched-product-card">
             <div className="product-image-container">
@@ -20,7 +20,7 @@ const SearchedProductCard = ({ product, onAddToCart }) => {
                 <p className="product-measurement-unit"><strong>Unidad de medida:</strong> {product.gramaje}</p>
                 <p className="product-price"><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
                 <div className="product-actions">
-                    <button className="add-to-cart" onClick={() => onAddToCart(product)}>Añadir al carrito</button>
+                    <button className="add-to-cart" onClick={() => addtoCart(product)}>Añadir al carrito</button>
                     <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">
                         <i className="fab fa-facebook-f"></i> Facebook
                     </a>

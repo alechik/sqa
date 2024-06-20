@@ -14,7 +14,7 @@ import bellIcon from '../assets/notificacion.png';
 import wishlistIcon from '../assets/wishlist.png';
 import categoriesIcon from '../assets/categories.png';
 
-export default function Navbar({ cartItems, setCartItems }) {
+export default function Navbar({ cartItems, setCartItems, addtoCart }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -135,7 +135,7 @@ export default function Navbar({ cartItems, setCartItems }) {
                     <span className="store-name">Saltillo</span>
                 </Link>
             </div>
-            <Search />
+            <Search addtoCart={addtoCart}/>
             <ul className="navegacion">
                 {userProfile ? (
                     <>

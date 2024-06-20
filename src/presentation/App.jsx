@@ -122,14 +122,14 @@ function App() {
             <OrderProvider user={currentUser}>
                 <SearchedProductsProvider>
                     <Router>
-                        <Navbar cartItems={cartItems} setCartItems={setCartItems}/>
+                        <Navbar cartItems={cartItems} setCartItems={setCartItems} addtoCart={addtoCart}/>
                         <main>
                             <Routes>
                                 <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
                                 <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/registrarse" element={<Register />} />
-                                <Route path="/search" element={<SearchesPage />} />
+                                <Route path="/search" element={<SearchesPage addtoCart={addtoCart} />} />
                                 <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
                                 <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
                                 <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />

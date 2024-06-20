@@ -139,8 +139,8 @@ function Login2() {
                         <div className="social-login">
                             <span className="social-label">O inicia sesión con</span>
                             <ul className="socials">
-                                <li><a onClick={handleSignInWithFacebook}><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
-                                <li><a onClick={handleSignInWithGoogle}><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                                <li><a onClick={handleSignInWithFacebook}><i className="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a onClick={handleSignInWithGoogle}><i className="display-flex-center zmdi zmdi-google"></i></a></li>
                             </ul>
                         </div>
                     </div>

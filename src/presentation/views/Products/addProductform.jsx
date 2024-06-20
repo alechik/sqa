@@ -4,6 +4,7 @@ import { createProduct } from '../../../infraestructure/api/product'; // Asegúr
 import { storage, db } from '../../../infraestructure/firebase-connection';// Importa storage desde tu configuración de Firebase
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, getDocs } from 'firebase/firestore';
+import { ToastContainer, toast } from 'react-toastify';
 
 function AddProductForm() {
     const [product, setProduct] = useState({
@@ -44,23 +45,23 @@ function AddProductForm() {
 
         // Validación adicional antes de enviar el formulario
         if (product.unitary_price <= 0 || product.unitary_price > 999999) {
-            alert('El precio unitario debe ser mayor a 0 y no mayor a 999999.');
+            toast('El precio unitario debe ser mayor a 0 y no mayor a 999999.');
             return;
         }
         if (product.stock <= 0 || product.stock > 9999) {
-            alert('El stock debe ser mayor a 0 y no mayor a 9999.');
+            toast('El stock debe ser mayor a 0 y no mayor a 9999.');
             return;
         }
         if (product.product_name.length > 60) {
-            alert('El nombre del producto no debe exceder los 60 caracteres.');
+            toast('El nombre del producto no debe exceder los 60 caracteres.');
             return;
         }
-        if (product.description.length > 2000) {
-            alert('La descripción no debe exceder los 2000 caracteres.');
+        if (product.description.length > 500) {
+            toast('La descripción no debe exceder los 500 caracteres.');
             return;
         }
         if (!product.image) {
-            alert('Por favor, selecciona una imagen para el producto.');
+            toast('Por favor, selecciona una imagen para el producto.');
             return;
         }
 
@@ -81,7 +82,7 @@ function AddProductForm() {
                 ...productData,
                 pictures: imageUrl, // Asegúrate de que este campo coincide con lo esperado en Firestore y la clase Product
             }, product.image); // Considera si necesitas pasar realmente la imagen aquí, dado que ya has manejado la subida
-            alert('Producto agregado con éxito');
+            toast('Producto agregado con éxito');
             // Opcional: resetear el estado del formulario aquí
             setProduct({
                 product_name: '',
@@ -94,7 +95,7 @@ function AddProductForm() {
             });
         } catch (error) {
             console.error('Error al agregar el producto:', error);
-            alert('Error al agregar el producto. Por favor, revisa la consola para más detalles.');
+            toast('Error al agregar el producto. Por favor, revisa la consola para más detalles.');
         }
     };
 
@@ -114,7 +115,7 @@ function AddProductForm() {
                 name="description" 
                 placeholder="Descripción" 
                 onChange={handleChange} 
-                maxLength="2000" 
+                maxLength="500" 
                 value={product.description} 
                 required 
             />
@@ -130,8 +131,8 @@ function AddProductForm() {
                 placeholder="Precio Unitario" 
                 onChange={handleChange} 
                 value={product.unitary_price} 
-                min="1" 
-                max="999999" 
+                min="0.00" 
+                max="999999.99" 
                 required 
             />
             <input 
@@ -163,6 +164,7 @@ function AddProductForm() {
                 required 
             />
             <button type="submit">Agregar Producto</button>
+            <ToastContainer/>
         </form>
     );
 }

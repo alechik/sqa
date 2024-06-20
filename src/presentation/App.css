@@ -10,6 +10,7 @@ body {
     justify-content: center;
     overflow-x: hidden;
     margin-top: 120px;
+    height: 100%;
     /* Oculta el scroll horizontal */
 }
 
@@ -37,21 +38,25 @@ main {
 }
 
 ::-webkit-scrollbar-track {
-    background: #ecf0f1;
+    background: #FCF5EB;
     /* Color del track */
     border-radius: 10px;
     /* Redondea los bordes del track */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(transparent, #bdc3c7, transparent);
-    /* Gradient para "acortar" visualmente */
-    border-radius: 10px;
-    /* Redondea los bordes del thumb */
+    background: #ffe1b7;
+    /* Color del thumb al pasar el mouse */
+    border-radius: 15px;
+    /* Aumenta el border-radius para hacerlo visualmente más "redondo" y más pequeño */
+    width: 8px;
+    /* Hace el thumb visualmente más delgado al pasar el mouse */
+    margin: 0 1px;
+    /* Ajusta márgenes para compensar la disminución en el ancho */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #a4a9ad;
+    background: #ffd9a3;
     /* Color del thumb al pasar el mouse */
     border-radius: 15px;
     /* Aumenta el border-radius para hacerlo visualmente más "redondo" y más pequeño */

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Search from "./Search";
 import { getUserProfile } from '../../infraestructure/api/user';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -13,25 +13,60 @@ import defaultAvatar from '../assets/usuario.png';
 import bellIcon from '../assets/notificacion.png';
 import wishlistIcon from '../assets/wishlist.png';
 import categoriesIcon from '../assets/categories.png';
-import {SearchedProductsProvider} from "../../infraestructure/api/searchedproducts.jsx";
 
-export default function Navbar({ cartItems = [] , setCartItems}) {
+export default function Navbar({ cartItems, setCartItems }) {
     const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
     const [userProfile, setUserProfile] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
-    const [reviewOrdersCount, setReviewOrdersCount] = useState(0);
     const navigate = useNavigate();
+    const location = useLocation();
     const auth = getAuth();
     const modalRef = useRef();
+    const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
+    const [reviewOrdersCount, setReviewOrdersCount] = useState(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const navbar = document.querySelector('.nav');
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollPosition > 100) {  // Ajusta este valor según tus necesidades
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
 
     const clearCart = () => {
         setCartItems([]);
         localStorage.removeItem('cartItems');
-
     };
 
-   useEffect(() => {
+    useEffect(() => {
+        // Cerrar el modal al cambiar la ubicación
+        const handleRouteChange = () => {
+            if (showModal) {
+                handleCloseModal();
+            }
+        };
+
+        // Escucha cambios en la ubicación
+        location.pathname;
+
+        return () => {
+            handleRouteChange();
+        };
+    }, [location, showModal]);  // Dependencias actualizadas
+
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const profile = await getUserProfile(user.uid);
@@ -49,28 +84,23 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
                 }
             } else {
                 setUserProfile(null);
+                handleCloseModal();
             }
         });
         return () => unsubscribe();
     }, [auth]);
 
     const logout = () => {
-        // Cerrar sesión del usuario
         signOut(auth).then(() => {
-            // Vaciar el carrito de compras
             clearCart();
-            // Navegar a la página de inicio de sesión
             navigate('/login');
-        })
+        }).finally(() => {
+            handleCloseModal();  // Asegurarse de que la modal y el overflow se manejen correctamente al salir
+        });
     };
 
-
-    const handleLogoClick = (event) => {
-        event.preventDefault();
-        if (userProfile) {
-            setShowModal(true);
-            document.body.style.overflow = 'hidden';
-        }
+    const handleProfileClick = () => {
+        setShowModal(true);
     };
 
     const handleCloseModal = () => {
@@ -79,7 +109,6 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
             modal.classList.add('hide');
             setTimeout(() => {
                 setShowModal(false);
-                document.body.style.overflow = 'auto';
             }, 300);
         }
     };
@@ -91,52 +120,34 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
             }
         };
 
-        if (showModal) {
-            document.addEventListener('mousedown', handleClickOutside);
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-
+        // Agregar y remover el listener de eventos
+        document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [showModal]);
-
-    const handleModalOptionClick = (option) => {
-        switch (option) {
-            case 'wishlist':
-                navigate('/wishlist');
-                break;
-            case 'logout':
-                logout();
-                break;
-            default:
-                break;
-        }
-        handleCloseModal();
-    };
+    }, []);
 
     return (
         <nav className="nav">
             <div className="logo-container">
-                <a href="/" className="logo-link" onClick={handleLogoClick}>
+                <Link to="/" className="logo-link">
                     <img src={tuImagen} alt="logo" className="logo-image" />
                     <span className="store-name">Saltillo</span>
-                </a>
+                </Link>
             </div>
-                <Search />
+            <Search />
             <ul className="navegacion">
                 {userProfile ? (
                     <>
                         <li>
                             <div className='wishlist'>
                                 <Link to='/Category' className="wishlist-link" title='Categorias'>
-                                    <img src={categoriesIcon} alt="wishlist" />
+                                    <img src={categoriesIcon} alt="Categorias" />
                                 </Link>
                             </div>
                             {userProfile.userTypeId === '2' && (
                                 <div className='notifications'>
-                                    <Link to='/notifications' className='notification-link' title='Notificaciones' >
+                                    <Link to='/notifications' className='notification-link' title='Notificaciones'>
                                         <img src={bellIcon} alt='Notificaciones' />
                                         <span className='notification-count'>{pendingOrdersCount + reviewOrdersCount}</span>
                                     </Link>
@@ -148,15 +159,26 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
                                     <span>{totalItems}</span>
                                 </Link>
                             </div>
-                            <Link to={userProfile.userTypeId === '1' ? "/admin/AdminInfo" : "/perfil"} className="perfil-link">
+                            <div onClick={handleProfileClick} className="perfil-link">
                                 <img src={userProfile.avatar || defaultAvatar} alt="Perfil" className="navbar-avatar" />
-                            </Link>
+                            </div>
                         </li>
                     </>
                 ) : (
-                    <li className='links'>
-                        <Link to="/login">Iniciar sesión</Link>
-                    </li>
+                        <li className='links'>
+                            <div className='wishlist'>
+                                <Link to='/Category' className="wishlist-link" title='Categorias'>
+                                    <img src={categoriesIcon} alt="Categorias" />
+                                </Link>
+                            </div>
+                            <div className='cart'>
+                                <Link to='/cart' className="cart-link">
+                                    <img src={shoppingCartIcon} alt="Carrito" title='Carrito' />
+                                    <span>{totalItems}</span>
+                                </Link>
+                            </div>
+                            <Link className='Links' to="/login">Iniciar sesión</Link>
+                        </li>
                 )}
             </ul>
 
@@ -168,14 +190,18 @@ export default function Navbar({ cartItems = [] , setCartItems}) {
                             &times;
                         </span>
                         <div className="modal-options">
-                            {(userProfile?.userTypeId === '1' || userProfile?.userTypeId === '3') && (
-                                <div className="modal-option" onClick={() => handleModalOptionClick('wishlist')}>
-                                    <img src={wishlistIcon} alt="Wishlist" />
+                        <div className="modal-option" onClick={() => navigate(userProfile.userTypeId === '1' ? '/Admin/AdminInfo' : '/perfil')}>
+                                <img src={defaultAvatar} alt="Perfil" />
+                                <span>{userProfile.userTypeId === '1' ? 'Perfil' : 'Perfil'}</span>
+                            </div>
+                            {(userProfile.userTypeId === '1' || userProfile.userTypeId === '3') && (
+                                <div className="modal-option" onClick={() => navigate('/wishlist')}>
+                                    <img src={wishlistIcon} alt="Lista de Deseos" />
                                     <span>Lista de Deseos</span>
                                 </div>
                             )}
-                            <div className="modal-option" onClick={() => handleModalOptionClick('logout')}>
-                                <img src={logoutIcon} alt="Logout" />
+                            <div className="modal-option" onClick={logout}>
+                                <img src={logoutIcon} alt="Cerrar Sesión" />
                                 <span>Cerrar Sesión</span>
                             </div>
                         </div>

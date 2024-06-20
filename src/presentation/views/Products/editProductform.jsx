@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById, updateProduct, getCategories } from '../../../infraestructure/api/product';
-import { storage } from '../../../infraestructure/firebase-connection';// Importa storage desde tu configuración de Firebase
+import { storage } from '../../../infraestructure/firebase-connection';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import './edditProductform.css'; // Asegúrate de que el archivo CSS existe y tiene los estilos apropiados
+import './edditProductform.css';
 
 function EditProductForm() {
     const [product, setProduct] = useState({
@@ -13,30 +13,25 @@ function EditProductForm() {
         stock: '',
         CategoryID: '',
         gramaje: '',
-        image: null, // Para el archivo de imagen
-        imageUrl: '' // Para la URL de la vista previa de la imagen
+        image: null,
+        imageUrl: ''
     });
-    const [categories, setCategories] = useState([]); // Estado para almacenar las categorías
+    const [categories, setCategories] = useState([]);
     const { productId } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
-       
         const fetchProductData = async () => {
             try {
                 const data = await getProductById(productId);
-                // Asume que 'data' tiene un campo 'imageUrl' con la URL de la imagen actual
                 setProduct({
                     ...data,
-                    CategoryID: data.CategoryID,
-                    gramaje: data.gramaje,
-                    imageUrl: data.imageUrl,
+                    unitary_price: data.unitary_price.toString(),
                 });
             } catch (error) {
                 console.error("Error fetching product data:", error);
             }
         };
-
 
         const fetchCategoriesData = async () => {
             try {
@@ -55,47 +50,56 @@ function EditProductForm() {
         const { name, value, files } = e.target;
         if (name === 'image' && files) {
             const file = files[0];
-            setProduct(prev => ({ ...prev, image: file }));
-            setProduct(prev => ({ ...prev, imageUrl: URL.createObjectURL(file) }));
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!['png', 'jpg', 'jpeg'].includes(fileExtension)) {
+                alert('Solo se aceptan imágenes en formato PNG, JPG o JPEG.');
+                return;
+            }
+            if (file.size > 5000000) { // 5MB limit
+                alert('El archivo no debe superar los 5MB.');
+                return;
+            }
+            setProduct(prev => ({ ...prev, image: file, imageUrl: URL.createObjectURL(file) }));
         } else {
+            if ((name === 'unitary_price' || name === 'stock') && parseFloat(value) < 0) {
+                alert('El valor no puede ser negativo.');
+                return;
+            }
+            if (name === 'unitary_price' && value.includes('.') && value.split('.')[1].length > 2) {
+                alert('Por favor, introduce solo hasta dos decimales en el precio.');
+                return;
+            }
+            if ((name === 'product_name' && value.length > 100) || (name === 'description' && value.length > 500)) {
+                alert('Has excedido la longitud máxima permitida para este campo.');
+                return;
+            }
             setProduct(prev => ({ ...prev, [name]: value }));
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const { date_added, image, imageUrl, ...updatedData } = product;
+        updatedData.unitary_price = updatedData.unitary_price.toString();
 
-        // Initialize an object to collect the data you'll update
-        let updatedData = { ...product };
-
-        // Check if an image file was selected
         if (product.image instanceof File) {
             try {
                 const imageRef = ref(storage, `products/${product.image.name}`);
                 const uploadResult = await uploadBytes(imageRef, product.image);
-                const imageUrl = await getDownloadURL(uploadResult.ref);
-
-                // Add/Update imageUrl in the data to update
-                updatedData.imageUrl = imageUrl;
-
-                // Remove the File object from the data sent to Firestore
-                delete updatedData.image;
+                updatedData.pictures = await getDownloadURL(uploadResult.ref);
             } catch (error) {
                 console.error("Error uploading new image:", error);
-                // Optionally handle the error, e.g., by showing a message to the user
-                return; // Exit the function to avoid updating Firestore with incorrect data
+                return;
             }
         }
 
         try {
             await updateProduct(productId, updatedData);
-            navigate('/admin/crud-productos'); // Change to your actual route for the product list
+            navigate('/admin/crud-productos');
         } catch (error) {
             console.error("Error updating product:", error);
-            // Optionally handle the error, e.g., by showing a message to the user
         }
     };
-
 
     if (!product) {
         return <div>Cargando...</div>;
@@ -112,22 +116,22 @@ function EditProductForm() {
                         type="text"
                         name="product_name"
                         value={product.product_name || ''}
+                        maxLength="60" // Limit to 100 characters
                         onChange={handleChange}
                         required
                     />
                 </div>
-
                 <div className="form-field">
                     <label htmlFor="description">Descripción</label>
                     <textarea
                         id="description"
                         name="description"
                         value={product.description || ''}
+                        maxLength="500" // Limit to 500 characters
                         onChange={handleChange}
                         required
                     />
                 </div>
-
                 <div className="form-field">
                     <label htmlFor="CategoryID">Categoría</label>
                     <select
@@ -136,14 +140,12 @@ function EditProductForm() {
                         value={product.CategoryID || ''}
                         onChange={handleChange}
                         required>
-
-                        <option value="">Categoría</option>
+                        <option value="">Selecciona una categoría</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                     </select>
                 </div>
-
                 <div className="form-field">
                     <label htmlFor="unitary_price">Precio Unitario</label>
                     <input
@@ -153,9 +155,10 @@ function EditProductForm() {
                         value={product.unitary_price || ''}
                         onChange={handleChange}
                         required
+                        min="0.00" // No negative numbers, minimum 0.01
+                        max="999999.99" // Maximum reasonable price
                     />
                 </div>
-
                 <div className="form-field">
                     <label htmlFor="stock">Stock</label>
                     <input
@@ -165,13 +168,19 @@ function EditProductForm() {
                         value={product.stock || ''}
                         onChange={handleChange}
                         required
+                        min="0" // No negative numbers
+                        max="9999" // Maximum reasonable stock
                     />
                 </div>
-
                 <div className="form-field">
                     <label htmlFor="gramaje">Unidad de medida</label>
-                    <select name="gramaje" id="gramaje" placeholder="Unidad de medida" value={product.gramaje} onChange={handleChange} required>
-                        <option value="">Unidad de medida</option>
+                    <select
+                        name="gramaje"
+                        id="gramaje"
+                        value={product.gramaje || ''}
+                        onChange={handleChange}
+                        required>
+                        <option value="">Selecciona una unidad</option>
                         <option value="Litro">Litro</option>
                         <option value="Gramos">Gramos</option>
                         <option value="Kilogramos">Kilogramos</option>
@@ -182,15 +191,13 @@ function EditProductForm() {
                         <option value="Centímetros">Centímetros</option>
                     </select>
                 </div>
-
-
-                <img src={product.pictures} alt="Product" className="product-imagess" />
-
+                <img src={product.pictures} alt="Product" className="product-images" />
                 <div className="form-field">
                     <label htmlFor="image">Imagen</label>
                     <input
                         type="file"
                         name="image"
+                        accept="image/*" 
                         onChange={handleChange}
                     />
                     {product.imageUrl && (
@@ -199,12 +206,10 @@ function EditProductForm() {
                         </div>
                     )}
                 </div>
-
                 <button type="submit">Guardar Cambios</button>
             </form>
         </div>
     );
-
 }
 
 export default EditProductForm;

@@ -8,11 +8,6 @@
     --secondary-text-color: #555;
 }
 
-body {
-    font-family: 'Open Sans', sans-serif;
-    background-color: #f4f4f4;
-}
-
 .loading-container,
 .error-container {
     display: flex;

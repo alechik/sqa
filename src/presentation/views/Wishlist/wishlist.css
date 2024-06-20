@@ -24,7 +24,6 @@
     flex-direction: column;
     background-color: #fff;
     border-radius: 8px;
-    align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     cursor: pointer;
@@ -37,26 +36,29 @@
 }
 
 .product-imagess {
-    margin-top: 10px;
+    width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 8px 8px 0 0;
 }
 
-.product-details {
+.product-detailss {
     padding: 1.5rem;
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
-.product-details h3 {
+.product-detailss h3 {
     font-size: 1.2rem;
     color: #333;
     margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.product-details p {
+.product-detailss p {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 1rem;
@@ -64,10 +66,8 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    /* Limita el texto a 5 líneas */
+    -webkit-line-clamp: 3;
     text-overflow: ellipsis;
-    /* Añade puntos suspensivos si el texto excede las líneas */
 }
 
 .price-and-add {
@@ -130,20 +130,26 @@
 }
 
 /* Diseño responsivo */
+@media (max-width: 1024px) {
+    .wishlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
     .wishlist-section h2 {
         font-size: 1.8rem;
     }
 
     .wishlist-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 
-    .product-details h3 {
+    .product-detailss h3 {
         font-size: 1.1rem;
     }
 
-    .product-details p,
+    .product-detailss p,
     .product-price,
     .add-to-cart-button {
         font-size: 0.8rem;
@@ -155,11 +161,11 @@
         grid-template-columns: 1fr;
     }
 
-    .product-details h3 {
+    .product-detailss h3 {
         font-size: 1rem;
     }
 
-    .product-details p,
+    .product-detailss p,
     .product-price,
     .add-to-cart-button {
         font-size: 0.7rem;

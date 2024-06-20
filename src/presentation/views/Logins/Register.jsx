@@ -16,7 +16,6 @@ export default function Register() {
     const [numero, setNumber] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [address, setAddress] = useState('');
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
     const navigate = useNavigate();
 
@@ -25,7 +24,6 @@ export default function Register() {
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
     const handleConfirmPasswordChange = (event) => setConfirmPassword(event.target.value);
-    const handleAddressChange = (event) => setAddress(event.target.value);
     const handleNumberChange = (event) => setNumber(event.target.value);
 
     const handleSubmit = async (event) => {
@@ -98,20 +96,6 @@ export default function Register() {
                                 />
                             </div>
                             <div className="form-group">
-                                <label className='labellr' htmlFor="direccion"><i className="zmdi zmdi-pin"></i></label>
-                                <input
-                                    className='inputrl'
-                                    type="text"
-                                    autoComplete='nope'
-                                    id='direccion'
-                                    name='direccion'
-                                    placeholder="Direccion"
-                                    required
-                                    value={address}
-                                    onChange={handleAddressChange}
-                                />
-                            </div>
-                            <div className="form-group">
                                 <label className='labellr' htmlFor="numero"><i className="zmdi zmdi-phone"></i></label>
                                 <input
                                     id='numero'
@@ -168,12 +152,12 @@ export default function Register() {
                                 />
                             </div>
                             {!isPasswordMatch && isClicked && <p style={{ color: '#FFFF99' }}>Las contraseñas no coinciden</p>}
-                            <div class="form-group form-button">
-                                <input type="submit" disabled={!isPasswordMatch} name="signup" id="signup" class="form-submit" value="Registrarse" />
+                            <div className="form-group form-button">
+                                <input type="submit" disabled={!isPasswordMatch} name="signup" id="signup" className="form-submit" value="Registrarse" />
                             </div>
                         </form>
                     </div>
-                    <div class="signup-image">
+                    <div className="signup-image">
                         <figure><img className='imgrl' src={registroimagen} alt="sing up image" /></figure>
                         <Link to="/login" className="signup-image-link">¿Ya tienes una cuenta? Iniciar sesión</Link>
                     </div>

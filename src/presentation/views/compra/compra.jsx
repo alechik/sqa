@@ -32,152 +32,125 @@ export default function Compra({ cartItems }) {
                 const data = docSnap.data();
                 setUserData(data);
                 checkDataCompletion(data);
-                if (data.address) updateMapLocation(data.address);
+                loadGoogleMapScript().then(() => {
+                    initMap(data.address);
+                });
             } else {
                 toast.error('Datos de usuario no encontrados.');
                 navigate('/login');
             }
         });
-
-        loadGoogleMapScript().then(() => {
-            window.initMap = () => initMap(userData.address);
-        });
-        
     }, [user, firestore, navigate]);
 
     useEffect(() => {
-        if (map && userData.address) {
-            updateMapLocation(userData.address);
-        }
-    }, [userData.address]);
-
-    useEffect(() => {
-        window.initMap = () => initMap(userData.address); // Define initMap global function before script loads
-        loadGoogleMapScript();
-    }, [userData.address]);
-
-    useEffect(() => {
-        if (marker) {
-            marker.addListener('dragend', handleMarkerDragEnd);
-            return () => {
-                google.maps.event.clearListeners(marker, 'dragend');
-            };
-        }
-    }, [marker]);
-    
-    useEffect(() => {
         if (map && marker && userData.address) {
             updateMapLocation(userData.address);
+            marker.addListener('dragend', handleMarkerDragEnd);
         }
-    }, [map, marker, userData.address]);  // Dependencias para reaccionar a cambios
-    
+        return () => {
+            if (marker) {
+                window.google.maps.event.clearListeners(marker, 'dragend');
+            }
+        };
+    }, [map, marker, userData.address]);
+
     const loadGoogleMapScript = () => {
         return new Promise((resolve) => {
-            if (window.google) {
+            if (window.google && window.google.maps) {
                 resolve();
             } else {
-                const existingScript = document.querySelector('script[src^="https://maps.googleapis.com"]');
-                if (!existingScript) {
-                    const script = document.createElement("script");
-                    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places&callback=initMap";
+                const scriptId = 'google-maps-script';
+                let script = document.getElementById(scriptId);
+                if (!script) {
+                    script = document.createElement("script");
+                    script.id = scriptId;
+                    script.src =  "https://maps.googleapis.com/maps/api/js?key=AIzaSyDF8jKuen4pA9YJvZWBTLlIPOYpzgJ9i6E&libraries=places&callback=initMap";
                     script.async = true;
                     script.defer = true;
                     document.head.appendChild(script);
                     script.onload = () => resolve();
                 } else {
-                    existingScript.onload = () => resolve();
+                    script.onload = () => resolve();
                 }
             }
         });
     };
-    
 
     const initMap = (address) => {
-        if (!window.google) {
-            
-            return;
-        }
+        if (window.google && window.google.maps && mapRef.current && !map) {
+            const mapOptions = {
+                zoom: 13,
+                center: new window.google.maps.LatLng(-17.72213363647461, -63.174591064453125)
+            };
+            const newMap = new window.google.maps.Map(mapRef.current, mapOptions);
+            setMap(newMap);
     
-        const mapOptions = {
-            zoom: 13,
-            center: new window.google.maps.LatLng(-17.72213363647461, -63.174591064453125)
-        };
-        const newMap = new window.google.maps.Map(mapRef.current, mapOptions);
-        setMap(newMap);
-        const newMarker = new window.google.maps.Marker({
-            map: newMap,
-            draggable: true,
-            title: "Drag me!"
-        });
-        setMarker(newMarker);
+            const newMarker = new window.google.maps.Marker({
+                map: newMap,
+                draggable: true,
+                position: newMap.getCenter(),
+                title: "Arrastrar para actualizar la dirección"
+            });
+            setMarker(newMarker);
     
-        if (address) {
-            updateMapLocation(address);
+            newMarker.addListener('dragend', handleMarkerDragEnd);
+    
+            if (address) {
+                updateMapLocation(address);
+            }
         }
     };
 
     const updateMapLocation = (address) => {
-        if (!map || !marker) {
-            return;  // Salir de la función si `map` o `marker` no están inicializados.
+        if (map && marker) {
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ address }, (results, status) => {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    marker.setPosition(results[0].geometry.location);
+                } else {
+                    console.error("Failed to geocode address.");
+                }
+            });
         }
-    
-        const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ address }, (results, status) => {
-            if (status === 'OK') {
-                map.setCenter(results[0].geometry.location);
-                marker.setPosition(results[0].geometry.location);
-            } else {
-                console.error("Failed to geocode address.");
-            }
-        });
     };
-    
 
     const handleMarkerDragEnd = () => {
-        if (!marker) {
-            console.error("Marker is not initialized.");
-            return;
+        if (marker) {
+            const newPos = marker.getPosition();
+            geocodePosition(newPos);
         }
-    
-        const newPos = marker.getPosition();
-        geocodePosition(newPos);
     };
-
 
     const geocodePosition = (pos) => {
-        if (!map) {
-            console.error("Map is not initialized.");
-            return;
+        if (map) {
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ location: pos }, async (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    const updatedAddress = results[0].formatted_address;
+                    setUserData(prevState => ({
+                        ...prevState,
+                        address: updatedAddress
+                    }));
+                    await updateUserDataInFirestore(updatedAddress);
+                    toast.success(`Dirección actualizada: ${updatedAddress}`);
+                } else {
+                    toast.error('No se pudo obtener la dirección.');
+                }
+            });
         }
-    
-        const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ location: pos }, async (results, status) => {
-            if (status === 'OK' && results[0]) {
-                const updatedAddress = results[0].formatted_address;
-                setUserData(prevState => ({
-                    ...prevState,
-                    address: updatedAddress
-                }));
-                await updateUserDataInFirestore(updatedAddress);
-                toast.info(`Address updated: ${updatedAddress}`);
-            } else {
-                toast.error('Failed to retrieve address.');
-            }
-        });
     };
-    
+
     const updateUserDataInFirestore = async (address) => {
-        if (!user) {
-            console.error("User not authenticated.");
-            return;
-        }
-        const userRef = doc(firestore, 'users', user.uid);
-        try {
-            await updateDoc(userRef, { address });
-            toast.success('Address saved to your profile!');
-        } catch (error) {
-            toast.error('Failed to save address.');
-            console.error("Error updating user address in Firestore: ", error);
+        if (user) {
+            const userRef = doc(firestore, 'users', user.uid);
+            try {
+                await updateDoc(userRef, { address });
+                toast.success('Dirección guardada en tu perfil!');
+            } catch (error) {
+                toast.error('Error al guardar la dirección.');
+                console.error("Error al actualizar la dirección del usuario en Firestore: ", error);
+            }
         }
     };
 
@@ -187,14 +160,64 @@ export default function Compra({ cartItems }) {
         setIsDataComplete(isComplete);
     };
 
+    const validateAllInputs = (data) => {
+        const { names, address, ci, numero, email, birthday_date } = data;
+        let isValid = true;
+
+        const lettersAndSpacesRegex = /^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ.,'-]+$/;
+
+        if (!lettersAndSpacesRegex.test(names) || names.length > 100) {
+            toast.error('El nombre completo solo puede contener letras y debe ser menor de 100 caracteres.');
+            isValid = false;
+        }
+        if (address.length > 255) {
+            toast.error('La dirección debe ser menor de 255 caracteres.');
+            isValid = false;
+        }
+        if (!/^\d+$/.test(ci) || ci.length < 6 || ci.length > 10) {
+            toast.error('El CI debe contener solo dígitos y tener entre 6 y 10 caracteres.');
+            isValid = false;
+        }
+        if (!/^\d{8}$/.test(numero)) {
+            toast.error('El número de teléfono debe contener solo dígitos y tener exactamente 8 caracteres.');
+            isValid = false;
+        }
+        if (email.length > 100 || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+            toast.error('El email debe ser válido y no exceder los 100 caracteres.');
+            isValid = false;
+        }
+        if (!isAdult(new Date(birthday_date))) {
+            toast.error('Debes ser mayor de 18 años para realizar una compra.');
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const isAdult = (birthdate) => {
+        const today = new Date();
+        const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        return birthdate <= eighteenYearsAgo;
+    };
+
     const handleInputChange = (field, value) => {
         setUserData({ ...userData, [field]: value });
+        if (field === 'address') {
+            updateMapLocation(value);
+        }
     };
 
     const handleSaveData = async () => {
-        const userRef = doc(firestore, 'users', user.uid);
-        await updateDoc(userRef, userData);
-        toast.success('Datos actualizados correctamente!');
+        if (validateAllInputs(userData)) {
+            const userRef = doc(firestore, 'users', user.uid);
+            try {
+                await updateDoc(userRef, userData);
+                toast.success('Datos actualizados correctamente!');
+            } catch (error) {
+                toast.error('Error al guardar los datos.');
+                console.error("Error updating user data in Firestore: ", error);
+            }
+        }
     };
 
     const handlePaymentProceed = () => {
@@ -215,30 +238,30 @@ export default function Compra({ cartItems }) {
             return total;
         }
     }, 0);
-    
+
     useEffect(() => {
         return () => {
-            // Limpiar recursos relacionados con el mapa al desmontar el componente
-            setMap(null);
-            setMarker(null);
-            window.google = null; // Limpiar objeto global de Google Maps
+            if (map) {
+                window.google.maps.event.clearInstanceListeners(map);
+            }
             const script = document.querySelector('script[src^="https://maps.googleapis.com"]');
             if (script) {
-                script.remove(); // Eliminar el script del mapa de Google
+                script.remove();
             }
         };
     }, []);
-    
+
+
     return (
         <div className="toast">
         <div className="compra-container">
-            <div className="user-info-form">
+        <div className="user-info-form">
                 <h2>Detalles del Cliente</h2>
                 <p>Por favor, completa tu información para continuar con la compra:</p>
                 <input className='inputcompra' type="text" value={userData.names || ''} onChange={(e) => handleInputChange('names', e.target.value)} placeholder="Nombre completo" required />
                 <input className='inputcompra' type="text" value={userData.address || ''} onChange={(e) => handleInputChange('address', e.target.value)} placeholder="Dirección" required />
                 <input className='inputcompra' type="text" value={userData.ci || ''} onChange={(e) => handleInputChange('ci', e.target.value)} placeholder="Carnet de Identidad" required />
-                <input className='inputcompra' type="text" value={userData.numero || ''} onChange={(e) => handleInputChange('numero', e.target.value)} placeholder="Numero" required />
+                <input className='inputcompra' type="text" pattern="[0-9]*" value={userData.numero || ''} onChange={(e) =>  handleInputChange('numero', e.target.value)} placeholder="Numero" required />
                 <select className='selectcompra' value={userData.gender || ''} onChange={(e) => handleInputChange('gender', e.target.value)} required>
                     <option value="" disabled>Selecciona tu género</option>
                     <option value="Masculino">Masculino</option>
@@ -270,7 +293,7 @@ export default function Compra({ cartItems }) {
             <div className="map-container" ref={mapRef} style={{ height: '400px', width: '90%', borderRadius: "10px", marginLeft: '20px' }}>
             </div>
         </div>
-        <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={true} theme="colored" transition="Bounce" />
+        <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={true} theme="colored" />
     </div>
     );
 }

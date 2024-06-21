@@ -49,7 +49,6 @@ export default function Search({addtoCart}) {
 
             const fuse = new Fuse(products, fuseOptions);
             const results = fuse.search(searchTerm.toLowerCase());
-            console.log("Search results:", results.map(r => r.item));
             setSearchedProducts(results.map(result => result.item));
             setLoading(false);
             setPopupVisible(true); // Mostrar popup con resultados

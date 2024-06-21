@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "tienda-fa7e8"
-  }
+    "default": "tienda-fa7e8",
+    "Saltillo": "tienda-fa7e8"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

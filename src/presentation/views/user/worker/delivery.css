@@ -11,6 +11,7 @@
     text-align: center;
     color: #333;
     margin-bottom: 20px;
+    font-size: 24px; 
 }
 
 .delivery-details-content {
@@ -32,15 +33,15 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 10px;
+    padding: 12px; /* Increased padding for better touch */
     margin-top: 10px;
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Rounded corners for modern look */
     cursor: pointer;
     font-weight: bold;
-    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effect */
 }
 
 .delivery-button:hover {
@@ -58,6 +59,7 @@
 .whatsapp-button:hover,
 .delivered-button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 .delivery-loader {
@@ -68,9 +70,7 @@
 
 .delivery-button-icon {
     width: 24px;
-    /* Adjust icon size */
     height: 24px;
-    /* Adjust icon size */
     margin-right: 8px;
 }
 

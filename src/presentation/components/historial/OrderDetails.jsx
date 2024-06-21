@@ -128,7 +128,7 @@ function OrderDetails() {
                     <h2>Solicitar Devolución</h2>
                     <p>¿Estás seguro de que quieres solicitar la devolución de este producto?</p>
                     <input type="number" value={returnData.quantity} onChange={e => setReturnData({ ...returnData, quantity: parseInt(e.target.value, 10) })} min="1" max={returnData.maxQuantity} className="input-quantity" />
-                    <button onClick={handleReturnRequest} className="confirm-button">Confirmar Solicitud</button>
+                    <button onClick={handleReturnRequest} className="confirm-button-modal">Confirmar Solicitud</button>
                 </div>
             </Modal>
         )}

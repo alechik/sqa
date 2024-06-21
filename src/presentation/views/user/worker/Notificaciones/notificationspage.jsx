@@ -123,7 +123,7 @@ function NotificationsPage() {
                                         <p className="order-total"><strong>Total:</strong> Bs {order.totalPrice.toFixed(2)}</p>
                                         <p className="order-time"><strong>Tiempo Ordenado:</strong> {order.createdAt}</p>
                                         <p className="order-address"><strong>Delivery Address:</strong> {order.deliveryAddress}</p>
-                                        <button className="accept-button" onClick={() => handleAccept(order.id)}>Aceptar orden</button>
+                                        <button className="button accept-button" onClick={() => handleAccept(order.id)}>Aceptar orden</button>
                                     </div>
                                 </li>
                             ))}
@@ -152,10 +152,10 @@ function NotificationsPage() {
                                             </ul>
                                         </div>
                                         <div className="botoness">
-                                            <button className="map-button" onClick={() => openMap(request.deliveryAddress)}>Ver en Maps</button>
-                                            <button className="whatsapp-button" onClick={() => openWhatsApp(request.userPhone)}>Contactar en WhatsApp</button>
-                                            <button className="accept-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'accept')}>Aceptar devolucion</button>
-                                            <button className="reject-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'reject')}>Denegar devolucion</button>
+                                            <button className="button map-button" onClick={() => openMap(request.deliveryAddress)}>Ver en Maps</button>
+                                            <button className="button whatsappp-button" onClick={() => openWhatsApp(request.userPhone)}>Contactar en WhatsApp</button>
+                                            <button className="button accept-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'accept')}>Aceptar devolucion</button>
+                                            <button className="button reject-button" onClick={() => handleReturnRequestAction(request.orderId, request.productId, 'reject')}>Denegar devolucion</button>
                                         </div>
                                     </div>
                                 </li>

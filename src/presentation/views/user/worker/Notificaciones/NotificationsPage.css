@@ -40,7 +40,7 @@
 .orders-section:hover,
 .returns-section:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .section-title {
@@ -55,12 +55,33 @@
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    padding: 15px;
+    overflow: hidden; /* Asegura que nada se salga del contenedor */
+}
+
+.order-details {
+    font-size: 14px; /* Ajusta el tamaño de la fuente si es necesario */
+    line-height: 1.4; /* Mejora la legibilidad aumentando el espacio entre líneas */
+    word-wrap: break-word; /* Asegura que las palabras largas se partan correctamente */
+}
+
+.order-button {
+    width: 100%; /* Asegúrate de que el botón no se salga de su contenedor */
+    padding: 10px; /* Padding adecuado para el botón */
+    margin-top: 10px; /* Espacio antes del botón */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.order-button:hover {
+    background-color: #218838;
 }
 
 .order-item:hover,
 .return-item:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .button-container {
@@ -71,7 +92,7 @@
 }
 
 .button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
@@ -79,7 +100,11 @@
     border: none;
     transition: transform 0.3s ease, background-color 0.2s;
     color: #ffffff;
-    flex: 1 1 48%;
+    flex-grow: 1;
+}
+
+.accept-button, .reject-button, .map-button, .whatsapp-button {
+    width: 100%; /* Botones de ancho completo dentro de su contenedor */
 }
 
 .product-images {
@@ -92,44 +117,42 @@
 }
 
 .accept-button {
-    background-color: #27ae60;
-    color: #fff;
-    border: none;
-    padding: 10px 10px;
-    border-radius: 8px;
-    font-size: 15px;
-    width: 100%;
+    background-color: #28a745;
 }
 
 .accept-button:hover {
-    background-color: #2ecc71;
-    transform: scale(1.03);
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
 .reject-button {
-    background-color: #e74c3c;
-    color: #fff;
+    background-color: #dc3545;
 }
 
 .reject-button:hover {
-    background-color: #c0392b;
-    transform: scale(1.03);
+    background-color: #c82333;
+    transform: scale(1.05);
 }
 
 .map-button,
 .whatsapp-button {
     background-color: #3498db;
     color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
 }
 
 .map-button:hover,
 .whatsapp-button:hover {
     background-color: #2980b9;
-    transform: scale(1.03);
+    transform: scale(1.05);
+}
+
+.whatsappp-button {
+    background-color: #25D366;
+}
+
+.whatsappp-button:hover {
+    background-color: #1da955;
+    transform: scale(1.05);
 }
 
 .loading {
@@ -151,42 +174,38 @@
 
     .orders-section,
     .returns-section {
-        margin: 10px 0;
+        margin: 10px -7px;
+        padding: 10px; /* Agregar un poco de padding para evitar que los elementos toquen los bordes */
     }
 
     .button-container {
         flex-direction: column;
+        /* Apilar botones verticalmente en móviles */
     }
 
     .button {
-        width: 100%;
+        width: 100%; /* Hacer que los botones ocupen el ancho completo para evitar desbordamientos */
+        margin-bottom: 10px; /* Espacio entre botones cuando están apilados */
     }
 
-    .page-title {
-        font-size: 1.8rem;
-    }
-
+    .page-title, 
     .section-title {
-        font-size: 1.4rem;
+        font-size: 1.5rem; /* Tamaño de fuente más pequeño para ajustarse a pantallas menores */
     }
 
     .order-details p,
     .return-details p {
-        font-size: 0.9rem;
-    }
-
-    .order-details p strong,
-    .return-details p strong {
-        display: block;
-    }
-
-    .order-item,
-    .return-item {
-        padding: 10px;
+        font-size: 13px; /* Reducir la fuente para mejorar la legibilidad y evitar el desbordamiento */
+        margin-bottom: 5px; /* Espacio reducido entre párrafos para compactar el contenido */
     }
 
     .product-images {
-        width: 80px;
-        height: 120px;
+        width: 100px; /* Reducir el tamaño de las imágenes para adaptarse a contenedores más pequeños */
+        height: 150px; /* Ajustar la altura correspondiente */
+    }
+
+    .botoness {
+        grid-template-columns: 1fr; /* Cambiar la disposición de los botones a una columna en dispositivos móviles */
+        gap: 10px; /* Aumentar el espacio entre botones para facilitar la interacción */
     }
 }

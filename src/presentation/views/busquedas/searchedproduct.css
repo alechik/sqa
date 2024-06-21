@@ -1,4 +1,3 @@
-/* SearchedProductCard.css */
 .searched-product-card {
   display: flex;
   background-color: white;
@@ -6,11 +5,11 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin: 20px;
   overflow: hidden;
+  flex-direction: column;
 }
 
 .product-image-container {
   flex: 0 0 120px;
-  /* Ajusta esto según tus necesidades */
   overflow: hidden;
 }
 
@@ -30,12 +29,15 @@
   margin-bottom: 10px;
 }
 
-.product-descriptionn {
+.product-description {
   font-size: 1rem;
   margin-bottom: 5px;
 }
 
-.product-category {
+.product-category,
+.product-stock,
+.product-measurement-unit,
+.product-price {
   font-size: 1rem;
   margin-bottom: 5px;
 }
@@ -48,7 +50,9 @@
 
 .product-actions {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
 }
 
 .add-to-cart {
@@ -65,14 +69,6 @@
   background-color: #920000;
 }
 
-/* Botones de Redes Sociales - Estilos Mejorados */
-.social-share-buttons {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 10px;
-}
-
 .social-button {
   background-color: #ffffff;
   border: 1px solid #ddd;
@@ -83,24 +79,16 @@
   justify-content: center;
   transition: all 0.3s ease;
   font-size: 18px;
-  /* Tamaño del icono */
   text-decoration: none;
   color: inherit;
 }
 
 .social-button i {
   margin-right: 5px;
-}
-
-/* Aumentar tamaño del ícono al mismo tamaño del texto del botón */
-.social-button .fab {
   width: 1.25em;
-  /* Ajustar según sea necesario */
   height: 1.25em;
-  /* Ajustar según sea necesario */
 }
 
-/* Facebook */
 .share-facebook {
   background-color: #3b5998;
   color: #fff;
@@ -110,7 +98,6 @@
   background-color: #344e86;
 }
 
-/* Twitter */
 .share-twitter {
   background-color: #1DA1F2;
   color: #fff;
@@ -120,7 +107,6 @@
   background-color: #1991db;
 }
 
-/* WhatsApp */
 .ask-on-whatsapp {
   background-color: #25D366;
   color: #fff;
@@ -130,8 +116,20 @@
   background-color: #22c35e;
 }
 
-/* Efectos de transición al pasar el mouse */
 .social-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .searched-product-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-description {
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

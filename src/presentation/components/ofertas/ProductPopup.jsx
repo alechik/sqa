@@ -40,7 +40,6 @@ export default function  ProductPopup({ product, onClose, addtoCart }) {
 
                     if (!querySnapshot.empty) {
                         const userRating = querySnapshot.docs[0].data().rating;
-                        console.log('User rating data:', userRating);
                         setRating(userRating);
                         setSelectedRating(userRating);
                     } else {

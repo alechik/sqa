@@ -74,16 +74,14 @@ const Category = ({addtoCart}) => {
                     product_id: productId,
                     user_id: user.uid
                 });
-                console.log('Producto agregado a la lista de deseos.');
             } else {
                 const docToDelete = querySnapshot.docs[0];
                 await deleteDoc(doc(wishlistRef, docToDelete.id));
-                console.log('El producto eliminado de la lista de deseos.');
             }
 
             loadProductData(productId);
         } catch (error) {
-            console.error('Error adding/removing product to/from wishlist:', error);
+
         }
     };
 
@@ -109,7 +107,6 @@ const Category = ({addtoCart}) => {
         setShowPopup(true);
     };
 
-    console.log(categories)
     return (
         <div className="containerCat">
             <div className="categorypopup">

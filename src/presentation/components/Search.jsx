@@ -105,6 +105,7 @@ export default function Search({addtoCart}) {
                 <ProductPopup
                     product={selectedProduct}
                     onClose={handleClosePopup}
+                    addtoCart={addtoCart}
                 />,
                 document.body
             )}

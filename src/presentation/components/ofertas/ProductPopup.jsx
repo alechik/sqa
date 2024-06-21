@@ -100,6 +100,7 @@ export default function  ProductPopup({ product, onClose, addtoCart }) {
     return (
         <div className={`product-popup-overlay ${product ? 'active' : ''}`} onClick={onClose}>
             <div className="product-popup" onClick={(e) => e.stopPropagation()}>
+                <button className="close-buttonn" onClick={onClose}><i className="fas fa-times"></i></button>
                 <div className="product-details-container">
                     <div className="product-left">
                         <img
@@ -132,7 +133,6 @@ export default function  ProductPopup({ product, onClose, addtoCart }) {
                         </div>
                     </div>
                     <div className="product-right">
-                        <button className="close-buttonn" onClick={onClose}><i className="fas fa-times"></i></button>
                         <h2>{product.product_name}</h2>
                         <p><strong>Descripción:</strong> {product.description}</p>
                         <p><strong>Categoría:</strong> {categoryName}</p>
@@ -143,7 +143,6 @@ export default function  ProductPopup({ product, onClose, addtoCart }) {
                             <a href={`https://wa.me/600032422?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${product.product_name}`} target="_blank" rel="noopener noreferrer" className="ask-on-whatsapp">
                                 <i className="fab fa-whatsapp"></i> Preguntar
                             </a>
-                            {/* Botón para compartir en Facebook */}
                             <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">
                                 <i className="fab fa-facebook-f"></i> Facebook
                             </a>

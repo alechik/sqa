@@ -1,4 +1,3 @@
-/* ProductPopup.css */
 .product-popup-overlay {
     display: flex;
     justify-content: center;
@@ -13,7 +12,6 @@
     visibility: hidden;
     opacity: 0;
     overflow-y: auto;
-    /* Permite scroll en el overlay si es necesario */
     transition: visibility 0.3s, opacity 0.3s ease-in-out;
 }
 
@@ -29,20 +27,25 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     width: 90%;
-    /* Más pequeño para móviles */
     max-height: 80vh;
-    /* Limita la altura y permite scroll dentro del popup */
     overflow-y: auto;
-    /* Permite scroll dentro del popup si el contenido es muy largo */
+    position: relative; /* Importante para posicionar el botón de cierre */
 }
 
 .close-buttonn {
     position: absolute;
-    top: auto;
-    right: 340px;
+    top: 10px;
+    right: 10px;
     background-color: transparent;
     border: none;
     cursor: pointer;
+    font-size: 24px; /* Ajustar el tamaño del icono */
+    color: #333; /* Color del icono */
+    transition: color 0.3s ease; /* Efecto de transición para el color */
+}
+
+.close-buttonn:hover {
+    color: #000; /* Color del icono al pasar el ratón */
 }
 
 .product-details-container {
@@ -85,7 +88,7 @@
     cursor: pointer;
 }
 
-.close-button :hover {
+.close-button:hover {
     background-color: #920000;
 }
 
@@ -97,7 +100,6 @@
     font-size: 15px;
     color: #ffcd4e;
 }
-
 
 .buttons-container {
     margin-top: 20px;
@@ -112,13 +114,13 @@
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-right: 10px ;
+    margin-right: 10px;
 }
 
 .add-to-cart {
     background-color: #ac0505;
     color: white;
-    padding: 12px 30px; /* Ajustado el padding para aumentar el ancho */
+    padding: 12px 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -131,8 +133,8 @@
 .ask-on-whatsapp {
     background-color: #25d366;
     color: white;
-    display: flex; /* Añadido */
-    align-items: center; /* Añadido */
+    display: flex;
+    align-items: center;
     padding: 12px 24px;
     border: none;
     border-radius: 5px;
@@ -142,7 +144,7 @@
 }
 
 .ask-on-whatsapp i {
-    margin-right: 8px; /* Añadido */
+    margin-right: 8px;
 }
 
 .add-to-cart:hover,
@@ -178,20 +180,16 @@
     margin-right: 0.5rem;
 }
 
-/* Media Queries */
 @media (min-width: 768px) {
     .product-popup {
         width: 70%;
-        /* Ajusta el ancho para tablets */
         max-height: 90vh;
-        /* Mayor altura visible sin necesidad de scroll */
     }
 }
 
 @media (min-width: 1024px) {
     .product-popup {
         width: 50%;
-        /* Ajusta el ancho para pantallas grandes */
     }
 }
 
@@ -203,48 +201,37 @@
 @media (min-width: 768px) {
     .product-details-container {
         flex-direction: row;
-        /* Cambia a layout horizontal en tablets y desktop */
     }
 }
 
-/* Ajustes para botones y enlaces */
 .buttons-container a {
     padding: 10px 15px;
     font-size: 14px;
-    /* Más grande para fácil interacción en móviles */
 }
 
 @media (min-width: 768px) {
     .buttons-container a {
         padding: 12px 20px;
         font-size: 16px;
-        /* Tamaño adecuado para tablets y desktop */
     }
 }
 
-/* Asegura visibilidad completa y accesibilidad en dispositivos móviles */
 .product-right {
     padding: 0 10px;
 }
 
-/* Ajustar texto para diferentes tamaños de pantalla */
 h2,
 .product-details p {
     font-size: 14px;
-    /* Más pequeño para móviles */
 }
 
 @media (min-width: 768px) {
-
     h2,
     .product-details p {
         font-size: 18px;
-        /* Aumenta el tamaño del texto en pantallas más grandes */
     }
 }
 
 input[type="radio"] {
     display: none;
 }
-
-

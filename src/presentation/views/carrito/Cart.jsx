@@ -15,6 +15,7 @@ export default function Cart({ updateCartItem, removeCartItem, decreaseQty }) {
     const navigate = useNavigate();
     const auth = getAuth();
     const [user, setUser] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     // Observa los cambios en el estado de autenticación
     useEffect(() => {
@@ -22,6 +23,14 @@ export default function Cart({ updateCartItem, removeCartItem, decreaseQty }) {
             setUser(currentUser);
         });
         return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     // Guardar el carrito en localStorage cada vez que cambie
@@ -68,7 +77,7 @@ export default function Cart({ updateCartItem, removeCartItem, decreaseQty }) {
         <>
             <ToastContainer position="bottom-right" autoClose={5000} newestOnTop />
             <section className="cart-items">
-                <div className=" d_flex">
+                <div className='d_flex' id={`${isMobile ? 'mobile' : ''}`}>
                     <div className="cart-details">
                         {cartItems.length === 0 && <h1 className='no-items'>No hay productos en el carrito</h1>}
                         {cartItems.map((item) => (

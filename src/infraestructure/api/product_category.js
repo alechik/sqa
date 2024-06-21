@@ -41,6 +41,7 @@ export async function getProductCategoryById(categoryId) {
     }
 }
 
+
 export async function createProductCategory(productCategoryData) {
     const newProductCategory = new ProductCategory(
         null,

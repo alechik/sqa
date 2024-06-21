@@ -28,7 +28,6 @@
 .orders-section,
 .returns-section {
     position: relative;
-    /* Para un mejor control del posicionamiento */
     flex: 1;
     background-color: #ffffff;
     padding: 20px;
@@ -88,9 +87,7 @@
 .button-container {
     display: flex;
     flex-wrap: wrap;
-    /* Permitir que los botones se ajusten según el tamaño */
     gap: 10px;
-    /* Espaciado entre botones */
     margin-top: 10px;
 }
 
@@ -111,17 +108,12 @@
 }
 
 .product-images {
-    width: 150px;
-    /* Ajusta el tamaño de la imagen */
-    height: 200px;
-    /* Mantén una relación de aspecto cuadrada */
+    width: 100px;
+    height: 150px;
     object-fit: cover;
-    /* Asegura que la imagen se recorte para llenar el contenedor */
     border-radius: 10px;
-    /* Añade bordes redondeados */
     margin-bottom: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Añade una sombra ligera */
 }
 
 .accept-button {
@@ -142,11 +134,14 @@
     transform: scale(1.05);
 }
 
-.map-button {
+.map-button,
+.whatsapp-button {
     background-color: #3498db;
+    color: #fff;
 }
 
-.map-button:hover {
+.map-button:hover,
+.whatsapp-button:hover {
     background-color: #2980b9;
     transform: scale(1.05);
 }
@@ -184,7 +179,8 @@
     }
 
     .button-container {
-        flex-direction: column; /* Apilar botones verticalmente en móviles */
+        flex-direction: column;
+        /* Apilar botones verticalmente en móviles */
     }
 
     .button {

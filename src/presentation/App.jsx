@@ -32,6 +32,7 @@ import Category from "./components/category";
 import DeliveryDetailsPage from './views/user/worker/delivery';
 import {SearchedProductsProvider} from "../infraestructure/api/searchedproducts.jsx";
 import {getProductCategories} from "../infraestructure/api/product_category.js";
+import EditCategoryForm from "./views/user/admin/EditCategoryForm.jsx";
 
 const saveCartToLocalStorage = (cartItems) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -121,14 +122,14 @@ function App() {
             <OrderProvider user={currentUser}>
                 <SearchedProductsProvider>
                     <Router>
-                        <Navbar cartItems={cartItems} setCartItems={setCartItems}/>
+                        <Navbar cartItems={cartItems} setCartItems={setCartItems} addtoCart={addtoCart}/>
                         <main>
                             <Routes>
                                 <Route path="/" element={<Home productos={productos} addtoCart={addtoCart} />} />
                                 <Route path="/cart" element={<Cart cartItems={cartItems} updateCartItem={addtoCart} removeCartItem={removeCartItem} decreaseQty={decreaseQty} />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/registrarse" element={<Register />} />
-                                <Route path="/search" element={<SearchesPage />} />
+                                <Route path="/search" element={<SearchesPage addtoCart={addtoCart} />} />
                                 <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
                                 <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
                                 <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />
@@ -138,6 +139,7 @@ function App() {
                                 <Route path="/addproduct" element={<PrivateRoute><AddProductForm /></PrivateRoute>} />
                                 <Route path="/addcategory" element={<PrivateRoute><CrudCategoria /></PrivateRoute>} />
                                 <Route path="/admin/edit-product/:productId" element={<PrivateRoute><EditProductForm /></PrivateRoute>} />
+                                <Route path="/admin/edit-category/:categoryId" element={<PrivateRoute><EditCategoryForm/></PrivateRoute>} />
                                 <Route path="/perfil" element={<PrivateRoute><Profile /></PrivateRoute>} />
                                 <Route path="/admin/:activepage" element={<PrivateRoute allowedTypes={['1']}><AdminProfile productos={productos} categorys = {categorys}/></PrivateRoute>} />
                                 <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />

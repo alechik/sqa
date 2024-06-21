@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './category.css';
 import ProductPopup from './ofertas/ProductPopup.jsx';
 
-const Category = (addtoCart) => {
+const Category = ({addtoCart}) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [products, setProducts] = useState([]);
@@ -108,6 +108,7 @@ const Category = (addtoCart) => {
         setShowPopup(true);
     };
 
+    console.log(categories)
     return (
         <div className="containerCat">
             <div className="categorypopup">

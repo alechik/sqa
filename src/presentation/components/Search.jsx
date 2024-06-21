@@ -8,7 +8,7 @@ import ProductPopup from './ofertas/ProductPopup'; // Asegúrate de que la ruta 
 import { useNavigate } from 'react-router-dom';
 import { useSearchedProducts } from '../../infraestructure/api/searchedproducts.jsx'; // Verifica la ruta
 
-export default function Search() {
+export default function Search({addtoCart}) {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);

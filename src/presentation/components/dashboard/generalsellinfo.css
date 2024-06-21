@@ -5,20 +5,42 @@
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 600px; /* Limitar el ancho máximo para dispositivos grandes */
+    margin: 20px auto; /* Centrarse en el contenedor */
 }
 
 .general-sell-info h2 {
     color: #333;
     margin-bottom: 15px;
+    text-align: center; /* Centrar el título */
 }
 
 .info-item {
     margin-bottom: 10px;
     font-size: 16px;
     color: #666;
+    display: flex;
+    justify-content: space-between; /* Distribuir espacio entre elementos */
+    align-items: center; /* Alinear elementos verticalmente */
 }
 
 .info-item strong {
-    float: right;
     color: #333;
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 600px) {
+    .general-sell-info {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    .info-item {
+        flex-direction: column; /* Cambiar la dirección de los elementos a columna */
+        align-items: flex-start; /* Alinear elementos al inicio */
+    }
+
+    .info-item strong {
+        margin-top: 5px; /* Agregar espacio entre los elementos */
+    }
 }

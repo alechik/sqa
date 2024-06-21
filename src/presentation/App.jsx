@@ -144,7 +144,10 @@ function App() {
                                 <Route path="/admin/:activepage" element={<PrivateRoute allowedTypes={['1']}><AdminProfile productos={productos} categorys = {categorys}/></PrivateRoute>} />
                                 <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
                                 <Route path="/admin/crud-products-excel" element={<PrivateRoute allowedTypes={['1']}><CrudProductExcel /></PrivateRoute>} />
-                                <Route path="/wishlist" element={<Wishlist addtoCart={addtoCart} />} />
+
+
+                                <Route path="/wishlist" element={<PrivateRoute><Wishlist addtoCart={addtoCart} /></PrivateRoute>} />
+
                                 <Route path="/Category" element={<Category addtoCart={addtoCart}/>} />
                             </Routes>
                         </main>

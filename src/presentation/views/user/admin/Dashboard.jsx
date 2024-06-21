@@ -1,34 +1,30 @@
-import './dashboard.css'
+import './dashboard.css';
 import Analytics from "../../../components/dashboard/Analytics.jsx";
-import {useEffect, useState} from "react";
-import {db} from "../../../../infraestructure/firebase--config.js";
-import {doc, getDocs, collection, getDoc} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../../../../infraestructure/firebase--config.js";
+import { doc, getDocs, collection, getDoc } from "firebase/firestore";
 import SellsReport from '../../../components/dashboard/SellsReport.jsx';
 import SelledProductsList from '../../../components/dashboard/SelledProductList.jsx';
 import GeneralSellInfo from '../../../components/dashboard/GeneralSellInfo.jsx';
 
-export default function Dashboard(){
+export default function Dashboard() {
     const [topProducts, setTopProducts] = useState([]);
+
     useEffect(() => {
         const fetchTopProducts = async () => {
             try {
                 const ordersCollectionRef = collection(db, 'orders');
                 const productsCollectionRef = collection(db, 'products');
-
                 const ordersSnapshot = await getDocs(ordersCollectionRef);
                 const productSales = {};
 
                 ordersSnapshot.forEach(orderDoc => {
                     const orderData = orderDoc.data();
                     orderData.products.forEach(product => {
-                        const productId = product.productId;
-                        const quantity = product.quantity;
-
-                        if (!productSales[productId]) {
-                            productSales[productId] = 0;
+                        if (!productSales[product.productId]) {
+                            productSales[product.productId] = 0;
                         }
-
-                        productSales[productId] += quantity;
+                        productSales[product.productId] += product.quantity;
                     });
                 });
 
@@ -44,25 +40,20 @@ export default function Dashboard(){
                     const productDocRef = doc(productsCollectionRef, product.productId);
                     const productDocSnapshot = await getDoc(productDocRef);
                     if (productDocSnapshot.exists()) {
-                        const productName = productDocSnapshot.data().product_name;
                         return {
-                            productName: productName,
+                            productName: productDocSnapshot.data().product_name,
                             quantitySold: product.quantitySold
                         };
                     } else {
-                        console.error(`No se encontró el producto con ID ${product.productId}`);
-                        return null;
+                        return null; // Devolvemos null para productos no encontrados
                     }
                 });
 
                 const topProductsData = await Promise.all(productPromises);
-
-                const validTopProductsData = topProductsData.filter(productData => productData !== null);
+                const validTopProductsData = topProductsData.filter(productData => productData !== null); // Filtramos para eliminar los null
 
                 setTopProducts(validTopProductsData);
 
-                validTopProductsData.forEach(productData => {
-                });
             } catch (error) {
                 console.error("Error al obtener los documentos:", error);
             }
@@ -70,20 +61,20 @@ export default function Dashboard(){
 
         fetchTopProducts();
     }, []);
-    
+
     return (
         <div className='content'>
             <span className="section-titles">Dashboard de Ventas</span>
-            <div className="analytics">
+            <div className="row">
                 <Analytics topProducts={topProducts} />
             </div>
-            <div className="general-info">
+            <div className="row">
                 <GeneralSellInfo />
             </div>
-            <div className="full-width">
+            <div className="row">
                 <SellsReport />
             </div>
-            <div className="full-width">
+            <div className="row">
                 <SelledProductsList />
             </div>
         </div>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './category.css';
 import ProductPopup from './ofertas/ProductPopup.jsx';
 
+
 const Category = ({addtoCart}) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);

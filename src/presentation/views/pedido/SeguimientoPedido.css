@@ -99,4 +99,7 @@
         margin-bottom: 10px;
         /* Espacio entre la imagen y los detalles del producto en móvil */
     }
+    .tracking-title{
+        margin-left: 0;
+    }
 }

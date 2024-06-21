@@ -237,7 +237,7 @@
 
 @media (max-width: 576px) {
     .cart-info {
-        margin-left: 0;
+        margin-left: 1em;
     }
 
     .price-info {

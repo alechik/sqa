@@ -130,8 +130,8 @@ function App() {
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/registrarse" element={<Register />} />
                                 <Route path="/search" element={<SearchesPage addtoCart={addtoCart} />} />
-                                <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} /></PrivateRoute>} />
-                                <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} /></PrivateRoute>} />
+                                <Route path="/compra" element={<PrivateRoute><Compra cartItems={cartItems} setCartItems={setCartItems} /></PrivateRoute>} />
+                                <Route path="/payment" element={<PrivateRoute><Pagoqr cartItems={cartItems} setCartItems={setCartItems} /></PrivateRoute>} />
                                 <Route path="/delivery/:orderId" element={<PrivateRoute><DeliveryDetailsPage /></PrivateRoute>} />
                                 <Route path="/notifications" element={<PrivateRoute allowedTypes={['1','2']}> <NotificationsPage /> </PrivateRoute>} />
                                 <Route path="/pedidoconfirmado/:orderId" element={<PrivateRoute><ConfirmacionPedido /></PrivateRoute>} />

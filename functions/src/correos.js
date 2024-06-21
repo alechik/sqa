@@ -89,7 +89,7 @@ exports.sendOrderConfirmation = functions.firestore.document("orders/{orderId}")
   const mailHtml = `<html><head><style>body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333333; } .container { width: 100%; max-width: 600px; margin: auto; background: #ffffff; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } .header { background: #f8f8f8; padding: 10px 20px; text-align: center; } .content { margin-top: 20px; } .footer { margin-top: 20px; padding-top: 10px; border-top: 1px solid #cccccc; font-size: 12px; text-align: center; }</style></head><body><div class='container'><div class='header'><h1>Confirmación de Pedido</h1></div><div class='content'><p>Estimado cliente,</p><p>Su pedido ha sido procesado y está en camino. Adjuntamos su factura en formato PDF.</p><p>Si tiene alguna pregunta o necesita ayuda, no dude en contactarnos.</p></div><div class='footer'><p>Gracias por su compra,</p><p><strong>Su E-commerce de Confianza</strong></p></div></div></body></html>`;
 
   const mailOptions = {
-    from: "ecommercesantillo@gmail.com",  
+    from: "ecommercesantillo@gmail.com",
     to: orderData.userEmail,
     subject: "Confirmación de Pedido y Factura",
     attachments: [{

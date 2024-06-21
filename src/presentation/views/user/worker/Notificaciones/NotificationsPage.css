@@ -28,7 +28,6 @@
 .orders-section,
 .returns-section {
     position: relative;
-    /* Para un mejor control del posicionamiento */
     flex: 1;
     background-color: #ffffff;
     padding: 20px;
@@ -56,6 +55,7 @@
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    padding: 15px;
 }
 
 .order-item:hover,
@@ -66,9 +66,7 @@
 .button-container {
     display: flex;
     flex-wrap: wrap;
-    /* Permitir que los botones se ajusten según el tamaño */
     gap: 10px;
-    /* Espaciado entre botones */
     margin-top: 10px;
 }
 
@@ -82,21 +80,15 @@
     transition: transform 0.3s ease, background-color 0.2s;
     color: #ffffff;
     flex: 1 1 48%;
-    /* Ajustar el tamaño a casi la mitad del contenedor */
 }
 
 .product-images {
-    width: 150px;
-    /* Ajusta el tamaño de la imagen */
-    height: 200px;
-    /* Mantén una relación de aspecto cuadrada */
+    width: 100px;
+    height: 150px;
     object-fit: cover;
-    /* Asegura que la imagen se recorte para llenar el contenedor */
     border-radius: 10px;
-    /* Añade bordes redondeados */
     margin-bottom: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Añade una sombra ligera */
 }
 
 .accept-button {
@@ -124,23 +116,19 @@
     transform: scale(1.03);
 }
 
-.map-button {
+.map-button,
+.whatsapp-button {
     background-color: #3498db;
     color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-.map-button:hover {
-    background-color: #2980b9;
-    transform: scale(1.03);
-}
-
-.whatsapp-button {
-    background-color: #25D366;
-    color: #fff;
-}
-
+.map-button:hover,
 .whatsapp-button:hover {
-    background-color: #2ecc71;
+    background-color: #2980b9;
     transform: scale(1.03);
 }
 
@@ -168,12 +156,10 @@
 
     .button-container {
         flex-direction: column;
-        /* Apilar botones verticalmente en móviles */
     }
 
     .button {
         width: 100%;
-        /* Botones a ancho completo para facilitar la interacción */
     }
 
     .page-title {
@@ -182,5 +168,25 @@
 
     .section-title {
         font-size: 1.4rem;
+    }
+
+    .order-details p,
+    .return-details p {
+        font-size: 0.9rem;
+    }
+
+    .order-details p strong,
+    .return-details p strong {
+        display: block;
+    }
+
+    .order-item,
+    .return-item {
+        padding: 10px;
+    }
+
+    .product-images {
+        width: 80px;
+        height: 120px;
     }
 }

@@ -7,7 +7,7 @@ import "./qrcompra.css";
 import { generateQRCodeAndOrder } from '../../../Controlador/paymentController';
 import { checkPaymentStatus } from '../../../infraestructure/api/orders';  // Asumiendo que esta función existe
 
-function QRCompra() {
+function QRCompra({setCartItems}) {
   const [qrImage, setQRImage] = useState('');
   const [orderId, setOrderId] = useState(null);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
@@ -32,12 +32,18 @@ function QRCompra() {
     }
   }, [user, cartItems, navigate]);
 
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('cartItems');
+  };
+
   const startPaymentStatusCheck = (orderId) => {
     const interval = setInterval(async () => {
       const isConfirmed = await checkPaymentStatus(orderId);
       if (isConfirmed) {
         setPaymentConfirmed(true);
         clearInterval(interval);
+        clearCart()
         navigate(`/pedidoconfirmado/${orderId}`);
       }
     }, 5000);  // Verificar cada 5 segundos

@@ -5,17 +5,17 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin: 20px;
   overflow: hidden;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .product-image-container {
-  flex: 0 0 120px;
+  flex: 0 0 190px;
   overflow: hidden;
 }
 
 .product-imagene {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -131,5 +131,14 @@
     max-height: 60px;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 576px) {
+  .searched-product-card{
+    flex-direction: column;
+  }
+  #producto-precio{
+    font-size: 1em;
   }
 }

@@ -40,7 +40,7 @@ const SearchedProductCard = ({ product, addtoCart }) => {
                     <p className="product-category"><strong>Categoría:</strong> {categoryName}</p>
                     <p className="product-stock"><strong>Stock:</strong> {product.stock}</p>
                     <p className="product-measurement-unit"><strong>Unidad de medida:</strong> {product.gramaje}</p>
-                    <p className="product-price"><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
+                    <p className="product-price" id='producto-precio'><strong>Precio:</strong> Bs {product.unitary_price}.00</p>
                     <div className="product-actions">
                         <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); addtoCart(product); }}>Añadir al carrito</button>
                         <a href={`https://www.facebook.com/sharer/sharer.php?u=URL_DEL_PRODUCTO`} target="_blank" rel="noopener noreferrer" className="social-button share-facebook">

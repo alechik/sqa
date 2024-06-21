@@ -4,67 +4,72 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(77, 77, 77, 0.466);
-    /* Oscurecer un poco más */
-    backdrop-filter: blur(5px);
-    /* Añadir desenfoque al fondo */
+    background-color: rgba(77, 77, 77, 0.6);
+    backdrop-filter: blur(5px); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1050;
 }
 
 .modal-content {
-    padding: 20px 40px 70px 40px;
-    /* Aumentar el padding para incluir espacio para el botón cerrar */
+    padding: 20px;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 500px;
+    background: #fff;
     position: relative;
-    /* Asegurar que está posicionado relativamente para el posicionamiento absoluto del botón cerrar */
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
 }
 
 .modal-header {
-    font-size: 22px;
-    /* Aumentar el tamaño de la fuente para el título */
-    font-weight: 600;
-    /* Negrita más definida */
+    font-size: 1.25rem;
+    font-weight: bold;
     margin-bottom: 20px;
-    /* Más espacio después del título */
 }
 
 .modal-body {
+    font-size: 1rem;
     margin-bottom: 25px;
-    /* Más espacio antes de los botones */
-    font-size: 18px;
-    /* Fuente más grande para el cuerpo */
+    width: 100%;
 }
 
 .close-button {
-    position: absolute;
-    top: 230px;
-    /* Aumentar el espacio desde el borde superior */
-    right: 0;
-    background: none;
+    margin-top: 20px; 
+    background: transparent;
     border: none;
-    font-size: 24px;
-    /* Aumentar el tamaño para mejor accesibilidad */
+    font-size: 1.5rem;
     cursor: pointer;
-    outline: none;
     color: #333;
-    /* Asegurar que el color sea visible */
+    width: auto;
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    transition: color 0.2s, background-color 0.2s; 
+    align-self: center; 
 }
 
 .close-button:hover {
     color: #f44336;
-    /* Cambio a rojo al pasar el mouse para indicar interacción */
+
 }
 
 .close-button:hover,
 .close-button:focus {
-    color: #ff0000;
-    /* Cambio de color al pasar el mouse o enfocar */
-    text-decoration: none;
-    /* Quitar cualquier subrayado */
+    color: #ff0707;
+    text-decoration: none; 
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 15px;
+        width: 85%;
+    }
+
+    .close-button {
+        font-size: 1.25rem;
+        padding: 8px 16px; 
+    }
 }

@@ -63,7 +63,7 @@
 
 .table-container th,
 .table-container td {
-    padding: 12px 15px;
+    padding: 12px 12px; 
     text-align: left;
     border-bottom: 1px solid #ddd;
 }

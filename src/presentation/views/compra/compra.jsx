@@ -18,6 +18,7 @@ export default function Compra({ cartItems }) {
     const mapRef = useRef(null);
     const [map, setMap] = useState(null);
     const [marker, setMarker] = useState(null);
+    const [timeoutId, setTimeoutId] = useState(null);
 
     useEffect(() => {
         if (!user) {
@@ -187,14 +188,66 @@ export default function Compra({ cartItems }) {
         setIsDataComplete(isComplete);
     };
 
+    const validateAllInputs = (data) => {
+        const { names, address, ci, numero, email, birthday_date } = data;
+        let isValid = true; // Asumimos que todos los datos son válidos inicialmente
+    
+        // Regex para validar que los nombres y direcciones contienen solo letras, espacios y caracteres permitidos
+        const lettersAndSpacesRegex = /^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ.,'-]+$/;
+    
+        if (!lettersAndSpacesRegex.test(names) || names.length > 100) {
+            toast.error('El nombre completo solo puede contener letras y debe ser menor de 100 caracteres.');
+            isValid = false;
+        }
+        if (address.length > 255) { // Aumentando el límite de caracteres para acomodar direcciones completas
+            toast.error('La dirección debe ser menor de 255 caracteres.');
+            isValid = false;
+        }
+        if (!/^\d+$/.test(ci) || ci.length < 6 || ci.length > 10) {
+            toast.error('El CI debe contener solo dígitos y tener entre 6 y 10 caracteres.');
+            isValid = false;
+        }
+        if (!/^\d{8}$/.test(numero)) {
+            toast.error('El número de teléfono debe contener solo dígitos y tener exactamente 8 caracteres.');
+            isValid = false;
+        }
+        if (email.length > 100 || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+            toast.error('El email debe ser válido y no exceder los 100 caracteres.');
+            isValid = false;
+        }
+        if (!isAdult(new Date(birthday_date))) {
+            toast.error('Debes ser mayor de 18 años para realizar una compra.');
+            isValid = false;
+        }
+    
+        return isValid;
+    };
+    
+    const isAdult = (birthdate) => {
+        const today = new Date();
+        const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        return birthdate <= eighteenYearsAgo;
+    };
+    
+
     const handleInputChange = (field, value) => {
         setUserData({ ...userData, [field]: value });
     };
+    
+
 
     const handleSaveData = async () => {
-        const userRef = doc(firestore, 'users', user.uid);
-        await updateDoc(userRef, userData);
-        toast.success('Datos actualizados correctamente!');
+        // Primero verifica todos los campos antes de intentar guardar.
+        if (validateAllInputs(userData)) {
+            const userRef = doc(firestore, 'users', user.uid);
+            try {
+                await updateDoc(userRef, userData);
+                toast.success('Datos actualizados correctamente!');
+            } catch (error) {
+                toast.error('Error al guardar los datos.');
+                console.error("Error updating user data in Firestore: ", error);
+            }
+        }
     };
 
     const handlePaymentProceed = () => {
@@ -232,13 +285,13 @@ export default function Compra({ cartItems }) {
     return (
         <div className="toast">
         <div className="compra-container">
-            <div className="user-info-form">
+        <div className="user-info-form">
                 <h2>Detalles del Cliente</h2>
                 <p>Por favor, completa tu información para continuar con la compra:</p>
                 <input className='inputcompra' type="text" value={userData.names || ''} onChange={(e) => handleInputChange('names', e.target.value)} placeholder="Nombre completo" required />
                 <input className='inputcompra' type="text" value={userData.address || ''} onChange={(e) => handleInputChange('address', e.target.value)} placeholder="Dirección" required />
                 <input className='inputcompra' type="text" value={userData.ci || ''} onChange={(e) => handleInputChange('ci', e.target.value)} placeholder="Carnet de Identidad" required />
-                <input className='inputcompra' type="text" value={userData.numero || ''} onChange={(e) => handleInputChange('numero', e.target.value)} placeholder="Numero" required />
+                <input className='inputcompra' type="text" pattern="[0-9]*" value={userData.numero || ''} onChange={(e) =>  handleInputChange('numero', e.target.value)} placeholder="Numero" required />
                 <select className='selectcompra' value={userData.gender || ''} onChange={(e) => handleInputChange('gender', e.target.value)} required>
                     <option value="" disabled>Selecciona tu género</option>
                     <option value="Masculino">Masculino</option>

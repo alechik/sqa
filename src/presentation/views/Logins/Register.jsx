@@ -81,7 +81,6 @@ export default function Register() {
                     email,
                     names: `${firstName} ${lastName}`,
                     numero,
-                    address,
                     gender: '',
                     birthday_date: '',
                     ci: '',

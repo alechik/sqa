@@ -50,7 +50,7 @@ function Footer() {
             <div className="footer-top">
                 <div className="footer-contact">
                     <p><strong>Teléfono:</strong> +591 60032422</p>
-                    <p><strong>Email:</strong> <a href="mailto:ecommercesantillo@gmail.com">ecommercesantillo@gmail.com</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:ecommercesantillo@gmail.com">ecommercesaltillo@gmail.com</a></p>
                 </div>
                 <div className="footer-social">
                     <a href="https://wa.me/59160032422" target="_blank" rel="noopener noreferrer"><img src={iconUrls.whatsapp} alt="WhatsApp" /></a>

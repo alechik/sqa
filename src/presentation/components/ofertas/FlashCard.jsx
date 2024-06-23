@@ -22,7 +22,7 @@ const PrevArrow = ({ onClick }) => (
     </div>
 );
 
-const FlashCard = ({ productItems, addtoCart }) => {
+const FlashCard = React.memo(({ productItems, addtoCart }) => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productsWithRatings, setProductsWithRatings] = useState([]);
 
@@ -133,6 +133,5 @@ const FlashCard = ({ productItems, addtoCart }) => {
             )}
         </>
     );
-};
-
+});
 export default FlashCard;

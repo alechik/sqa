@@ -3,7 +3,7 @@ import React from "react";
 import FlashCard from "./FlashCard.jsx";
 /*import './flashdeals.css'*/
 // eslint-disable-next-line react/prop-types
-const FlashDeals = ({ productItems, addtoCart, productos , titulo}) => {
+const FlashDeals = React.memo(({ productItems, addtoCart, productos , titulo}) => {
     return (
         <>
             <section className='flash'>
@@ -17,7 +17,7 @@ const FlashDeals = ({ productItems, addtoCart, productos , titulo}) => {
             </section>
         </>
     )
-}
+})
 
 export default FlashDeals
 

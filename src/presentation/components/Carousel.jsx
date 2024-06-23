@@ -5,7 +5,7 @@ import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../infraestructure/firebase-connection.js';
 import { Link } from 'react-router-dom';
 
-function Carousel() {
+const Carousel = React.memo (() => {
     const listRef = useRef();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [categories, setCategories] = useState([]);
@@ -93,5 +93,5 @@ function Carousel() {
         </div>
     );
 }
-
+)
 export default Carousel;

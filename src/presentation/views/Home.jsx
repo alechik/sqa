@@ -7,7 +7,7 @@ import './home.css';
 import { db } from '../../infraestructure/firebase--config.js';
 import { collection, getDocs, } from 'firebase/firestore';
 
-export default function Home({ productos, addtoCart }) {
+const Home = React.memo(({ productos, addtoCart }) => {
     const [recentProducts, setRecentProducts] = useState([]);
     const [topRatedProducts, setTopRatedProducts] = useState([]);
     const [bestSellingProducts, setBestSellingProducts] = useState([]);
@@ -37,13 +37,13 @@ export default function Home({ productos, addtoCart }) {
 
     const fetchRecentProducts = async () => {
         setRecentProducts([...productos]
-            .filter(product => product.date_added)  
-            .sort((a, b) => 
+            .filter(product => product.date_added)
+            .sort((a, b) =>
                 new Date(b.date_added) - new Date(a.date_added)
             )
             .slice(0, 10)
         );
-    };     
+    };
 
     const fetchTopRatedProducts = async () => {
         const productsWithRatings = await Promise.all(
@@ -165,3 +165,5 @@ export default function Home({ productos, addtoCart }) {
         </div>
     );
 }
+)
+export default Home

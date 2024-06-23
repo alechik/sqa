@@ -6,7 +6,7 @@ import './category.css';
 import ProductPopup from './ofertas/ProductPopup.jsx';
 
 
-const Category = ({addtoCart}) => {
+const Category = React.memo(({addtoCart}) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [products, setProducts] = useState([]);
@@ -163,5 +163,5 @@ const Category = ({addtoCart}) => {
         </div>
     );
 }
-
+)
 export default Category;
